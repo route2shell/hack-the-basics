@@ -2,144 +2,127 @@
 
 # Hack the Basics
 
-### Build real offensive security fundamentals — the right way, in the right order.
+### Build offensive security fundamentals in the right order.
 
-*An open-source, self-paced course built to teach offensive security as a progression of thinking, not a pile of disconnected tools.*
+*A premium open-source, self-paced course designed to teach offensive security as a progression of reasoning, evidence, and workflow, not a pile of disconnected tools.*
 
 </div>
 
 ---
 
+> **🧭 Start Here**
+>
+> If you are new to the project, read this page first, then go to [Module 01 - Orientation and Assessment Workflow](modules/01-orientation-and-assessment-workflow/README.md). If you want the full source-of-truth curriculum and repository plan, open the [master implementation blueprint](hack-the-basics-implementation-blueprint.md).
+
 ## What This Project Is
 
-**Hack the Basics** is a structured offensive security course series designed for learners who want more than scattered notes, isolated walkthroughs, or copy-paste commands.
+`Hack the Basics` is a structured offensive security course for learners who want more than scattered notes, one-off walkthroughs, and command-copying habits.
 
-It is built around a simple idea:
+The course is built around a simple idea:
 
-> teach the basics without making them feel basic.
+> teach the basics without making them feel basic
 
-That means the course is designed to feel:
+That means the repository is designed to feel:
 
-- **progressive** instead of random
-- **technical** without becoming overwhelming
-- **practical** without becoming shallow
-- **open-source** while still feeling polished, intentional, and premium
+- progressive instead of random
+- technical without becoming overwhelming
+- practical without becoming shallow
+- open-source while still feeling deliberate, polished, and premium
 
-This repository is the home for that learning journey.
-
----
-
-## What We Are Building
-
-Most beginner-friendly security content tends to break down in one of two ways:
-
-- it gives learners commands without enough systems understanding
-- it introduces tools and topics in an order that does not match how real assessments actually unfold
-
-**Hack the Basics** is meant to fix that.
-
-This series is being built as a **deliberate learning path** that follows the shape of real offensive work:
-
-1. orient to the workflow
-2. map the attack surface
-3. understand exposed services and applications
-4. analyze authentication and trust boundaries
-5. validate weaknesses carefully
-6. gain and operate through footholds in a lab setting
-7. escalate, pivot, and expand visibility
-8. document the work like a professional
-
-The goal is not just to teach *what to type*.
-
-The goal is to teach learners how to think through an assessment from beginning to end.
+The goal is not just to teach what to type.
+The goal is to teach how to think through an assessment from beginning to end.
 
 ---
 
-## The Philosophy Behind the Series
+## Why This Exists
 
-| Instead of this... | We are building this... |
-|---|---|
-| Tool-first learning | Workflow-first learning |
-| Memorizing flags | Understanding systems |
-| One-off tricks | Transferable methodology |
-| Random topic order | Progressive prerequisites |
-| “Run this exploit” | “Explain why this is the next step” |
-| Loose notes repo | A designed course experience |
+Most beginner-friendly offensive security content breaks down in one of two ways:
 
-That difference is the point of the project.
+- it teaches commands without enough systems understanding
+- it teaches topics in an order that does not match how real assessments actually unfold
+
+`Hack the Basics` is meant to fix that by teaching a cleaner workflow:
+
+1. orient to the assessment
+2. map the visible surface
+3. understand what exposed services and applications mean
+4. analyze credentials, trust, and validation paths
+5. gain and operate through footholds carefully
+6. escalate, pivot, and expand visibility
+7. document and report the work professionally
 
 ---
 
-## Who This Is For
+## The Course Promise
 
-**Hack the Basics** is for learners who are serious about building offensive security skill the right way, even if they are still early in that journey.
+By the end of the course, the learner should be able to move through a realistic lab assessment while explaining:
 
-It is a strong fit for people who want to:
+- what they observed
+- what they inferred
+- what they validated
+- why the next step made sense
 
-- move from curiosity into structured, lab-based learning
-- understand how technical assessments actually flow
-- build real fundamentals before diving deeper into specialized areas
-- connect enumeration, exploitation, escalation, and reporting into one coherent process
-- learn in a way that rewards good notes, repetition, and technical honesty
+This course is designed to produce:
 
-This is not meant to be a hype-driven “instant hacker” repo.
-It is meant to be a clean, serious foundation.
+- stronger mental models
+- cleaner workflow habits
+- more trustworthy technical reasoning
+- reusable notes, worksheets, maps, and references
 
 ---
 
 ## What Makes It Different
 
-### It is built like a course.
+| Instead of this | We are building this |
+|---|---|
+| Tool-first learning | Workflow-first learning |
+| Memorizing flags | Understanding systems |
+| One-off tricks | Transferable methodology |
+| Random topic order | Progressive prerequisites |
+| "Run this exploit" | "Explain why this is the next step" |
+| Loose notes repo | A designed course experience |
 
-Each module should prepare the learner for the next one.
-The order matters.
-The pacing matters.
-The transitions matter.
-
-### It treats fundamentals as serious work.
-
-“Basics” here does **not** mean watered down.
-It means learning the material that everything else depends on:
-
-- enumeration
-- service reasoning
-- web behavior
-- authentication and credential logic
-- shells and operating system context
-- privilege boundaries
-- pivoting and internal expansion
-- evidence handling and reporting
-
-### It puts tools inside workflows.
-
-Tools matter, but tools are not the curriculum.
-Wherever possible, tools are taught inside a larger question:
-
-- what problem is this tool helping solve?
-- why does it belong here in the workflow?
-- how much confidence should we place in the result?
-- what should happen next?
-
-### It is open-source, but it should still feel premium.
-
-The writing, diagrams, labs, notes, and progression should feel designed.
-The learner should feel like they are moving through a structured experience, not browsing a folder full of fragments.
+> **🧠 Mental Model**
+>
+> Tools matter in this course, but tools are never the curriculum.
+> The curriculum is the sequence of questions, evidence, and decisions that make technical work meaningful.
 
 ---
 
-## The Learning Journey
+## Who This Is For
 
-The new course spine is designed around a full offensive workflow.
-Each phase has a job.
-Each phase builds the next one.
+This course is a strong fit for learners who want to:
+
+- move from curiosity into structured lab-based learning
+- understand how offensive assessments actually flow
+- build strong fundamentals before specializing
+- connect enumeration, exploitation, escalation, movement, and reporting into one coherent system
+- learn in a way that rewards notes, repetition, and technical honesty
+
+This project is not meant to be:
+
+- hype-driven
+- shortcut-first
+- an "instant hacker" repo
+- a giant exploit catalog
+
+It is meant to be a serious foundation.
+
+---
+
+## Learning Journey
+
+The course is organized around one full offensive workflow.
+Each phase has a clear job.
+Each phase prepares the next one.
 
 | Phase | Focus | What the learner is building |
 |---|---|---|
-| **Phase I** | Orientation and attack-surface mapping | Lab workflow, assessment mindset, network visibility, service reasoning |
+| **Phase I** | Orientation and surface mapping | Lab workflow, assessment mindset, network visibility, service reasoning |
 | **Phase II** | Web understanding and exposure analysis | Web discovery, traffic analysis, auth context, fuzzing, and core web attack thinking |
-| **Phase III** | Access and platform operations | Common service attack paths, shells, payloads, and foothold management |
-| **Phase IV** | Escalation and internal expansion | Linux, Windows, pivoting, and enterprise movement |
-| **Phase V** | Professional output and synthesis | Active Directory reasoning, reporting discipline, and end-to-end capstone execution |
+| **Phase III** | Access and foothold operations | Common service attack paths, shells, payloads, and initial-access handling |
+| **Phase IV** | Local escalation and internal movement | Linux, Windows, pivoting, and deeper internal visibility |
+| **Phase V** | Enterprise reasoning, communication, and synthesis | Active Directory reasoning, reporting discipline, and capstone execution |
 
 <details>
 <summary><strong>Why this structure?</strong></summary>
@@ -148,9 +131,7 @@ A learner can memorize commands quickly and still have no idea how to operate du
 
 This series is structured to prevent that.
 
-We start with orientation and surface mapping, then move into application understanding, then access and foothold operations, then privilege and internal expansion, and finally into professional deliverables and enterprise reasoning.
-
-That is how the series stays approachable **without** becoming shallow.
+We start with orientation and attack-surface mapping, move into web understanding and exposure analysis, then into access and foothold operations, then local escalation and internal movement, and finally into enterprise reasoning, reporting, and full-course synthesis.
 
 </details>
 
@@ -158,102 +139,136 @@ That is how the series stays approachable **without** becoming shallow.
 
 ## Course Roadmap
 
-The roadmap below reflects the current implementation blueprint for the full course.
-It is intentionally high-level on the landing page: enough to show the journey, without turning the README into a giant syllabus.
-
-### Phase I — Orientation and Surface Mapping
+### Phase I - Orientation and Surface Mapping
 
 | Module | Focus |
 |---|---|
-| **01. Orientation and Assessment Workflow** | How the course works, how assessments flow, how to think, and how to build a repeatable learner workflow |
-| **02. Network Enumeration with Nmap** | Host discovery, port scanning, service detection, output interpretation, and repeatable attack-surface mapping |
-| **03. Service Footprinting and Common Infrastructure Enumeration** | Turning ports into actual understanding across common enterprise services and infrastructure protocols |
+| [01. Orientation and Assessment Workflow](modules/01-orientation-and-assessment-workflow/README.md) | Course workflow, assessment lifecycle, scope discipline, and analyst mindset |
+| [02. Network Enumeration with Nmap](modules/02-enumeration-using-nmap/README.md) | Host discovery, port scanning, service clues, and repeatable attack-surface mapping |
+| [03. Service Footprinting and Common Infrastructure Enumeration](modules/03-service-footprinting-and-common-infrastructure-enumeration/README.md) | Turning ports into host-role, service, and follow-up understanding |
 
-### Phase II — Web Understanding and Exposure Analysis
-
-| Module | Focus |
-|---|---|
-| **04. Web Reconnaissance and Application Discovery** | Web asset mapping, content discovery, fingerprinting, and first-pass web context gathering |
-| **05. Web Proxies and HTTP Traffic Analysis** | Inspecting, replaying, modifying, and reasoning about requests and responses |
-| **06. Authentication, Credentials, and Password Operations** | Login surfaces, password logic, credential operations, and authentication as a cross-cutting attack surface |
-| **07. Web Content Discovery and Fuzzing** | Directories, parameters, virtual hosts, hidden routes, and systematic web surface expansion |
-| **08. Core Web Vulnerabilities and Exploit Chains** | Foundational web vulnerability classes and how to reason about exploiting and chaining them |
-
-### Phase III — Access and Platform Operations
+### Phase II - Web Understanding and Exposure Analysis
 
 | Module | Focus |
 |---|---|
-| **09. Attacking Common Services and Applications** | Applying attack-path reasoning to frequently encountered services, platforms, and exposed applications |
-| **10. Footholds, Shells, Payloads, and File Operations** | Initial execution, shells, payload choices, session handling, and practical post-foothold operations |
+| [04. Web Reconnaissance and Application Discovery](modules/04-web-reconnaissance-and-application-discovery/README.md) | Web asset mapping, fingerprinting, and first-pass discovery |
+| [05. Web Proxies and HTTP Traffic Analysis](modules/05-web-proxies-and-http-traffic-analysis/README.md) | Inspecting, replaying, modifying, and reasoning about HTTP traffic |
+| [06. Authentication, Credentials, and Password Operations](modules/06-authentication-credentials-and-password-operations/README.md) | Login surfaces, password logic, credential operations, and auth as a cross-cutting attack surface |
+| [07. Web Content Discovery and Fuzzing](modules/07-web-content-discovery-and-fuzzing/README.md) | Hidden routes, parameters, vhosts, and systematic web surface expansion |
+| [08. Core Web Vulnerabilities and Exploit Chains](modules/08-core-web-vulnerabilities-and-exploit-chains/README.md) | Foundational web vulnerability classes and exploit-chain reasoning |
 
-### Phase IV — Escalation and Internal Expansion
-
-| Module | Focus |
-|---|---|
-| **11. Linux Privilege Escalation** | Local enumeration, misconfigurations, and privilege boundary reasoning on Linux |
-| **12. Windows Privilege Escalation** | Local Windows context, services, permissions, credentials, and privilege escalation patterns |
-| **13. Pivoting, Tunneling, and Port Forwarding** | Reaching internal-only services and moving through segmented environments after a foothold |
-| **14. Active Directory Enumeration and Attacks** | Identity, trust, privilege relationships, graph-based reasoning, and enterprise attack paths |
-
-### Phase V — Professional Output and Capstone Synthesis
+### Phase III - Access and Foothold Operations
 
 | Module | Focus |
 |---|---|
-| **15. Documentation, Reporting, and Assessment Communication** | Turning technical work into notes, evidence, findings, and professional communication |
-| **16. Attacking Enterprise Networks Capstone** | A start-to-finish simulated engagement that ties the entire series together |
+| [09. Attacking Common Services and Applications](modules/09-attacking-common-services-and-applications/README.md) | Applying attack-path reasoning to frequently encountered services and exposed apps |
+| [10. Footholds, Shells, Payloads, and File Operations](modules/10-footholds-shells-payloads-and-file-operations/README.md) | Initial execution, shell handling, payload choice, and practical post-access workflow |
+
+### Phase IV - Local Escalation and Internal Movement
+
+| Module | Focus |
+|---|---|
+| [11. Linux Privilege Escalation](modules/11-linux-privilege-escalation/README.md) | Local enumeration and privilege boundary reasoning on Linux |
+| [12. Windows Privilege Escalation](modules/12-windows-privilege-escalation/README.md) | Local Windows context, privilege, configuration, and escalation patterns |
+| [13. Pivoting, Tunneling, and Port Forwarding](modules/13-pivoting-tunneling-and-port-forwarding/README.md) | Reaching internal-only services and moving through segmented environments |
+| [14. Active Directory Enumeration and Attacks](modules/14-active-directory-enumeration-and-attacks/README.md) | Identity, trust, delegated privilege, and enterprise attack-path reasoning |
+
+### Phase V - Enterprise Reasoning, Communication, and Synthesis
+
+| Module | Focus |
+|---|---|
+| [15. Documentation, Reporting, and Assessment Communication](modules/15-documentation-reporting-and-assessment-communication/README.md) | Turning technical work into notes, evidence, findings, and professional communication |
+| [16. Attacking Enterprise Networks Capstone](modules/16-attacking-enterprise-networks-capstone/README.md) | A start-to-finish simulated engagement that ties the full series together |
 
 ---
 
-## What the Repository Will Eventually Contain
+## Repository Structure
 
-As the course is built out, this repository is intended to include:
+```text
+hack-the-basics/
+├── README.md
+├── hack-the-basics-implementation-blueprint.md
+├── COURSE_STATUS.md
+├── docs/
+├── templates/
+├── assets/
+└── modules/
+```
 
-- module overviews
+### What lives where
+
+| Path | Role |
+|---|---|
+| [`modules/`](modules) | The actual learner-facing module implementations |
+| [`docs/`](docs) | Shared design, authoring, review, and agent guidance |
+| [`templates/`](templates) | Reusable starting points for lessons, labs, cheat sheets, and artifacts |
+| [`assets/`](assets) | Shared diagrams, screenshots, and visual support material |
+| [`hack-the-basics-implementation-blueprint.md`](hack-the-basics-implementation-blueprint.md) | The master curriculum and repository source of truth |
+| [`COURSE_STATUS.md`](COURSE_STATUS.md) | High-level implementation progress |
+
+---
+
+## What the Repository Is Meant to Contain
+
+As the course is built out, the repository is intended to include:
+
+- module landing pages
 - lesson files
 - guided labs
-- screenshots and diagrams
-- command walkthroughs
-- reference notes and cheat sheets
-- templates for notes, findings, and reporting
-- capstone materials and supporting artifacts
+- diagrams and screenshots
+- field references and cheat sheets
+- worksheets and note-taking aids
+- reporting templates
+- capstone materials
 
-The goal is for the repo to be useful in two ways at once:
+The repo is meant to work in two modes at once:
 
-- as a **sequential learning path**
-- and later, as a **high-quality reference** learners can return to while practicing
+- as a sequential course
+- as a long-term reference set learners can return to later
 
 ---
 
 ## Build Principles
 
-The implementation blueprint for the series is guided by a few simple rules:
+The implementation and review system for the course follows a few simple rules:
 
-- new domains begin with a **how it works** lesson before tactics
+- new domains begin with a "how it works" lesson before tactics
 - enumeration comes before exploitation
-- repeated ideas should return with **more depth**, not just repetition
-- tool coverage should support a workflow, not replace one
-- every module should create a natural handoff into the next module
-- the course should remain GitHub-friendly, readable, and easy to expand over time
+- repeated ideas should return with deeper context, not repetition alone
+- tools should support workflows, not replace them
+- every module should create a natural handoff into the next one
+- the course should remain GitHub-friendly, maintainable, and visually deliberate
 
 ---
 
 ## Current Direction
 
-This repository is being built around a full implementation blueprint with:
+The repository is now being built around:
 
-- a locked module spine
-- module-by-module lesson structure
-- topic and sub-topic breakdowns
-- practice placement strategy
-- a progression designed for self-paced learners
+- a master implementation blueprint
+- a shared Markdown design system
+- a module-by-module content architecture
+- reusable templates and agent briefs
+- practice, reference, and artifact systems designed for self-paced learners
 
-So while the course is open-source, it is being designed with the same seriousness you would expect from a premium training product.
+That means the course is open-source, but it is being built with the seriousness and structure of a premium training product.
+
+---
+
+## Useful Entry Points
+
+| If you want to... | Start here |
+|---|---|
+| begin the course as a learner | [Module 01](modules/01-orientation-and-assessment-workflow/README.md) |
+| see the full curriculum and repo architecture | [Master Blueprint](hack-the-basics-implementation-blueprint.md) |
+| check build progress | [Course Status](COURSE_STATUS.md) |
+| review the design system | [Markdown Visual System](docs/design/markdown-visual-system.md) |
 
 ---
 
 <div align="center">
 
-### Hack the Basics is about learning the craft in the right order.
+### Learn the craft in the right order.
 
 **Strong fundamentals. Clean workflows. Serious progression.**
 
