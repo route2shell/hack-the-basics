@@ -24,7 +24,7 @@
 - [Lesson Map](#lesson-map)
 - [Why This Lesson Matters](#why-this-lesson-matters)
 - [Learning Objectives](#learning-objectives)
-- [The Hook: The Difference Between Running Nmap and Understanding Nmap](#the-hook-the-difference-between-running-nmap-and-understanding-nmap)
+- [The Difference Between Running Nmap and Understanding Nmap](#the-difference-between-running-nmap-and-understanding-nmap)
 - [What Nmap Actually Is](#what-nmap-actually-is)
 - [The Core Mental Model: Probe → Observe → Infer](#the-core-mental-model-probe--observe--infer)
 - [What Questions Nmap Helps Us Answer](#what-questions-nmap-helps-us-answer)
@@ -109,7 +109,7 @@ By the end of this lesson, we should be able to:
 
 ---
 
-## The Hook: The Difference Between Running Nmap and Understanding Nmap
+## The Difference Between Running Nmap and Understanding Nmap
 
 Imagine two learners sit down at a shell.
 
