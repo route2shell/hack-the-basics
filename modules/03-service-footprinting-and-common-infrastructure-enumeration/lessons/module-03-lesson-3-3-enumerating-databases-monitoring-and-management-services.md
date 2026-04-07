@@ -76,12 +76,34 @@
 ## Lesson Map
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryColor":"#0f172a","primaryTextColor":"#e2e8f0","primaryBorderColor":"#7dd3fc","lineColor":"#64748b","secondaryColor":"#111827","tertiaryColor":"#0b1220","clusterBkg":"#0b1220","clusterBorder":"#334155","fontSize":"14px"}}}%%
 flowchart TD
-    A[High-signal infrastructure service exposed] --> B[Ask what function and trust it represents]
-    B --> C[Choose a protocol-aware first check]
-    C --> D[Capture version, identity, auth, and posture clues]
-    D --> E[Interpret host role and administrative relevance]
-    E --> F[Choose focused next-step follow-up]
+    subgraph SIGNAL["High-Signal Entry"]
+        A["High-signal infrastructure service exposed"]
+    end
+    subgraph TRIAGE["Triage The Meaning"]
+        B["Ask what function and trust it represents"]
+        C["Choose a protocol-aware first check"]
+        D["Capture version, identity,<br/>auth, and posture clues"]
+    end
+    subgraph ACTION["Decide The Follow-Up"]
+        E["Interpret host role<br/>and administrative relevance"]
+        F["Choose focused next-step follow-up"]
+    end
+
+    A ==> B ==> C ==> D ==> E ==> F
+
+    classDef source fill:#142033,stroke:#60a5fa,color:#dbeafe,stroke-width:2px;
+    classDef analysis fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:2px;
+    classDef action fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+
+    class A source;
+    class B,C,D analysis;
+    class E,F action;
+
+    style SIGNAL fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style TRIAGE fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style ACTION fill:#0b1220,stroke:#334155,color:#cbd5e1
 ```
 
 > **💡 Tip**
@@ -239,11 +261,20 @@ When we enumerate these services, we should think in two layers at once:
 2. Why does that matter operationally?
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryColor":"#0f172a","primaryTextColor":"#e2e8f0","primaryBorderColor":"#7dd3fc","lineColor":"#64748b","secondaryColor":"#111827","tertiaryColor":"#0b1220","clusterBkg":"#0b1220","clusterBorder":"#334155","fontSize":"14px"}}}%%
 flowchart LR
-    A[Service exposed] --> B[What does it identify?]
-    B --> C[What role does it imply?]
-    C --> D[What trust or risk does it suggest?]
-    D --> E[What careful follow-up should come next?]
+    A["Service exposed"] ==> B["What does it identify?"]
+    B ==> C["What role does it imply?"]
+    C ==> D["What trust or risk does it suggest?"]
+    D ==> E["What careful follow-up should come next?"]
+
+    classDef source fill:#142033,stroke:#60a5fa,color:#dbeafe,stroke-width:2px;
+    classDef analysis fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:2px;
+    classDef action fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+
+    class A source;
+    class B,C,D analysis;
+    class E action;
 ```
 
 ### Useful first questions
@@ -770,12 +801,34 @@ Inference:
 These services are easiest to handle with a clean multi-step rhythm.
 
 ```mermaid
-flowchart TD
-    A[Identify high-signal service exposure] --> B[Gather version / identity clues]
-    B --> C[Capture auth or management posture]
-    C --> D[Correlate with host role and neighboring services]
-    D --> E[Write evidence and inference separately]
-    E --> F[Choose focused next-step follow-up]
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryColor":"#0f172a","primaryTextColor":"#e2e8f0","primaryBorderColor":"#7dd3fc","lineColor":"#64748b","secondaryColor":"#111827","tertiaryColor":"#0b1220","clusterBkg":"#0b1220","clusterBorder":"#334155","fontSize":"14px"}}}%%
+flowchart LR
+    subgraph DISCOVER["Discover"]
+        A["Identify high-signal service exposure"]
+        B["Gather version and identity clues"]
+    end
+    subgraph ASSESS["Assess"]
+        C["Capture auth or management posture"]
+        D["Correlate with host role<br/>and neighboring services"]
+    end
+    subgraph DECIDE["Decide"]
+        E["Write evidence and inference separately"]
+        F["Choose focused next-step follow-up"]
+    end
+
+    A ==> B ==> C ==> D ==> E ==> F
+
+    classDef source fill:#142033,stroke:#60a5fa,color:#dbeafe,stroke-width:2px;
+    classDef analysis fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:2px;
+    classDef action fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+
+    class A,B source;
+    class C,D,E analysis;
+    class F action;
+
+    style DISCOVER fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style ASSESS fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style DECIDE fill:#0b1220,stroke:#334155,color:#cbd5e1
 ```
 
 ### Step 1: Decide what kind of service this is

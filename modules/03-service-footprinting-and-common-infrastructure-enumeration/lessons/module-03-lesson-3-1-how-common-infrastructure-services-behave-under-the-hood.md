@@ -67,12 +67,34 @@
 ## Lesson Map
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryColor":"#0f172a","primaryTextColor":"#e2e8f0","primaryBorderColor":"#7dd3fc","lineColor":"#64748b","secondaryColor":"#111827","tertiaryColor":"#0b1220","clusterBkg":"#0b1220","clusterBorder":"#334155","fontSize":"14px"}}}%%
 flowchart TD
-    A[Open ports and service clues] --> B[Ask what role the service plays]
-    B --> C[Understand protocol purpose and trust assumptions]
-    C --> D[Infer likely host function]
-    D --> E[Identify what should be enumerated next]
-    E --> F[Turn exposure into service-aware follow-up]
+    subgraph OBSERVE["Observe The Exposure"]
+        A["Open ports<br/>banners, certs, service labels"]
+    end
+    subgraph INTERPRET["Interpret The Service Story"]
+        B["Ask what role the service plays"]
+        C["Understand protocol purpose<br/>and trust assumptions"]
+        D["Infer likely host function"]
+    end
+    subgraph ACT["Decide The Next Move"]
+        E["Identify what should be enumerated next"]
+        F["Turn exposure into service-aware follow-up"]
+    end
+
+    A ==> B ==> C ==> D ==> E ==> F
+
+    classDef source fill:#142033,stroke:#60a5fa,color:#dbeafe,stroke-width:2px;
+    classDef analysis fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:2px;
+    classDef action fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+
+    class A source;
+    class B,C,D analysis;
+    class E,F action;
+
+    style OBSERVE fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style INTERPRET fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style ACT fill:#0b1220,stroke:#334155,color:#cbd5e1
 ```
 
 > **💡 Tip**
@@ -751,12 +773,34 @@ They help us ask better questions:
 A simple workflow helps keep service interpretation deliberate.
 
 ```mermaid
-flowchart TD
-    A[Review exposed services] --> B[Classify each service by role]
-    B --> C[Look for meaningful combinations]
-    C --> D[Form a host-role hypothesis]
-    D --> E[List direct observations vs inferences]
-    E --> F[Choose service-aware follow-up]
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryColor":"#0f172a","primaryTextColor":"#e2e8f0","primaryBorderColor":"#7dd3fc","lineColor":"#64748b","secondaryColor":"#111827","tertiaryColor":"#0b1220","clusterBkg":"#0b1220","clusterBorder":"#334155","fontSize":"14px"}}}%%
+flowchart LR
+    subgraph EVIDENCE["Evidence Pass"]
+        A["Review exposed services"]
+        B["Classify each service by role"]
+        C["Look for meaningful combinations"]
+    end
+    subgraph REASON["Reasoning Pass"]
+        D["Form a host-role hypothesis"]
+        E["List direct observations<br/>vs inferences"]
+    end
+    subgraph FOLLOWUP["Follow-Up Pass"]
+        F["Choose service-aware follow-up"]
+    end
+
+    A ==> B ==> C ==> D ==> E ==> F
+
+    classDef source fill:#142033,stroke:#60a5fa,color:#dbeafe,stroke-width:2px;
+    classDef analysis fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:2px;
+    classDef action fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+
+    class A,B,C source;
+    class D,E analysis;
+    class F action;
+
+    style EVIDENCE fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style REASON fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style FOLLOWUP fill:#0b1220,stroke:#334155,color:#cbd5e1
 ```
 
 ### Step 1: Review exposed services

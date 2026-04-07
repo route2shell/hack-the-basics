@@ -68,12 +68,34 @@
 ## Lesson Map
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryColor":"#0f172a","primaryTextColor":"#e2e8f0","primaryBorderColor":"#7dd3fc","lineColor":"#64748b","secondaryColor":"#111827","tertiaryColor":"#0b1220","clusterBkg":"#0b1220","clusterBorder":"#334155","fontSize":"14px"}}}%%
 flowchart TD
-    A[Service exposure identified] --> B[Choose a protocol-aware question]
-    B --> C[Gather low-friction service details]
-    C --> D[Capture names, shares, records, auth clues, and posture]
-    D --> E[Interpret what the service reveals about host role]
-    E --> F[Choose the next deliberate follow-up]
+    subgraph ENTRY["Entry Point"]
+        A["Service exposure identified"]
+    end
+    subgraph GATHER["Evidence Collection"]
+        B["Choose a protocol-aware question"]
+        C["Gather low-friction service details"]
+        D["Capture names, shares, records,<br/>auth clues, and posture"]
+    end
+    subgraph INTERPRET["Meaning And Routing"]
+        E["Interpret what the service reveals<br/>about host role"]
+        F["Choose the next deliberate follow-up"]
+    end
+
+    A ==> B ==> C ==> D ==> E ==> F
+
+    classDef source fill:#142033,stroke:#60a5fa,color:#dbeafe,stroke-width:2px;
+    classDef analysis fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:2px;
+    classDef action fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+
+    class A source;
+    class B,C,D analysis;
+    class E,F action;
+
+    style ENTRY fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style GATHER fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style INTERPRET fill:#0b1220,stroke:#334155,color:#cbd5e1
 ```
 
 > **💡 Tip**
@@ -230,11 +252,21 @@ One of the easiest mistakes in service work is running tools without knowing wha
 A stronger approach is:
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryColor":"#0f172a","primaryTextColor":"#e2e8f0","primaryBorderColor":"#7dd3fc","lineColor":"#64748b","secondaryColor":"#111827","tertiaryColor":"#0b1220","clusterBkg":"#0b1220","clusterBorder":"#334155","fontSize":"14px"}}}%%
 flowchart LR
-    A[Identify the service] --> B[Ask what it is designed to reveal]
-    B --> C[Choose a low-friction first check]
-    C --> D[Capture direct observations]
-    D --> E[Interpret host-role and follow-up relevance]
+    A["Identify the service"] ==> B["Ask what it is designed to reveal"]
+    B ==> C["Choose the cheapest useful first check"]
+    C ==> D["Capture direct observations"]
+    D ==> E["Interpret host-role and follow-up relevance"]
+    E ==> F["Route the next focused action"]
+
+    classDef source fill:#142033,stroke:#60a5fa,color:#dbeafe,stroke-width:2px;
+    classDef analysis fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:2px;
+    classDef action fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+
+    class A,B source;
+    class C,D,E analysis;
+    class F action;
 ```
 
 ### Questions worth asking first
@@ -479,11 +511,22 @@ It is often about:
 - mapping environment function through names
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryColor":"#0f172a","primaryTextColor":"#e2e8f0","primaryBorderColor":"#7dd3fc","lineColor":"#64748b","secondaryColor":"#111827","tertiaryColor":"#0b1220","clusterBkg":"#0b1220","clusterBorder":"#334155","fontSize":"14px"}}}%%
 flowchart TD
-    A[DNS service visible] --> B[Resolve known names]
-    B --> C[Query useful record types]
-    C --> D[Look for infrastructure naming]
-    D --> E[Correlate names with hosts and roles]
+    A["DNS service visible"] ==> B["Resolve known names"]
+    A ==> C["Query useful record types<br/>NS, MX, PTR, SRV"]
+    C -. if allowed .-> D["Test carefully for broader exposure"]
+    B --> E["Correlate names with hosts,<br/>mail, identity, and infrastructure"]
+    C --> E
+    D --> E
+
+    classDef source fill:#142033,stroke:#60a5fa,color:#dbeafe,stroke-width:2px;
+    classDef analysis fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:2px;
+    classDef action fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+
+    class A source;
+    class B,C,D analysis;
+    class E action;
 ```
 
 ---
@@ -742,12 +785,37 @@ Inference:
 A useful early workflow across these service families often looks like this:
 
 ```mermaid
-flowchart TD
-    A[Identify service from scan results] --> B[Choose low-friction manual or protocol-aware check]
-    B --> C[Capture banner, names, shares, records, or capabilities]
-    C --> D[Correlate results with host role]
-    D --> E[Record direct observations and inferences]
-    E --> F[Choose focused next-step enumeration]
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryColor":"#0f172a","primaryTextColor":"#e2e8f0","primaryBorderColor":"#7dd3fc","lineColor":"#64748b","secondaryColor":"#111827","tertiaryColor":"#0b1220","clusterBkg":"#0b1220","clusterBorder":"#334155","fontSize":"14px"}}}%%
+flowchart LR
+    subgraph START["Start"]
+        A["Identify service from scan results"]
+    end
+    subgraph GATHER["Gather"]
+        B["Choose low-friction manual<br/>or protocol-aware check"]
+        C["Capture banner, names, shares,<br/>records, or capabilities"]
+    end
+    subgraph INTERPRET["Interpret"]
+        D["Correlate results with host role"]
+        E["Record direct observations<br/>and inferences"]
+    end
+    subgraph ROUTE["Route"]
+        F["Choose focused next-step enumeration"]
+    end
+
+    A ==> B ==> C ==> D ==> E ==> F
+
+    classDef source fill:#142033,stroke:#60a5fa,color:#dbeafe,stroke-width:2px;
+    classDef analysis fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:2px;
+    classDef action fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+
+    class A source;
+    class B,C,D,E analysis;
+    class F action;
+
+    style START fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style GATHER fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style INTERPRET fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style ROUTE fill:#0b1220,stroke:#334155,color:#cbd5e1
 ```
 
 ### Step 1: Start with protocol identity

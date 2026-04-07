@@ -77,12 +77,34 @@
 ## Lesson Map
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryColor":"#0f172a","primaryTextColor":"#e2e8f0","primaryBorderColor":"#7dd3fc","lineColor":"#64748b","secondaryColor":"#111827","tertiaryColor":"#0b1220","clusterBkg":"#0b1220","clusterBorder":"#334155","fontSize":"14px"}}}%%
 flowchart TD
-    A[Service footprints collected] --> B[Assess host role and trust relevance]
-    B --> C[Decide what matters most]
-    C --> D[Route findings into the right next workflow]
-    D --> E[Document priorities and open questions]
-    E --> F[Move into the next module with a cleaner plan]
+    subgraph EVIDENCE["Evidence In Hand"]
+        A["Service footprints collected"]
+    end
+    subgraph TRIAGE["Triage The Meaning"]
+        B["Assess host role and trust relevance"]
+        C["Decide what matters most"]
+        D["Route findings into the right next workflow"]
+    end
+    subgraph OUTPUT["Operational Output"]
+        E["Document priorities and open questions"]
+        F["Move into the next module with a cleaner plan"]
+    end
+
+    A ==> B ==> C ==> D ==> E ==> F
+
+    classDef source fill:#142033,stroke:#60a5fa,color:#dbeafe,stroke-width:2px;
+    classDef analysis fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:2px;
+    classDef action fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+
+    class A source;
+    class B,C,D analysis;
+    class E,F action;
+
+    style EVIDENCE fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style TRIAGE fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style OUTPUT fill:#0b1220,stroke:#334155,color:#cbd5e1
 ```
 
 > **💡 Tip**
@@ -240,9 +262,31 @@ Service triage is not just "pick a service."
 It usually has to do three jobs well:
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryColor":"#0f172a","primaryTextColor":"#e2e8f0","primaryBorderColor":"#7dd3fc","lineColor":"#64748b","secondaryColor":"#111827","tertiaryColor":"#0b1220","clusterBkg":"#0b1220","clusterBorder":"#334155","fontSize":"14px"}}}%%
 flowchart LR
-    A[Sort] --> B[Prioritize]
-    B --> C[Route]
+    subgraph SORT["1. Sort"]
+        A["Classify by service role,<br/>host function, and trust context"]
+    end
+    subgraph PRIORITIZE["2. Prioritize"]
+        B["Score value, access,<br/>reachability, and risk"]
+    end
+    subgraph ROUTE["3. Route"]
+        C["Assign the correct next-step owner<br/>instead of chasing everything now"]
+    end
+
+    A ==> B ==> C
+
+    classDef source fill:#142033,stroke:#60a5fa,color:#dbeafe,stroke-width:2px;
+    classDef analysis fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:2px;
+    classDef action fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+
+    class A source;
+    class B analysis;
+    class C action;
+
+    style SORT fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style PRIORITIZE fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style ROUTE fill:#0b1220,stroke:#334155,color:#cbd5e1
 ```
 
 ### 1. Sort
@@ -314,14 +358,43 @@ If the answer to several is yes, priority usually rises.
 A simple triage model can help us stay disciplined.
 
 ```mermaid
-quadrantChart
-    title Service Follow-Up Priority
-    x-axis Low Reachability --> High Reachability
-    y-axis Low Value / Trust --> High Value / Trust
-    quadrant-1 Prioritize Soon
-    quadrant-2 Highest Priority
-    quadrant-3 Defer or Monitor
-    quadrant-4 Validate Then Promote
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryColor":"#0f172a","primaryTextColor":"#e2e8f0","primaryBorderColor":"#7dd3fc","lineColor":"#64748b","secondaryColor":"#111827","tertiaryColor":"#0b1220","clusterBkg":"#0b1220","clusterBorder":"#334155","fontSize":"14px"}}}%%
+flowchart TD
+    subgraph LENSES["Priority Lenses"]
+        A["Value / trust"]
+        B["Reachability"]
+        C["Clean next validation"]
+    end
+
+    D{"How strong is the combination?"}
+
+    E["Highest priority<br/>high value, high trust, reachable now"]
+    F["Validate then promote<br/>high value but unclear access or next step"]
+    G["Prioritize soon<br/>reachable and useful but lower trust or payoff"]
+    H["Defer or monitor<br/>low value and weak near-term leverage"]
+
+    A --> D
+    B --> D
+    C --> D
+
+    D -- strongest mix --> E
+    D -- valuable but partial --> F
+    D -- useful but not crown-jewel --> G
+    D -- weak signal --> H
+
+    classDef lens fill:#142033,stroke:#60a5fa,color:#dbeafe,stroke-width:2px;
+    classDef decision fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2.5px;
+    classDef highest fill:#7f1d1d,stroke:#fb7185,color:#fff1f2,stroke-width:3px;
+    classDef medium fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:2px;
+    classDef low fill:#1f2937,stroke:#94a3b8,color:#e2e8f0,stroke-width:1.5px,stroke-dasharray: 4 3;
+
+    class A,B,C lens;
+    class D decision;
+    class E highest;
+    class F,G medium;
+    class H low;
+
+    style LENSES fill:#0b1220,stroke:#334155,color:#cbd5e1
 ```
 
 In practice, we can think through four lenses:
@@ -697,12 +770,34 @@ That is much stronger than a flat note list.
 At the end of Module 03, a repeatable workflow should feel like this:
 
 ```mermaid
-flowchart TD
-    A[Collect service footprints] --> B[Classify by role]
-    B --> C[Score by value, access, trust, and reachability]
-    C --> D[Correlate names and cross-service patterns]
-    D --> E[Build prioritized queue]
-    E --> F[Route each finding into the right next workflow]
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryColor":"#0f172a","primaryTextColor":"#e2e8f0","primaryBorderColor":"#7dd3fc","lineColor":"#64748b","secondaryColor":"#111827","tertiaryColor":"#0b1220","clusterBkg":"#0b1220","clusterBorder":"#334155","fontSize":"14px"}}}%%
+flowchart LR
+    subgraph COLLECT["Collect"]
+        A["Collect service footprints"]
+    end
+    subgraph ANALYZE["Analyze"]
+        B["Classify by role"]
+        C["Score by value, access,<br/>trust, and reachability"]
+        D["Correlate names and cross-service patterns"]
+    end
+    subgraph DELIVER["Deliver"]
+        E["Build prioritized queue"]
+        F["Route each finding<br/>into the right next workflow"]
+    end
+
+    A ==> B ==> C ==> D ==> E ==> F
+
+    classDef source fill:#142033,stroke:#60a5fa,color:#dbeafe,stroke-width:2px;
+    classDef analysis fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:2px;
+    classDef action fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+
+    class A source;
+    class B,C,D analysis;
+    class E,F action;
+
+    style COLLECT fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style ANALYZE fill:#0b1220,stroke:#334155,color:#cbd5e1
+    style DELIVER fill:#0b1220,stroke:#334155,color:#cbd5e1
 ```
 
 ### Step 1: Classify
