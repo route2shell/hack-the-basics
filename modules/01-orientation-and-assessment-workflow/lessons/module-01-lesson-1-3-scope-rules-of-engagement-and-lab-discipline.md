@@ -12,20 +12,21 @@
 
 > **🎯 Lesson Objective**
 >
-> By the end of this lesson, we will understand how to work inside a legal lab with clear scope, safer operational habits, and a documented VMware-based workspace that a beginner can build step by step and reset cleanly for later labs.
+> By the end of this lesson, we will understand how to define scope inside a learner lab, how the course baseline is structured, what must be documented before technical work begins, and how to enter the lab build with a clean plan instead of improvisation.
 
 | **Course** | **Module** | **Lesson** | **Estimated Time** | **Difficulty** |
 |---|---|---|---:|---|
-| Hack the Basics | Module 01 — Orientation and Assessment Workflow | 1.3 — Scope, Rules of Engagement, and Lab Discipline | 45–65 min | Beginner |
+| Hack the Basics | Module 01 — Orientation and Assessment Workflow | 1.3 — Scope, Rules of Engagement, and Lab Discipline | 35–50 min | Beginner |
 
 | **Prerequisites** | **You will practice** | **Main outcome** |
 |---|---|---|
-| Lessons 1.1-1.2, willingness to work carefully in legal labs | Defining scope, documenting environment boundaries, and turning the VMware lab into a reusable workspace | A safer, clearer, step-by-step lab setup and evidence discipline before technical enumeration begins |
+| Lessons 1.1–1.2 and willingness to work carefully in legal labs | Defining the lab boundary, documenting the baseline, and planning the note artifacts that will survive into Module 02 | A clear operational plan for Lab 01 |
 
 > **🚨 Important**
 >
-> Technical curiosity does not override authorization.
-> This lesson treats scope and lab discipline as part of technical competence, not as legal fine print.
+> This lesson is about how to build and use the lab correctly.
+> The next document, [Lab 01](../labs/module-01-lab-01-build-your-assessment-workspace-and-note-system.md), is where the actual build happens.
+> Keep those roles separate: concept here, execution there.
 
 ---
 
@@ -35,37 +36,18 @@
 - [Why This Lesson Matters](#why-this-lesson-matters)
 - [Learning Objectives](#learning-objectives)
 - [The Practical Problem This Lesson Solves](#the-practical-problem-this-lesson-solves)
-- [What Scope Really Means in Practice](#what-scope-really-means-in-practice)
-- [Rules of Engagement for a Learner Lab](#rules-of-engagement-for-a-learner-lab)
-- [Why Lab Discipline Is a Technical Skill](#why-lab-discipline-is-a-technical-skill)
-- [The Course Lab Baseline in VMware Workstation Pro](#the-course-lab-baseline-in-vmware-workstation-pro)
-- [The Beginner Build Goal: Remove Friction Before the Real Work Starts](#the-beginner-build-goal-remove-friction-before-the-real-work-starts)
-- [Step-by-Step Lab Build Order](#step-by-step-lab-build-order)
-- [Step 1: Prepare the Host and the Install Media](#step-1-prepare-the-host-and-the-install-media)
-- [Step 2: Create the Naming Convention Before the Machines](#step-2-create-the-naming-convention-before-the-machines)
-- [Step 3: Define the Lab Networks First](#step-3-define-the-lab-networks-first)
-- [Step 4: Build the Kali VM](#step-4-build-the-kali-vm)
-- [Step 5: Build the Metasploit or Metasploitable Practice Target](#step-5-build-the-metasploit-or-metasploitable-practice-target)
-- [Step 6: Build the Configurable Linux VM](#step-6-build-the-configurable-linux-vm)
-- [Step 7: Build the Windows 11 VM](#step-7-build-the-windows-11-vm)
-- [Step 8: Create the Clean Baseline Snapshots](#step-8-create-the-clean-baseline-snapshots)
-- [Step 9: Define the Future Setup Script Pattern](#step-9-define-the-future-setup-script-pattern)
-- [VM Roles and Why They Exist](#vm-roles-and-why-they-exist)
-- [Kali as the Attack and Analysis Workstation](#kali-as-the-attack-and-analysis-workstation)
-- [The Metasploit or Metasploitable Practice Target](#the-metasploit-or-metasploitable-practice-target)
-- [The Configurable Linux VM](#the-configurable-linux-vm)
-- [The Windows-11 VM for Later Modules](#the-windows-11-vm-for-later-modules)
-- [Network Layout, Isolation, and Snapshot Discipline](#network-layout-isolation-and-snapshot-discipline)
-- [Evidence Handling and Note Hygiene](#evidence-handling-and-note-hygiene)
-- [What to Record Before You Touch a Target](#what-to-record-before-you-touch-a-target)
-- [Observation vs Inference vs Validation in Lab Setup](#observation-vs-inference-vs-validation-in-lab-setup)
-- [A Practical Lab-Readiness Workflow](#a-practical-lab-readiness-workflow)
-- [Walkthrough 1: Documenting the VMware Lab Correctly](#walkthrough-1-documenting-the-vmware-lab-correctly)
-- [Walkthrough 2: Writing a Usable Scope Note for a Practice Lab](#walkthrough-2-writing-a-usable-scope-note-for-a-practice-lab)
-- [Walkthrough 3: Planning for Resettable Lab Setup Scripts](#walkthrough-3-planning-for-resettable-lab-setup-scripts)
+- [What Scope and Lab Discipline Actually Mean Here](#what-scope-and-lab-discipline-actually-mean-here)
+- [The Core Mental Model](#the-core-mental-model)
+- [What Questions This Lesson Helps Us Answer](#what-questions-this-lesson-helps-us-answer)
+- [Major Components of the Module 01 Lab Plan](#major-components-of-the-module-01-lab-plan)
+- [What This Lesson Can and Cannot Tell Us](#what-this-lesson-can-and-cannot-tell-us)
+- [Where This Fits in a Real Workflow](#where-this-fits-in-a-real-workflow)
+- [Walkthrough: Turning the Course Baseline Into a Usable Scope and Lab Plan](#walkthrough-turning-the-course-baseline-into-a-usable-scope-and-lab-plan)
+- [Interpret the Plan Like an Analyst](#interpret-the-plan-like-an-analyst)
 - [Stop and Think](#stop-and-think)
 - [Common Mistakes and Misconceptions](#common-mistakes-and-misconceptions)
-- [Defender’s View](#defenders-view)
+- [Defender's View](#defenders-view)
+- [Beyond the Build Checklist](#beyond-the-build-checklist)
 - [Key Takeaways](#key-takeaways)
 - [Knowledge Check Quiz](#knowledge-check-quiz)
 - [Quiz Answers](#quiz-answers)
@@ -78,40 +60,46 @@
 ## Lesson Map
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryTextColor":"#e8f0ff","lineColor":"#7dd3fc","fontSize":"14px"}}}%%
 flowchart TD
-    A[Understand scope and ROE] --> B[Define the lab workspace]
-    B --> C[Document VM roles and network boundaries]
-    C --> D[Set note and evidence rules]
-    D --> E[Leave the lesson with a ready-to-use lab baseline]
+    A["Authorization boundary<br/>Define what is in and out of scope"] --> B["Real course baseline<br/>Understand the actual lab model"]
+    B --> C["Documented environment<br/>Assets, subnet, reset points"] --> D["Prepared artifacts<br/>Notes before touching targets"]
+    D --> E["Clean build entry<br/>Start Lab 01 with a real plan"]
+
+    classDef boundary fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:1.5px;
+    classDef baseline fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef artifact fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+    classDef handoff fill:#4c0519,stroke:#fb7185,color:#fff1f2,stroke-width:3px;
+
+    class A boundary;
+    class B,C baseline;
+    class D artifact;
+    class E handoff;
 ```
 
-> **💡 Tip**
+> **🧠 Mental Model**
 >
-> A disciplined lab makes later modules easier.
-> A messy lab makes later modules ambiguous, fragile, and harder to trust.
+> A strong learner lab is not just a set of machines.
+> It is a controlled environment with known assets, known boundaries, known reset points, and known places for evidence to live.
 
 ---
 
 ## Why This Lesson Matters
 
-Beginners often think scope and lab setup are secondary details.
+Many learners treat lab setup as separate from the real technical work.
 
-In practice, poor discipline here causes problems everywhere else:
+That usually leads to avoidable problems:
 
-- confusing IP and hostname records
-- uncertain VM roles
-- accidental cross-network mistakes
-- lost evidence
-- broken trust in later findings
+- unclear target roles
+- forgotten IPs and hostnames
+- missing scope notes
+- no snapshot discipline
+- weak handoffs into later modules
 
-This lesson matters because the learner’s workspace becomes part of the technical workflow.
+This lesson matters because the course lab is not just background infrastructure.
+It is the environment every later practical module will assume.
 
-If the workspace is unclear, then:
-
-- scan outputs become harder to interpret
-- screenshots lose context
-- service-role notes drift
-- later reporting quality drops
+If the environment is sloppy, later learning becomes slower, less trustworthy, and harder to repeat.
 
 ---
 
@@ -119,716 +107,250 @@ If the workspace is unclear, then:
 
 By the end of this lesson, we should be able to:
 
-- explain what scope and rules of engagement mean in a learner lab
-- describe the course’s VMware Workstation Pro lab baseline
-- document the roles of Kali, the Metasploit or Metasploitable practice target, the Linux VM, and the Windows 11 VM
-- explain why isolation, snapshots, and network notes matter
-- preserve stronger evidence and note hygiene
-- leave behind a usable scope note and lab inventory
+- explain what “scope” means even in a learner lab
+- describe the actual Module 01 course baseline accurately
+- distinguish the operator environment from the target environment
+- define what must be recorded before technical work begins
+- explain the course reset model and why snapshots matter
+- enter Lab 01 knowing what artifacts should exist when the build is done
 
 ---
 
 ## The Practical Problem This Lesson Solves
 
-Suppose a learner says:
+Suppose a learner opens the lab guide and starts building immediately.
 
-- “I have some VMs”
-- “I think one is Kali”
-- “I’m not sure which network they’re on”
-- “I can just remember the details later”
+They may be able to make machines boot, but still fail to answer:
 
-That may sound manageable in the moment.
-But once later modules begin, it becomes a serious problem.
+- what exactly is in scope?
+- which systems are targets versus operator infrastructure?
+- what subnet should remain stable throughout the course?
+- what notes should exist before scanning starts?
+- what state should later labs return to?
 
-The learner may no longer know:
-
-- which host was intended to be attacked
-- which VM was supposed to act as infrastructure versus a target
-- which IP was captured from which network
-- whether a change was made before or after a snapshot
-
-Lesson 1.3 fixes that by turning lab setup into a documented part of the assessment workflow.
+This lesson solves that problem by defining the lab model before the build starts.
 
 ---
 
-## What Scope Really Means in Practice
+## What Scope and Lab Discipline Actually Mean Here
 
-Scope means the boundaries of what you are authorized to touch and how.
+In this course, scope is not only a legal warning.
+It is a practical statement of what environment we are allowed to touch and why.
 
-In a learner lab, that still matters.
+For Module 01, scope means:
 
-### Scope includes
+- the learner is working in a legal practice environment only
+- the Windows host, Kali WSL, and VMware targets have distinct roles
+- the target subnet is intentionally isolated
+- later modules should inherit this baseline rather than improvising new infrastructure casually
 
-- which VMs are part of the lab
-- what network segments are allowed
-- what actions are acceptable in that environment
-- what systems are intentionally excluded
+Lab discipline means:
 
-### Why this matters even at home
-
-Because “it’s my machine” is not the same as “every connected thing is part of the lab.”
-
-The habit we want is:
-
-> always know what environment you are standing in before you act
+- naming things clearly
+- documenting the environment while it is still clean
+- treating snapshots and exports as part of repeatability
+- keeping observation, inference, and validation honest even during setup
 
 ---
 
-## Rules of Engagement for a Learner Lab
+## The Core Mental Model
 
-Rules of engagement in a training lab are often simpler than in a real engagement, but they still exist.
-
-Examples include:
-
-- keep intentionally vulnerable targets isolated
-- know which networks are host-only versus NAT
-- avoid blending lab and non-lab traffic carelessly
-- snapshot before major changes
-- record credentials and configuration changes in one place
-
-### Strong ROE thinking
-
-- “I know what this VM is for.”
-- “I know what network this action is happening on.”
-- “I know why this action belongs here.”
-
-### Weak ROE thinking
-
-- “I’ll figure out the topology later.”
-- “I think this IP is the right one.”
-- “It is probably fine because this is only practice.”
-
----
-
-## Why Lab Discipline Is a Technical Skill
-
-Lab discipline is not separate from technical skill.
-
-It improves:
-
-- output trustworthiness
-- repeatability
-- troubleshooting
-- later note quality
-- transition between modules
-
-### Example
-
-If you know:
-
-- which snapshot was taken before enabling a service
-- which network the VM lived on
-- what the VM’s role was supposed to be
-
-then later scan results become easier to interpret and repeat.
-
-That is a technical advantage, not just cleanliness.
-
----
-
-## The Course Lab Baseline in VMware Workstation Pro
-
-This course assumes a learner workspace built in VMware Workstation Pro.
-
-### Core lab components
-
-| Component | Role in the course |
-|---|---|
-| VMware Workstation Pro | host platform for managing the lab |
-| Kali VM | primary attack, analysis, and operator workstation |
-| Metasploit or Metasploitable-style target | intentionally vulnerable practice target |
-| Basic Linux VM | configurable Linux target for services and later Linux labs |
-| Windows 11 VM | Windows and future AD-adjacent learning platform |
-
-### Why this baseline works
-
-It gives the learner:
-
-- one clear attacker system
-- one intentionally vulnerable target for early repetition
-- one flexible Linux target for later service and privilege work
-- one Windows system that stays relevant deep into the course
-
----
-
-## The Beginner Build Goal: Remove Friction Before the Real Work Starts
-
-Because this is a beginner course, the lab should not feel like a separate project you have to survive before learning begins.
-
-The beginner build goal is simple:
-
-- create the machines in a clear order
-- give each one a durable name
-- put them on an intentional network
-- capture the clean baseline state
-- make later resets easy
-
-If we do that well, later hands-on modules become much easier to start.
-
-If we do it badly, every later lab inherits avoidable friction.
-
-> **📝 Note**
->
-> This lesson is deliberately trying to reduce setup pain.
-> The lab should become an enablement system for practice, not a recurring source of confusion.
-
----
-
-## Step-by-Step Lab Build Order
-
-Use this order unless you have a very good reason not to.
-
-1. Prepare the host and installation media.
-2. Choose the naming convention.
-3. Define the lab networks.
-4. Build Kali.
-5. Build the intentionally vulnerable practice target.
-6. Build the configurable Linux VM.
-7. Build the Windows 11 VM.
-8. Create clean baseline snapshots.
-9. Define the future setup-script and reset model.
-
-This order works because it gets:
-
-- the attacker machine ready early
-- the simplest practice target in place early
-- the longer-term Linux and Windows assets ready before later modules need them
-
----
-
-## Step 1: Prepare the Host and the Install Media
-
-Before opening the “new VM” wizard repeatedly, gather what you need.
-
-### Confirm the host baseline
-
-- VMware Workstation Pro is installed
-- you know where the VM files will live
-- you have enough disk and memory for the four-VM lab
-- you know whether any VM will temporarily need internet access during setup
-
-### Gather the install sources
-
-- Kali installer or prepared Kali image
-- a Metasploit or Metasploitable-style practice image
-- a Linux distribution image for the configurable Linux VM
-- Windows 11 installation media
-
-### Create one parent directory
-
-For example:
-
-```text
-hack-the-basics-lab/
-  vmware/
-  notes/
-  exports/
-```
-
-This sounds simple, but it reduces later sprawl immediately.
-
----
-
-## Step 2: Create the Naming Convention Before the Machines
-
-Do this before you create the first VM.
-
-Recommended names:
-
-- `KALI-LAB`
-- `META-TGT`
-- `LINUX-LAB`
-- `WIN11-LAB`
-
-### Why define this first
-
-Because beginners often create VMs named:
-
-- `kali-final`
-- `newlinux2`
-- `windows-test`
-
-Those names age badly and make later notes harder to trust.
-
-Good names should tell you:
-
-- what the machine is
-- what role it plays
-- whether it is long-lived or scenario-specific
-
----
-
-## Step 3: Define the Lab Networks First
-
-Before the VMs are all running, decide how they should connect.
-
-### Beginner-friendly default
-
-- one host-only network for the core lab
-- optional NAT only when a machine needs internet during setup or updates
-- no unnecessary bridged networking into unrelated networks
-
-### What to record
-
-- VMware network name
-- which VMs will share it
-- when NAT is temporary versus permanent
-- whether any VM should stay isolated from the others for a specific reason
-
-### Why this matters
-
-Later questions like:
-
-- “Why can Kali not see the target?”
-- “Why did this IP change?”
-- “Was this machine on the lab network or not?”
-
-often trace back to sloppy early network decisions.
-
----
-
-## Step 4: Build the Kali VM
-
-Build Kali first because it is the learner’s operator position for the rest of the course.
-
-### While creating it, record:
-
-- VM name
-- OS version
-- CPU and memory choices
-- disk location
-- network adapter choice
-- whether shared folders are enabled
-
-### After first boot, capture:
-
-- hostname
-- current IP and interface name
-- where notes and outputs will live
-- any first configuration changes
-
-### Why Kali comes first
-
-Because the whole lab is easier to reason about when the learner’s standing position is defined early.
-
----
-
-## Step 5: Build the Metasploit or Metasploitable Practice Target
-
-Build the intentionally vulnerable practice target second.
-
-### Record:
-
-- source image
-- hostname
-- expected role
-- known credentials if relevant
-- expected services or product surfaces
-- network placement
-
-### Why it comes second
-
-It gives the learner a quick, repeatable target for early scanning and later guided attack-path practice.
-
-This is one of the fastest ways to make the course feel hands-on early.
-
----
-
-## Step 6: Build the Configurable Linux VM
-
-Build the long-lived Linux lab machine next.
-
-### Record:
-
-- distribution and version
-- hostname
-- network placement
-- baseline users
-- what the machine is reserved for later
-
-### Why it matters now
-
-Even if later Linux-focused modules are far away, a clean baseline created early is much easier to preserve than one improvised later under time pressure.
-
----
-
-## Step 7: Build the Windows 11 VM
-
-Build the Windows 11 VM as part of the baseline rather than waiting until the Windows-heavy modules.
-
-### Record:
-
-- version/build
-- hostname
-- local accounts
-- network placement
-- current snapshot plan
-
-### Why build it now
-
-Because the course should feel like one growing lab, not a new environment every few modules.
-
-This also makes the future Windows and AD path feel planned from the start.
-
----
-
-## Step 8: Create the Clean Baseline Snapshots
-
-Once each machine is installed, named, and minimally documented, create the clean reset points.
-
-Recommended names:
-
-- `kali-clean`
-- `meta-clean`
-- `linux-clean`
-- `win11-clean`
-
-### The purpose of these snapshots
-
-- return to a known state
-- support repeated practice
-- make future lab setup scripts safe to re-run after a reset
-
-This is one of the most important beginner-friction reducers in the whole module.
-
-If the learner can reset cleanly, they are much more likely to practice repeatedly.
-
----
-
-## Step 9: Define the Future Setup Script Pattern
-
-The course should eventually support:
-
-- one initial configure script per baseline VM
-- later per-lab setup scripts that intentionally change a VM into a lesson-specific scenario
-
-### The intended model
-
-1. revert the VM to the clean baseline snapshot
-2. run the lab’s setup script
-3. complete the lab
-4. revert again when needed
-
-### Why define this now even before scripts exist
-
-Because it shapes how the learner thinks about the lab:
-
-- baseline state matters
-- repeatability matters
-- later hands-on modules should start quickly
-
-This is the bridge between Module 01 setup discipline and future “lab setup scripts.”
-
----
-
-## VM Roles and Why They Exist
-
-The lab is easier to use when each VM has a durable job.
+The course lab has two layers.
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryTextColor":"#e8f0ff","lineColor":"#7dd3fc","fontSize":"14px"}}}%%
 flowchart LR
-    A[Kali VM] --> B[Metasploit / Metasploitable practice target]
-    A --> C[Configurable Linux VM]
-    A --> D[Windows 11 VM]
+    OP["Operator Layer<br/>Windows 11 host plus Kali WSL"] ==> TG["Target Layer<br/>GOAD-Mini-DC01 plus GOAD-Mini-WS01 plus META-TGT"]
+    TG -. supports .-> NEXT["Later technical modules<br/>Enumeration, services, credentials, Windows, AD"]
+
+    classDef operator fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:2.5px;
+    classDef target fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:3px;
+    classDef future fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px,stroke-dasharray: 4 3;
+
+    class OP operator;
+    class TG target;
+    class NEXT future;
 ```
 
-### The core rule
+The operator layer is where the learner works.
+The target layer is what the learner enumerates, interprets, tests, and later attacks.
 
-Do not let VMs become generic blobs.
-If a VM exists, its job should be clear.
+That distinction matters because confusing those layers creates messy notes and sloppy reasoning.
 
----
+Examples:
 
-## Kali as the Attack and Analysis Workstation
-
-Kali is the learner’s primary operator position.
-
-That means it should hold:
-
-- tooling
-- notes access
-- saved outputs
-- the learner’s stable working environment
-
-### Good Kali habits
-
-- keep the machine stable
-- record network interfaces and IPs
-- know where outputs are saved
-- avoid mixing unrelated experiments into the same workspace blindly
-
-Kali is not just “the box with tools.”
-It is the place from which evidence is generated and preserved.
+- the Windows host is part of the learner workspace, not the attack target set
+- Kali WSL is the attack and analysis position, not a target to mutate casually
+- the VMware guests are the course targets and must have stable names and reset points
 
 ---
 
-## The Metasploit or Metasploitable Practice Target
+## What Questions This Lesson Helps Us Answer
 
-This target exists to give the learner an intentionally vulnerable practice system early in the course.
+This lesson should help the learner answer:
 
-### Why it matters
+- what assets belong in the course baseline?
+- what role does each asset play?
+- what network are the targets supposed to live on?
+- what should be saved in notes before Module 02 begins?
+- what should be reverted or preserved before later modules mutate the lab?
 
-- it supports repetition without guesswork
-- it provides a safe target for early service and attack-path practice
-- it lowers the risk of learners improvising against unclear targets
-
-### What to document
-
-- snapshot state
-- services expected to be exposed
-- default credentials if relevant
-- where it sits on the network
-
-> **📝 Note**
->
-> The exact vulnerable VM can vary, but its role should stay consistent: a deliberately unsafe practice target inside an isolated lab.
+Those are the questions that make the lab usable rather than merely assembled.
 
 ---
 
-## The Configurable Linux VM
+## Major Components of the Module 01 Lab Plan
 
-This VM is not only an early target.
-It is a flexible platform for later modules.
+### 1. Authorization boundary
 
-Examples of later use:
+The lab exists for legal learning only.
+That means the learner should be able to name:
 
-- enabling or disabling services
-- changing users and permissions
-- creating Linux privilege-escalation scenarios
-- hosting small web or service labs
+- what assets are in scope
+- what networks are in scope
+- what is excluded
 
-That means your notes should preserve:
+### 2. Stable baseline architecture
 
-- the distro
-- major service changes
-- user and role changes
-- snapshot history
+The course baseline is:
 
----
+- Windows 11 host
+- Kali WSL
+- VMware Workstation Pro
+- `GOAD-Mini-DC01`
+- `GOAD-Mini-WS01`
+- `META-TGT`
+- one host-only target subnet at `192.168.57.0/24`
 
-## The Windows-11 VM for Later Modules
+### 3. Asset-role clarity
 
-The Windows 11 VM matters even though its deeper use appears later.
+Each asset must have a durable job:
 
-Why build it now?
+| Asset | Role |
+|---|---|
+| Windows host | runs VMware and WSL |
+| Kali WSL | attack and analysis platform |
+| `GOAD-Mini-DC01` | AD and Windows infrastructure target |
+| `GOAD-Mini-WS01` | domain-joined workstation target |
+| `META-TGT` | intentionally vulnerable Linux target for early repetition |
 
-- it becomes part of the stable lab inventory
-- it supports future Windows and AD-related lessons
-- it helps the learner think long-term about the environment
+### 4. Reset model
 
-### Good notes to keep
+The course needs repeatability.
+That means:
 
-- Windows version and build
-- local accounts used in the lab
-- network placement
-- later configuration changes
-- snapshot names and reasons
+- clean VMware snapshots for the target VMs
+- one clean Kali WSL export
+- a documented snapshot map
+- a habit of reverting before later scenario changes
 
----
+### 5. Artifact model
 
-## Network Layout, Isolation, and Snapshot Discipline
+Before Module 02 starts, the learner should already have:
 
-The lab baseline should be intentionally designed, not improvised.
-
-### Useful questions
-
-- which VMs need host-only networking?
-- which VMs need NAT, if any?
-- what should stay isolated from the broader environment?
-- when should a fresh snapshot be taken?
-
-### Snapshot discipline
-
-Take a snapshot:
-
-- before enabling a major service
-- before installing risky software
-- before beginning a lab that changes the target state
-- before a lesson that may intentionally destabilize the VM
-
-### Why this matters
-
-Snapshots are not just convenience.
-They make the lab repeatable.
+- a scope note
+- a VM inventory
+- network notes
+- a snapshot map
+- one first analyst note using observation, inference, validation, and next-step language
 
 ---
 
-## Evidence Handling and Note Hygiene
+## What This Lesson Can and Cannot Tell Us
 
-Even the lab setup phase should leave behind usable notes.
+This lesson can tell us:
 
-At minimum, capture:
+- why the baseline exists
+- how the baseline is bounded
+- what the learner must document
+- what the lab outputs should look like
 
-- VM names
-- IPs and hostnames
-- network roles
-- credentials and access method notes
-- snapshots and state changes
-- where evidence and outputs will live
+This lesson cannot replace:
 
-Weak note:
+- the actual build steps in [Lab 01](../labs/module-01-lab-01-build-your-assessment-workspace-and-note-system.md)
+- the day-to-day GOAD operating commands in the [GOAD operations reference](../references/module-01-goad-lab-operations-reference.md)
+- the later enumeration logic in Module 02
+
+That boundary keeps the lesson focused.
+
+---
+
+## Where This Fits in a Real Workflow
+
+This lesson still belongs to the Orientation phase of the assessment lifecycle.
+
+At this stage, the real questions are:
+
+- what environment am I working in?
+- what assets and constraints define that environment?
+- what records should exist before I start gathering technical evidence?
+
+That is why this lesson appears before the build and before the final analyst-mindset lesson.
+It defines the environment that the learner will soon reason from.
+
+---
+
+## Walkthrough: Turning the Course Baseline Into a Usable Scope and Lab Plan
+
+Suppose we want to write the minimum strong planning note before opening the lab guide.
+
+A weak version would be:
 
 ```text
-Windows VM set up.
+Need to build the hacking lab.
 ```
 
-Strong note:
+A stronger version looks like this:
 
 ```text
-WIN11-LAB on host-only network VMnet2; snapshot baseline-win11-clean created before service changes; intended for later Windows, auth, and AD-adjacent modules.
-```
-
----
-
-## What to Record Before You Touch a Target
-
-Before later technical work begins, record:
-
-1. what VM or network you are using
-2. what its intended role is
-3. what is in scope
-4. what is excluded
-5. what you expect to learn from the next action
-
-This small discipline prevents a surprising amount of later confusion.
-
----
-
-## Observation vs Inference vs Validation in Lab Setup
-
-This distinction still applies, even here.
-
-### Observation
-
-- Kali and Linux VM are on the same host-only network
-- the Windows 11 VM has a clean baseline snapshot
-- the Metasploit or Metasploitable target exposes known services
-
-### Inference
-
-- the Kali VM should be able to reach the practice targets directly
-- later lessons will be easier to repeat because the baseline is documented
-
-### Validation
-
-- confirm connectivity later in Module 02
-- confirm the intended services are actually reachable from the Kali position
-
-This keeps even setup notes technically honest.
-
----
-
-## A Practical Lab-Readiness Workflow
-
-```mermaid
-flowchart TD
-    A[Prepare host and install media] --> B[Build and name the VMs]
-    B --> C[Document networks and roles]
-    C --> D[Create clean snapshots]
-    D --> E[Define future setup script pattern]
-    E --> F[Hand off cleanly into Module 02]
-```
-
-### Working sequence
-
-1. Prepare the host, files, and install media.
-2. Build each VM in a defined order.
-3. Assign each VM a durable role and record it.
-4. Record network placement and intended isolation.
-5. Create the notes workspace.
-6. Record the baseline state of each VM.
-7. Create the clean reset snapshots.
-8. Define where future setup scripts will live.
-9. Save the setup so scanning can begin without ambiguity later.
-
----
-
-## Walkthrough 1: Documenting the VMware Lab Correctly
-
-A weak inventory:
-
-```text
-Kali, Linux, Windows, metasploit box.
-```
-
-A stronger inventory:
-
-```text
-Kali-LAB:
-- role: attacker and analysis workstation
-- network: VMnet2 host-only
-
-META-TGT:
-- role: intentionally vulnerable practice target
-- network: VMnet2 host-only
-- snapshot: meta-clean
-
-LINUX-LAB:
-- role: configurable Linux service and privesc target
-- network: VMnet2 host-only
-- snapshot: linux-clean
-
-WIN11-LAB:
-- role: later Windows and AD-adjacent work
-- network: VMnet2 host-only
-- snapshot: win11-clean
-```
-
-The second version is much more useful when later modules begin.
-It also makes future setup script targeting much easier because the VM roles are explicit.
-
----
-
-## Walkthrough 2: Writing a Usable Scope Note for a Practice Lab
-
-Weak scope note:
-
-```text
-Testing local lab VMs.
-```
-
-Stronger scope note:
-
-```text
-Authorized lab scope:
-- Kali-LAB
-- META-TGT
-- LINUX-LAB
-- WIN11-LAB
+Authorized learner lab scope:
+- Windows 11 host running VMware and WSL2
+- Kali WSL attack platform
+- GOAD-Mini-DC01 at 192.168.57.10
+- GOAD-Mini-WS01 at 192.168.57.31
+- META-TGT at 192.168.57.25
+- host-only target subnet 192.168.57.0/24
 
 Purpose:
-- practice course workflows inside isolated VMware Workstation Pro lab
+- build the stable course baseline used by later modules
 
-Exclusions:
-- non-lab home devices
-- unrelated host networks
-- any external systems not intentionally attached to the course lab
+Required artifacts after build:
+- scope note
+- VM inventory
+- network notes
+- snapshot map
+- first analyst note
+
+Reset model:
+- VMware clean snapshots for each target VM
+- Kali WSL clean export
 ```
 
-That stronger note makes your environment defensible and easier to reason about later.
+That note is useful because it preserves:
+
+- the actual asset set
+- the actual boundary
+- the actual outputs the lab should leave behind
+
+That is what a self-learner needs before starting a long setup process.
 
 ---
 
-## Walkthrough 3: Planning for Resettable Lab Setup Scripts
+## Interpret the Plan Like an Analyst
 
-You do not need to implement scripts yet to benefit from the pattern.
+Do not read the lab plan passively.
+Read it as a sequence of claims that should later be validated.
 
-A strong planning note could look like:
+Example:
 
 ```text
-Baseline snapshots:
-- kali-clean
-- meta-clean
-- linux-clean
-- win11-clean
-
-Future automation model:
-- one baseline configure script per VM
-- one per-lab setup script when a module needs intentional state changes
-- always revert to clean snapshot before re-running a lab setup script
+Observation: the intended target subnet is 192.168.57.0/24 and the named targets are GOAD-Mini-DC01, GOAD-Mini-WS01, and META-TGT.
+Inference: later Module 02 scans should be launched from Kali WSL against that subnet and those specific target IPs.
+Validation: after Lab 01, confirm those hosts actually respond from the Kali position and record the results in the workspace.
 ```
 
-That note makes later automation much easier to design cleanly.
+That is the right standard.
+Even the build plan should already be shaping later evidence quality.
 
 ---
 
@@ -836,18 +358,20 @@ That note makes later automation much easier to design cleanly.
 
 > **🛠 Practice**
 >
-> Before reading on, write:
+> Before moving into Lab 01, write four short answers:
 >
-> 1. the role of each of your four core VMs
-> 2. one network or isolation decision that matters
-> 3. one snapshot you should probably create before moving to Module 02
+> 1. Which asset in this module is the attack platform?
+> 2. Which assets are the targets?
+> 3. What network should stay stable for later modules?
+> 4. Which note artifact will help Module 02 most immediately?
 
 <details>
 <summary><strong>Possible answer</strong></summary>
 
-1. Kali is the attack and analysis workstation; the Metasploit or Metasploitable VM is the intentionally vulnerable target; the Linux VM is the configurable Linux target; the Windows 11 VM is the later Windows and AD-adjacent platform.
-2. Keeping the core lab on a host-only network matters so intentionally vulnerable targets stay isolated.
-3. A clean baseline snapshot for each VM before technical changes begin is a strong starting point.
+1. Kali WSL is the attack and analysis platform.
+2. `GOAD-Mini-DC01`, `GOAD-Mini-WS01`, and `META-TGT` are the target systems.
+3. The host-only target subnet at `192.168.57.0/24` should stay stable.
+4. The VM inventory and network notes will help Module 02 immediately because scans need target names, IPs, and a clear network position.
 
 </details>
 
@@ -857,86 +381,102 @@ That note makes later automation much easier to design cleanly.
 
 ### Mistake 1: Treating scope as obvious
 
-If you do not write it down, it often stops being obvious later.
+If scope is not written down, it usually becomes ambiguous later.
 
-### Mistake 2: Letting VMs exist without durable roles
+### Mistake 2: Treating the host and targets as one blended environment
 
-That makes the lab harder to reuse and harder to interpret.
+That makes notes and next-step logic weaker immediately.
 
-### Mistake 3: Forgetting network context
+### Mistake 3: Thinking snapshots are optional polish
 
-Many later technical questions depend on where the VM is standing.
+Without reset points, the course baseline drifts fast.
 
-### Mistake 4: Skipping snapshots
+### Mistake 4: Building first and documenting later
 
-This makes practice brittle and harder to repeat.
+That usually produces incomplete inventories and weak evidence trails.
 
-### Mistake 5: Recording setup vaguely
+### Mistake 5: Thinking Module 01 is mostly theory
 
-Weak setup notes become weak evidence later.
+The real job of this module is to leave behind a working lab and reusable workspace.
 
 ---
 
-## Defender’s View
+## Defender's View
 
-This lesson also reinforces strong defensive habits:
+This lesson also reinforces habits that matter on the defensive side:
 
-- knowing what assets exist
-- knowing where they sit
-- documenting configuration intent
-- controlling segmentation and isolation
+- documenting asset roles
+- preserving known-good baselines
+- understanding network boundaries
+- recording what changed and when
 
-Good asset and environment hygiene is useful on both sides of security work.
+Good security work depends on controlled environments and trustworthy records on both sides of the field.
+
+---
+
+## Beyond the Build Checklist
+
+Even a perfectly built lab still requires judgment.
+
+The learner will still need to:
+
+- notice when later modules drift the environment
+- refresh snapshots when the baseline changes intentionally
+- record new credentials or service changes carefully
+- avoid promoting guesswork into “facts” too early
+
+That is why the final lesson in the module is still necessary.
+The lab gives us a working environment.
+The analyst mindset teaches us how to think inside it.
 
 ---
 
 ## Key Takeaways
 
-- Scope and rules of engagement are part of technical discipline.
-- The lab baseline should be documented in VMware Workstation Pro, not improvised mentally.
-- Kali, the Metasploit or Metasploitable target, the Linux VM, and the Windows 11 VM should each have a durable role.
-- Network placement, snapshots, and evidence notes matter before any later technical module begins.
-- Clean baseline snapshots and a future setup-script pattern reduce friction for later hands-on labs.
-- Strong setup notes make later enumeration clearer and more repeatable.
+- Scope in this course means a clearly bounded learner environment, not just a legal warning.
+- The real Module 01 baseline is Windows host + Kali WSL + VMware targets, not an improvised VM collection.
+- Asset roles, network notes, snapshots, and exports are part of the curriculum, not setup trivia.
+- Lab 01 should leave behind both infrastructure and artifacts.
+- A self-learner should enter the build knowing exactly what “done” looks like.
 
 ---
 
 ## Knowledge Check Quiz
 
-### 1. Why does scope still matter in a learner lab?
+### 1. What is the strongest summary of scope in Module 01?
 
-A. It does not matter at all
-B. Because the habit of knowing what is authorized and in bounds is part of professional technical work
-C. Because VMware blocks all mistakes automatically
-D. Because only reporting modules use scope
+A. Only a legal disclaimer with no workflow value  
+B. A clear definition of what assets, networks, and actions belong inside the learner lab  
+C. A list of tools to install  
+D. A replacement for note-taking
 
-### 2. What is the strongest reason to document VM roles clearly?
+### 2. Which environment is the learner's main attack position?
 
-A. It looks organized
-B. It prevents later ambiguity and makes the lab reusable across modules
-C. It replaces note-taking
-D. It makes snapshots unnecessary
+A. `GOAD-Mini-DC01`  
+B. `META-TGT`  
+C. Kali WSL  
+D. The Windows host-only adapter itself
 
-### 3. Which is the strongest setup note?
+### 3. Why does snapshot discipline belong in Module 01?
 
-A. “Windows VM installed.”
-B. “`WIN11-LAB` on host-only network; clean baseline snapshot created; reserved for later Windows and AD-adjacent modules.”
-C. “I think this is the Windows box.”
-D. “Will remember later.”
+A. Because later labs should inherit a repeatable baseline  
+B. Because snapshots replace evidence notes  
+C. Because only AD labs need them  
+D. Because the host system becomes a target later
 
-### 4. Why is snapshot discipline important?
+### 4. Which artifact helps Module 02 most directly?
 
-A. Because it helps make the lab repeatable and recoverable after changes
-B. Because it replaces scope
-C. Because only Linux needs it
-D. Because notes are unnecessary if snapshots exist
+A. A random screenshot folder with no context  
+B. A VM inventory and network notes that preserve names, roles, and IPs  
+C. A list of favorite tools  
+D. A vague “lab is ready” note
 
-### 5. What should be recorded before touching a target later?
+### 5. Why does Lesson 1.3 appear before the main lab build?
 
-A. only the tool name
-B. VM role, network position, scope, and the question being asked
-C. nothing, to stay fast
-D. only screenshots
+A. To teach the build commands themselves in full detail  
+B. To define the lab boundary, roles, and outputs before execution begins  
+C. Because the lab is optional afterward  
+D. Because Lesson 1.4 no longer matters
 
 ---
 
@@ -944,58 +484,66 @@ D. only screenshots
 
 ### 1. Correct answer: B
 
-Scope discipline is part of how serious technical work stays trustworthy.
+Scope here defines the actual learner environment and keeps later work bounded and understandable.
 
-### 2. Correct answer: B
+### 2. Correct answer: C
 
-Clear roles make later labs and notes easier to interpret and repeat.
+Kali WSL is the course attack and analysis platform.
 
-### 3. Correct answer: B
+### 3. Correct answer: A
 
-It captures role, network placement, and snapshot state clearly.
+Snapshots matter because later labs need a trusted place to return to.
 
-### 4. Correct answer: A
+### 4. Correct answer: B
 
-Snapshots make the lab more stable and reusable over time.
+Module 02 needs clear target nouns and network context immediately.
 
 ### 5. Correct answer: B
 
-Those details frame the meaning of the next action.
+The lesson exists to remove ambiguity before the learner starts building.
 
 ---
 
 ## Mini Practice Task
 
-Use the [notes workspace template](../references/module-01-notes-workspace-template.md) and create:
+Use the [notes workspace template](../references/module-01-notes-workspace-template.md) and draft:
 
-1. a VM inventory entry for each core VM
-2. one short scope note for the lab
-3. one snapshot naming rule you will use consistently
-4. one sentence defining how future per-lab setup scripts should use those snapshots
+1. one short scope note
+2. one initial VM inventory table header
+3. one line naming the target subnet
+4. one line describing the reset model you expect to use after the lab build
+
+Keep it short.
+The point is to enter the lab with structure already in place.
 
 ---
 
 ## Next Lesson Bridge
 
-With the lab defined and the scope boundaries clear, the final step in Module 01 is to teach the reasoning habit that later technical modules depend on:
+The next step is the center of the module:
+[Lab 01 - Build Your Assessment Workspace and Note System](../labs/module-01-lab-01-build-your-assessment-workspace-and-note-system.md).
 
-- asking better questions
-- separating observation from inference
-- deciding what should happen next
+The lab should now make sense:
 
-That is the job of [Lesson 1.4](module-01-lesson-1-4-hypothesis-driven-testing-and-the-analyst-mindset.md).
+- the boundary is clear
+- the baseline is clear
+- the outputs are clear
+- the reset model is clear
+
+Build the environment first.
+Then we will return for the final lesson and use that real environment to sharpen our analyst thinking.
 
 ---
 
 ## End-of-Lesson Recap
 
-Lesson 1.3 turned lab setup into a real part of the course workflow.
+Lesson 1.3 defined the lab contract before the build starts.
 
-We now know how to:
+We now know:
 
-- define scope in a learner lab
-- document the VMware-based workspace clearly
-- preserve VM roles, network placement, and snapshot history
-- treat setup notes as part of evidence quality
+- what is in scope
+- what the real course baseline contains
+- what artifacts the build must leave behind
+- why snapshots, exports, and note discipline matter now instead of later
 
-The final lesson of the module will build the analyst mindset needed to use that workspace well.
+That is the right place to start Lab 01.

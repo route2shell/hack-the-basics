@@ -10,48 +10,45 @@
 
 ---
 
-> **🧭 Use This For**
+> **Use This For**
 >
-> Fast reminders when you need to re-anchor yourself in the course workflow, the assessment lifecycle, scope discipline, workspace habits, and note quality before or during later technical modules.
+> Fast reminders when you need to re-anchor yourself in the course workflow, the lab baseline, the note artifacts, and the observation versus inference discipline that Module 02 will immediately rely on.
 
 | Best paired with | Main job | Assumption |
 |---|---|---|
-| Lesson 1.4 and the module lab | Help you work like an analyst instead of a tool collector | Legal lab use only |
+| Lesson 1.3, Lab 01, and Lesson 1.4 | Keep the learner aligned to the real Module 01 baseline and handoff | Legal lab use only |
 
 | Preserve these outputs | Avoid these habits |
 |---|---|
-| clear scope notes, lifecycle awareness, usable evidence, route-ready notes, lab hygiene | random tool hopping, vague notes, untracked screenshots, sloppy scope assumptions |
+| scope note, VM inventory, network notes, snapshot map, first analyst note | random tool hopping, vague environment memory, untracked changes, sloppy confidence |
 
 ---
 
 ## Table of Contents
 
-- [1. Quick Workflow](#1-quick-workflow)
+- [1. Module 01 Completion Flow](#1-module-01-completion-flow)
 - [2. Course Success Model](#2-course-success-model)
 - [3. Assessment Lifecycle](#3-assessment-lifecycle)
 - [4. Scope and Lab Discipline](#4-scope-and-lab-discipline)
-- [5. VMware Lab Baseline](#5-vmware-lab-baseline)
-- [6. Note-Taking Rules](#6-note-taking-rules)
+- [5. Baseline Lab Model](#5-baseline-lab-model)
+- [6. Required Module 01 Artifacts](#6-required-module-01-artifacts)
 - [7. Observation vs Inference vs Validation](#7-observation-vs-inference-vs-validation)
 - [8. Daily Analyst Questions](#8-daily-analyst-questions)
 - [9. Minimal Assessment Note Template](#9-minimal-assessment-note-template)
 
 ---
 
-## 1. Quick Workflow
+## 1. Module 01 Completion Flow
 
-> **🧠 Mental Model**
+> **Mental Model**
 >
-> orient -> define scope -> build workspace -> gather evidence -> reason carefully -> choose the next step
+> Orientation first, structure second, build third, reasoning fourth.
 
-### Fast operator rhythm
-
-1. Confirm what environment you are in and what is authorized.
-2. Identify the current assessment phase.
-3. Write the current question before you start the next action.
-4. Capture exact evidence, not vague impressions.
-5. Separate what you know from what you suspect.
-6. Leave behind notes that later modules can build on.
+1. Understand what the course is trying to teach.
+2. Understand the assessment lifecycle.
+3. Define scope, asset roles, and the reset model.
+4. Build the lab and workspace.
+5. Write notes like an analyst before Module 02 begins.
 
 ---
 
@@ -66,11 +63,11 @@ This course is designed to produce learners who can explain:
 
 ### Strong learning habits
 
-- read lessons in sequence on the first pass
-- keep a stable lab and note structure
-- repeat workflows, not only commands
-- prefer exact nouns over loose summaries
-- revisit references while practicing
+- read the lessons in sequence on the first pass
+- build the environment while documenting it
+- treat artifacts as working tools, not bonus files
+- use exact nouns in notes
+- return to the workflow question before chasing tools
 
 ---
 
@@ -78,18 +75,16 @@ This course is designed to produce learners who can explain:
 
 | Phase | Main question |
 |---|---|
-| Orientation | what is the environment, goal, and current constraint set? |
+| Orientation | what is the environment, what is authorized, and what constraints define the work? |
 | Surface mapping | what is visible and reachable from here? |
-| Service and app understanding | what do the visible services and apps probably mean? |
-| Validation and access | what can be tested or verified next? |
-| Post-access and expansion | what changed after we gained visibility or execution? |
-| Reporting and close-out | what evidence and findings are worth preserving? |
+| Service and app understanding | what do the visible services and routes probably mean? |
+| Validation and access | what deserves direct testing or authenticated interaction next? |
+| Post-access and expansion | what changed after access and what new paths now exist? |
+| Reporting and close-out | what evidence and findings must survive beyond the session? |
 
-### Quick lifecycle reminders
+### Quick reminder
 
-- every later module is one part of this larger flow
-- different phases ask different questions
-- strong notes should always name the current phase
+Module 01 mainly lives in Orientation, but it is building the exact baseline that Surface Mapping will use next.
 
 ---
 
@@ -98,71 +93,70 @@ This course is designed to produce learners who can explain:
 ### Non-negotiables
 
 - work only inside authorized lab environments
-- record scope and exclusions before testing
-- isolate the lab from anything unintended
-- snapshot important VMs before risky changes
-- document what you changed in the environment
-- do not let convenience erase evidence quality
+- record what assets are in scope
+- keep the targets on an isolated host-only subnet
+- document environment changes while they happen
+- snapshot clean target states before later drift begins
+- keep the operator environment separate from the targets mentally and in notes
 
 ### Scope prompts
 
-- what hosts or domains are in scope?
-- what hosts or domains are excluded?
-- what network are you standing on right now?
-- what action are you about to take, and why is it authorized here?
+- what assets are in scope?
+- what assets are excluded?
+- what network am I standing on right now?
+- what action am I about to take, and why is it authorized here?
 
 ---
 
-## 5. VMware Lab Baseline
+## 5. Baseline Lab Model
 
-### Host platform
+### Operator environment
 
-- VMware Workstation Pro
+- Windows 11 host
+- Kali WSL as the attack and analysis platform
+- VMware Workstation Pro for the target VMs
 
-### Core VM roles
+### Core target roles
 
-| VM | Role |
+| Asset | Role |
 |---|---|
-| Kali | primary attack and analysis workstation |
-| Metasploit / Metasploitable practice target | intentionally vulnerable target for early lessons and safe attack-path practice |
-| Basic Linux VM | configurable service and privilege-escalation target |
-| Windows 11 VM | later Windows, authentication, and AD-related learning path |
+| `GOAD-Mini-DC01` | domain controller target |
+| `GOAD-Mini-WS01` | domain-joined workstation target |
+| `META-TGT` | intentionally vulnerable Linux target |
 
-### Good lab habits
+### Stable target subnet
 
-- use clear VM names
-- keep a VM inventory table
-- decide which NICs are host-only, NAT, or isolated
-- snapshot before major configuration changes
-- note credentials, IPs, and network purpose in one place
+| Label | Subnet | Notes |
+|---|---|---|
+| `LAB-NET` | `192.168.57.0/24` | VMware host-only network for the target VMs |
+
+### Expected target IPs
+
+| Asset | Expected IP |
+|---|---|
+| `GOAD-Mini-DC01` | `192.168.57.10` |
+| `GOAD-Mini-WS01` | `192.168.57.31` |
+| `META-TGT` | `192.168.57.25` |
 
 ---
 
-## 6. Note-Taking Rules
+## 6. Required Module 01 Artifacts
 
-### Capture exact things
+Before Module 02 starts, these should exist:
 
-- IPs
-- hostnames
-- URLs
-- commands
-- output snippets
-- timestamps
-- screenshots with context
+- `scope.md`
+- `vm-inventory.md`
+- `network-notes.md`
+- `snapshot-map.md`
+- one first analyst note using observation, inference, validation, and next-step language
 
-### Avoid vague notes
+### Why these matter
 
-Weak:
-
-```text
-Interesting host. Maybe web app.
-```
-
-Strong:
-
-```text
-10.10.10.15 responds on 80/tcp and 443/tcp; cert name portal.lab.local; HTTP root redirects to /login.
-```
+- `scope.md` keeps the environment bounded
+- `vm-inventory.md` preserves names, roles, hostnames, and IPs
+- `network-notes.md` preserves the learner's network position
+- `snapshot-map.md` preserves the reset model
+- the analyst note turns setup into workflow instead of memory
 
 ---
 
@@ -171,25 +165,25 @@ Strong:
 | Category | Meaning |
 |---|---|
 | Observation | what you directly saw |
-| Inference | what you think that evidence suggests |
-| Validation | what still needs to be confirmed |
+| Inference | what you think that evidence probably suggests |
+| Validation | what still needs confirmation |
 
 ### Example
 
 ```text
-Observation: 443/tcp open; cert SAN includes admin.lab.local
-Inference: target may host an admin-related surface
-Validation: confirm whether admin.lab.local resolves and responds distinctly
+Observation: 192.168.57.10 answers on 53, 88, 135, 389, and 445 from Kali WSL.
+Inference: the host is likely the domain controller in the course baseline.
+Validation: confirm identity during later enumeration and preserve the result in host tracking notes.
 ```
 
 ---
 
 ## 8. Daily Analyst Questions
 
-- What phase of the assessment am I in?
+- What phase of the lifecycle am I in?
 - What question am I trying to answer right now?
-- What evidence will count as useful?
-- What is directly observed versus inferred?
+- What is directly observed versus only inferred?
+- What note artifact should this step update?
 - What should happen next if this succeeds?
 - What should happen next if this fails?
 
@@ -202,7 +196,7 @@ Assessment context:
 Current phase:
 Scope:
 Network position:
-Target or host:
+Target or asset:
 Question being asked:
 Action taken:
 Observation:
@@ -215,6 +209,6 @@ Next step:
 
 <div align="center">
 
-**The point of Module 01 is not to slow you down. It is to make every later action more deliberate and more reusable.**
+**Module 01 is complete when the learner can explain the baseline, trust the notes, and begin Module 02 without rebuilding context from memory.**
 
 </div>

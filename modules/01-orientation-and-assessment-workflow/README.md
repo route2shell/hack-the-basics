@@ -4,9 +4,9 @@
 
 **Phase I - Orientation and Surface Mapping**
 
-### Learn how this course works, how an assessment actually flows, and how to build a lab workspace that supports disciplined practice.
+### Learn how the course works, how the workflow fits together, and how to build the lab that the rest of the course will actually use.
 
-*This opening module establishes the learner mindset, assessment lifecycle, scope and safety rules, note-taking habits, and a guided VMware lab operation with topology, snapshots, and a Module 02-ready note system that the rest of the course will assume from the start.*
+*This module introduces the course, establishes the assessment lifecycle, teaches scope and lab discipline, walks the learner through building the real course workspace, and finishes by turning that environment into an analyst-ready starting point for Module 02.*
 
 </div>
 
@@ -14,43 +14,36 @@
 
 > **🧭 Start Here**
 >
-> If you are new to `Hack the Basics`, begin with [Lesson 1.1](lessons/module-01-lesson-1-1-what-hack-the-basics-is-and-how-to-learn-through-it.md), then work through the assessment lifecycle, lab discipline, and analyst mindset in order. Keep the [reference cheat sheet](references/module-01-reference-cheat-sheet.md) and [notes workspace template](references/module-01-notes-workspace-template.md) open while you build your lab.
+> Work through this module in this order:
+> [Lesson 1.1](lessons/module-01-lesson-1-1-what-hack-the-basics-is-and-how-to-learn-through-it.md) ->
+> [Lesson 1.2](lessons/module-01-lesson-1-2-the-assessment-lifecycle-from-first-contact-to-final-deliverable.md) ->
+> [Lesson 1.3](lessons/module-01-lesson-1-3-scope-rules-of-engagement-and-lab-discipline.md) ->
+> [Lab 01](labs/module-01-lab-01-build-your-assessment-workspace-and-note-system.md) ->
+> [Lesson 1.4](lessons/module-01-lesson-1-4-hypothesis-driven-testing-and-the-analyst-mindset.md).
+>
+> That order is intentional. The lab is the center of the module, not optional setup.
 
 ## Module Overview
 
-Module 01 is the operating-system layer for the rest of the course.
+Module 01 is where `Hack the Basics` stops being an abstract course idea and becomes a usable working environment.
 
-Before the learner starts scanning, fingerprinting, intercepting traffic, or attacking services, they need a strong answer to a different set of questions:
+The visible topics are:
 
-- what kind of course is this really?
-- how should a self-paced learner move through it?
-- what does an assessment workflow look like from beginning to end?
-- what belongs inside legal scope and lab discipline?
-- what kind of workspace and note system supports reliable technical work?
-- how should a beginner actually build the lab so later hands-on practice starts quickly?
+- what this course is trying to teach
+- how a realistic assessment workflow is structured
+- what scope, authorization, and lab discipline mean in practice
+- how to think like an analyst before the first real scan
 
-That is the role of Module 01.
+But the real module-level deliverable is more concrete:
 
-It gives the learner:
+- a Windows 11 host prepared for the course
+- Kali WSL as the attack and analysis platform
+- a VMware host-only target network
+- `GOAD-Mini-DC01`, `GOAD-Mini-WS01`, and `META-TGT`
+- a reusable assessment note workspace
+- clean reset points that later modules can inherit without guesswork
 
-- the course-wide workflow vocabulary
-- the assessment lifecycle model used across all later modules
-- the scope, safety, and evidence habits the repo expects
-- a concrete lab workspace built in VMware Workstation Pro
-- a documented VM naming, topology, and snapshot baseline
-- a resettable baseline model for future per-lab setup scripts
-- a clear Module 02 handoff for scan storage, host tracking, and evidence handling
-
-The intended lab baseline for this course is:
-
-- VMware Workstation Pro as the host platform
-- a Kali VM as the attack machine
-- a Metasploit or Metasploitable-style practice target VM
-- a configurable Linux VM for later lessons and labs
-- a Windows 11 VM that carries forward into later Windows and AD work
-
-This module makes that environment part of the learning workflow rather than a separate setup chore.
-The goal is to remove setup friction early so later modules can stay focused on practice instead of rebuilding the lab mentally every time.
+By the end of Module 01, the learner should be operationally ready for Module 02.
 
 ---
 
@@ -61,67 +54,99 @@ The goal is to remove setup friction early so later modules can stay focused on 
 | **Series** | Hack the Basics |
 | **Phase** | Phase I - Orientation and Surface Mapping |
 | **Module** | 01 - Orientation and Assessment Workflow |
-| **Role** | Establish learner mindset, workflow, scope discipline, evidence habits, and workspace design |
+| **Role** | Turn the learner from “new to the repo” into “ready to work from a stable lab and note system” |
 | **Level** | Beginner |
 | **Format** | Self-paced, Markdown-first, GitHub-native |
 
-| Builds On | Prepares Next | Core Artifacts |
+| Builds On | Prepares Next | Core Outputs |
 |---|---|---|
-| Basic computing, terminal comfort, and willingness to work carefully in legal labs | Module 02 network enumeration, Module 03 service reasoning, and every later workflow decision in the course | lifecycle map, notes workspace template, guided workspace lab, field reference |
+| Basic computing, terminal comfort, and willingness to work carefully in legal labs | Module 02 network enumeration, Module 03 service reasoning, and every later workflow decision in the course | lifecycle map, scope note, VM inventory, network notes, snapshot map, guided lab baseline, field reference |
 
 ---
 
 ## Why This Module Exists
 
-Most early-stage offensive security training fails before the first real technical lesson.
+Most early-stage offensive security learning breaks down before the first important technical result.
 
-It either:
+Common failure patterns look like this:
 
-- throws the learner into tooling without a workflow
-- or assumes the learner already knows how to structure lab work, notes, evidence, and scope decisions
+- the learner starts with tools before they understand the workflow
+- the lab is assembled loosely and never documented cleanly
+- notes stay vague until later modules need exact evidence
+- the environment changes constantly because no stable reset model exists
 
-That creates predictable problems:
+Module 01 exists to prevent that.
 
-- random practice
-- bad note hygiene
-- weak follow-up logic
-- poor scope discipline
-- shallow confidence built on command copying
+It gives the learner:
 
-Module 01 is designed to prevent that.
+- a mental model for the whole course
+- a workflow model for the whole assessment
+- a bounded lab model for the whole repo
+- a note and artifact model for the whole learning path
 
-It teaches the learner how to work through the rest of the course like an analyst:
+That is why this module belongs first.
 
-- understanding what phase they are in
-- knowing what the current step is trying to prove
-- building notes and lab habits that survive beyond one box or one weekend
+---
+
+## The Real Deliverable
+
+The main success condition for Module 01 is not “read four lessons.”
+
+The main success condition is:
+
+> the learner can sit down at a stable workspace, explain what the environment contains, know what is in scope, know where evidence belongs, and begin Module 02 without rebuilding context from memory
+
+The intended course lab baseline is:
+
+- Windows 11 host platform
+- Kali WSL as the attack machine
+- VMware Workstation Pro for the target VMs
+- one host-only target segment at `192.168.57.0/24`
+- `GOAD-Mini-DC01` at `192.168.57.10`
+- `GOAD-Mini-WS01` at `192.168.57.31`
+- `META-TGT` at `192.168.57.25`
+- clean baseline snapshots plus a Kali WSL export
+
+If those pieces are not clear, later modules inherit friction immediately.
 
 ---
 
 ## Module Position in the Course
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryTextColor":"#e8f0ff","lineColor":"#7dd3fc","fontSize":"14px"}}}%%
 flowchart LR
-    A[Course README<br/>Promise and roadmap] --> B[Module 01<br/>Orientation and Assessment Workflow]
-    B --> C[Module 02<br/>Network Enumeration with Nmap]
-    B --> D[All Later Modules<br/>Evidence, workflow, and scope discipline]
+    ENTRY["Course Entry<br/>README and roadmap"] --> M01["Module 01<br/>Orientation and lab foundation"]
+    M01 ==> M02["Module 02<br/>First real surface mapping"]
+    M01 -.-> REST["All later modules<br/>Evidence, workflow, and lab discipline"]
+
+    classDef context fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:1.5px;
+    classDef focus fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:3px;
+    classDef next fill:#19324d,stroke:#60a5fa,color:#eff6ff,stroke-width:2.5px;
+    classDef support fill:#1f2937,stroke:#94a3b8,color:#e2e8f0,stroke-width:1.5px,stroke-dasharray: 4 3;
+
+    class ENTRY context;
+    class M01 focus;
+    class M02 next;
+    class REST support;
 ```
 
 > **🧠 Mental Model**
 >
-> Module 01 does not teach the first tool.
-> It teaches the learner how to use the whole course and how to reason about technical work before tools take over.
+> Module 01 does not delay the technical work.
+> It creates the environment and habits that make the technical work usable.
 
 ---
 
-## Lesson Path
+## Recommended Learner Flow
 
-| Lesson | Role in the Journey | What the learner leaves with |
+| Step | Why it comes here | What the learner leaves with |
 |---|---|---|
-| [Lesson 1.1](lessons/module-01-lesson-1-1-what-hack-the-basics-is-and-how-to-learn-through-it.md) | Explains what the course is, how to use it, and what learner success looks like | A realistic, workflow-first way to move through the course |
-| [Lesson 1.2](lessons/module-01-lesson-1-2-the-assessment-lifecycle-from-first-contact-to-final-deliverable.md) | Establishes the assessment lifecycle as the course-wide operating model | A durable framework for understanding where any task fits |
-| [Lesson 1.3](lessons/module-01-lesson-1-3-scope-rules-of-engagement-and-lab-discipline.md) | Teaches authorization, scope, safety, evidence handling, and lab hygiene | A safer and more professional way to build and use the lab |
-| [Lesson 1.4](lessons/module-01-lesson-1-4-hypothesis-driven-testing-and-the-analyst-mindset.md) | Teaches evidence-based reasoning, note quality, and next-step decision discipline | The analyst mindset needed before enumeration begins |
+| [Lesson 1.1](lessons/module-01-lesson-1-1-what-hack-the-basics-is-and-how-to-learn-through-it.md) | Sets expectations before the learner starts treating the repo like disconnected notes | A realistic model for how to use the course |
+| [Lesson 1.2](lessons/module-01-lesson-1-2-the-assessment-lifecycle-from-first-contact-to-final-deliverable.md) | Gives the learner the course-wide workflow spine before specific lab details | A phase-aware model for where later tasks fit |
+| [Lesson 1.3](lessons/module-01-lesson-1-3-scope-rules-of-engagement-and-lab-discipline.md) | Defines the lab boundary, asset roles, reset logic, and what must be documented before building | A safe and deliberate lab plan |
+| [Lab 01](labs/module-01-lab-01-build-your-assessment-workspace-and-note-system.md) | Turns the module into a real environment with artifacts and reset points | The actual course lab plus a Module 02-ready workspace |
+| [Lesson 1.4](lessons/module-01-lesson-1-4-hypothesis-driven-testing-and-the-analyst-mindset.md) | Teaches the reasoning habit after the learner has real environment notes and validation data to think about | Stronger observation, inference, validation, and next-step discipline |
 
 ---
 
@@ -129,10 +154,25 @@ flowchart LR
 
 | Artifact | Purpose | When to use it |
 |---|---|---|
-| [Reference Cheat Sheet](references/module-01-reference-cheat-sheet.md) | Fast reminder of lifecycle stages, scope discipline, note prompts, and analyst habits | During the whole module and later review |
-| [Assessment Lifecycle Map](references/module-01-assessment-lifecycle-map.md) | Visual map of how the course models assessment work from first contact to reporting | During Lesson 1.2 and whenever later modules feel disconnected |
-| [Notes Workspace Template](references/module-01-notes-workspace-template.md) | Starter structure for the VMware lab, VM inventory, note folders, evidence capture, and future setup-script planning | During Lesson 1.3 and the module lab |
-| [Module Lab](labs/module-01-lab-01-build-your-assessment-workspace-and-note-system.md) | Turns the module into a guided operation with explicit VM roles, topology, snapshots, reset planning, and a Module 02-ready workspace handoff | After Lesson 1.4 |
+| [Reference Cheat Sheet](references/module-01-reference-cheat-sheet.md) | Fast reminder of workflow, lifecycle, scope discipline, and analyst habits | During the whole module and later review |
+| [Assessment Lifecycle Map](references/module-01-assessment-lifecycle-map.md) | Quick visual reminder of how the course models assessment work | During Lesson 1.2 and later orientation resets |
+| [Notes Workspace Template](references/module-01-notes-workspace-template.md) | Starter structure for admin notes, evidence folders, target tracking, and lab-automation planning | During Lesson 1.3 and Lab 01 |
+| [GOAD Lab Operations Reference](references/module-01-goad-lab-operations-reference.md) | Day-to-day operator reference for starting, stopping, validating, and recovering the GOAD portion of the lab after the build | After Lab 01 and in later Windows and AD modules |
+
+---
+
+## Module Outputs That Must Exist Before Module 02
+
+Treat the following as required, not nice-to-have:
+
+- a working course lab that Kali WSL can reach
+- a written scope note
+- a VM inventory with names, roles, IPs, and snapshot state
+- network notes that preserve the host-only baseline
+- a snapshot map for the target VMs
+- one first analyst note that uses observation, inference, validation, and next-step language
+
+If those outputs do not exist, the Module 02 handoff is weak.
 
 ---
 
@@ -140,34 +180,33 @@ flowchart LR
 
 ### If this is your first pass
 
-1. Read every lesson in order before you rush into Module 02.
-2. Treat the lifecycle and scope sections as operational requirements, not soft introductions.
-3. Build the workspace as you go, not after the fact.
-4. Start using observation, inference, and validation language immediately in your notes.
+1. Work in the documented order.
+2. Read Lesson 1.3 before touching the lab build.
+3. Build the lab while creating the note artifacts, not afterward.
+4. Do not skip Lesson 1.4 just because the lab is already built.
 
 ### If you are returning as a reference
 
 - start with the [reference cheat sheet](references/module-01-reference-cheat-sheet.md)
-- revisit Lesson 1.2 when later modules feel disconnected from the overall workflow
-- revisit Lesson 1.3 whenever you are rebuilding the lab or need to check scope and evidence habits
-- revisit Lesson 1.4 whenever you catch yourself tool-hopping without a clear next question
+- revisit Lesson 1.2 if later modules feel disconnected from the larger workflow
+- revisit Lesson 1.3 before rebuilding or changing the lab baseline
+- open the [GOAD lab operations reference](references/module-01-goad-lab-operations-reference.md) for day-to-day use after the build is complete
 
 ---
 
-## What Makes This Module Different
+## How This Sets Up Module 02
 
-Many introductory security modules are either motivational filler or legal boilerplate.
+Module 02 assumes the learner can already answer:
 
-This module aims for something more useful:
+- what assets are in scope right now?
+- what network position am I scanning from?
+- where should scan output be saved?
+- where will host tracking and service notes live?
+- what clean state should I revert to if the lab drifts?
 
-- a real course-usage guide instead of generic welcome text
-- a workflow model that later lessons actually reuse
-- lab discipline that connects to the learner’s actual VM setup
-- a guided lab operation with topology, checkpoints, and reset logic instead of “figure this part out yourself”
-- note-taking and evidence habits that make future modules stronger
+Module 01 is where those answers are created.
 
-The goal is not to delay the technical content.
-The goal is to make the technical content work better from the first real scan onward.
+That is why the module is foundational rather than introductory filler.
 
 ---
 
@@ -181,6 +220,6 @@ The goal is to make the technical content work better from the first real scan o
 
 <div align="center">
 
-**Use Module 01 to build the habits the whole course depends on: clear scope, a stable lab, usable notes, and disciplined next-step thinking.**
+**Module 01 is complete when the learner has both context and infrastructure: a clear workflow, a stable lab, usable notes, and a clean handoff into real surface mapping.**
 
 </div>

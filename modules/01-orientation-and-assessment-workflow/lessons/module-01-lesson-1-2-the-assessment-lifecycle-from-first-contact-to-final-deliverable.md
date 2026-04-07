@@ -65,10 +65,19 @@
 ## Lesson Map
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryTextColor":"#e8f0ff","lineColor":"#7dd3fc","fontSize":"14px"}}}%%
 flowchart TD
-    A[Understand the lifecycle stages] --> B[Map later modules onto them]
-    B --> C[Understand expected outputs by stage]
-    C --> D[Use the lifecycle to orient your current work]
+    A["Lifecycle stages<br/>Understand the full assessment arc"] --> B["Module mapping<br/>Place course modules on that arc"]
+    B --> C["Stage outputs<br/>Know what each phase should leave behind"]
+    C --> D["Working orientation<br/>Use the lifecycle to guide current tasks"]
+
+    classDef foundation fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:1.5px;
+    classDef focus fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef outcome fill:#4c0519,stroke:#fb7185,color:#fff1f2,stroke-width:3px;
+
+    class A,B foundation;
+    class C focus;
+    class D outcome;
 ```
 
 > **💡 Tip**
@@ -193,12 +202,27 @@ The lifecycle helps you decide:
 ## The Six Lifecycle Stages in This Course
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryTextColor":"#e8f0ff","lineColor":"#7dd3fc","fontSize":"14px"}}}%%
 flowchart LR
-    A[1. Orientation] --> B[2. Surface Mapping]
-    B --> C[3. Service and Application Understanding]
-    C --> D[4. Validation and Access]
-    D --> E[5. Post-Access and Expansion]
-    E --> F[6. Reporting and Close-Out]
+    O["1. Orientation<br/>Environment, scope, constraints"] --> S["2. Surface Mapping<br/>What is visible and reachable?"]
+    S --> U["3. Service and App Understanding<br/>What does the exposed surface mean?"]
+    U --> V["4. Validation and Access<br/>What deserves direct testing next?"]
+    V --> P["5. Post-Access and Expansion<br/>What changed after access?"]
+    P --> R["6. Reporting and Close-Out<br/>What evidence must survive?"]
+
+    classDef orientation fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:3px;
+    classDef mapping fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2.5px;
+    classDef understanding fill:#312e81,stroke:#a78bfa,color:#f5f3ff,stroke-width:2.5px;
+    classDef validation fill:#78350f,stroke:#fbbf24,color:#fffbeb,stroke-width:2.5px;
+    classDef postaccess fill:#4c0519,stroke:#fb7185,color:#fff1f2,stroke-width:2.5px;
+    classDef reporting fill:#334155,stroke:#cbd5e1,color:#f8fafc,stroke-width:2.5px;
+
+    class O orientation;
+    class S mapping;
+    class U understanding;
+    class V validation;
+    class P postaccess;
+    class R reporting;
 ```
 
 Each stage asks a different question.

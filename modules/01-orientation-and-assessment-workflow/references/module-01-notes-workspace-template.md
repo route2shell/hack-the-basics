@@ -2,28 +2,31 @@
 
 ---
 
-> **📝 Template Purpose**
+> **Template Purpose**
 >
-> Use this template to build both the assessment note workspace and the VMware lab inventory that the course will rely on from Module 01 onward. It also reserves a place for the future baseline configure scripts and per-lab setup scripts the course can grow into later.
+> Use this template to build the assessment note workspace for the course baseline: one Windows 11 host, one Kali WSL attack platform, and three target VMs.
 
-## VMware Lab Inventory
+## Lab Asset Inventory
 
-| VM | Primary role | Suggested notes to preserve |
+| Asset | Primary role | Suggested notes to preserve |
 |---|---|---|
-| Kali | attack and analysis workstation | IPs, interface setup, tool changes, shared folders |
-| Metasploit / Metasploitable practice target | intentionally vulnerable early target | snapshot state, services enabled, creds, network placement |
-| Basic Linux VM | configurable Linux service and privesc target | distro, users, service roles, later lab changes |
-| Windows 11 VM | later Windows, auth, and AD-adjacent work | local users, network role, snapshot history |
+| Windows 11 host | operator platform running WSL2 and VMware | hostname, storage paths, VMware version, WSL notes |
+| Kali WSL | attack and analysis platform | output paths, core tools, package changes, aliases, shared locations |
+| `GOAD-Mini-DC01` | domain controller target | domain facts, IP, snapshot state, service observations |
+| `GOAD-Mini-WS01` | domain-joined workstation target | IP, local/domain context notes, snapshot state |
+| `META-TGT` | intentionally vulnerable Linux target | credentials, IP, exposed services, snapshot state |
 
-### Lab topology prompts
+### Topology prompts
 
 ```text
+Windows host name:
+WSL distro name:
 VMware Workstation Pro version:
 Host-only network(s):
-NAT network(s):
-Isolated segments:
+Target subnet:
 Snapshot naming convention:
-Shared-folder policy:
+Target NAT policy:
+Where scan output will be saved:
 Credential storage approach:
 ```
 
@@ -38,9 +41,11 @@ assessment-workspace/
     rules-of-engagement.md
     vm-inventory.md
     network-notes.md
+    goad-instances.md
   01-target-notes/
     target-summary.md
     host-tracking.md
+    ad-host-tracking.md
   02-evidence/
     scans/
     screenshots/
@@ -56,6 +61,8 @@ assessment-workspace/
     initial-config/
     per-lab/
     snapshot-map.md
+    goad-install-notes.md
+    kali-wsl-baseline.md
 ```
 
 ---
@@ -66,17 +73,17 @@ assessment-workspace/
 
 | Area | Purpose |
 |---|---|
-| `initial-config/` | baseline scripts that prepare a clean VM for the course |
-| `per-lab/` | later module or lab scripts that intentionally configure a VM into a specific scenario |
-| `snapshot-map.md` | records which clean snapshot to revert to before re-running a setup script |
+| `initial-config/` | baseline scripts or notes that prepare a clean target state |
+| `per-lab/` | later module or lab scripts that intentionally configure a target into a specific scenario |
+| `snapshot-map.md` | records which clean snapshot to revert to before re-running a scenario |
+| `kali-wsl-baseline.md` | records the trusted attack-platform baseline outside the VMware snapshot model |
 
 ### Planning prompts
 
 ```text
-Kali baseline script name:
-Practice target baseline script name:
-Linux baseline script name:
-Windows baseline script name:
+Kali WSL baseline note:
+GOAD baseline snapshot names:
+Metasploitable2 baseline snapshot name:
 Per-lab script naming rule:
 Which snapshot should each script assume?
 Reset workflow before a new lab:
@@ -90,7 +97,7 @@ Reset workflow before a new lab:
 Date:
 Current module / lesson:
 Assessment phase:
-Environment or VM in use:
+Environment or asset in use:
 Question being answered:
 Commands or actions:
 Observation:
@@ -103,4 +110,4 @@ Next step:
 
 ## Design Notes
 
-This template is meant to be practical rather than decorative. It should support the whole course, not just the first lab.
+This template is meant to support the whole course, not just the first build.

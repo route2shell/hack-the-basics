@@ -2,9 +2,7 @@
 
 # Hack the Basics
 
-### Build offensive security fundamentals in the right order.
-
-*A premium open-source, self-paced course designed to teach offensive security as a progression of reasoning, evidence, and workflow, not a pile of disconnected tools.*
+*An open-source, self-paced course designed to teach offensive security as a progression of reasoning, evidence, and workflow, not a pile of disconnected tools.*
 
 </div>
 

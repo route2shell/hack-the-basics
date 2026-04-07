@@ -12,20 +12,21 @@
 
 > **🎯 Lesson Objective**
 >
-> By the end of this lesson, we will understand how to move from curiosity and output collection into a more disciplined analyst mindset built around questions, evidence, inference, validation, and next-step decisions.
+> By the end of this lesson, we will understand how to move from environment setup into disciplined technical reasoning by asking better questions, separating observation from inference, recording validation needs, and choosing stronger next steps from the real Module 01 lab.
 
 | **Course** | **Module** | **Lesson** | **Estimated Time** | **Difficulty** |
 |---|---|---|---:|---|
-| Hack the Basics | Module 01 — Orientation and Assessment Workflow | 1.4 — Hypothesis-Driven Testing and the Analyst Mindset | 40–60 min | Beginner |
+| Hack the Basics | Module 01 — Orientation and Assessment Workflow | 1.4 — Hypothesis-Driven Testing and the Analyst Mindset | 30–45 min | Beginner |
 
 | **Prerequisites** | **You will practice** | **Main outcome** |
 |---|---|---|
-| Lessons 1.1-1.3, basic note-taking willingness | Asking better questions, separating evidence from interpretation, and choosing next steps more deliberately | The analyst mindset needed before scanning, service interpretation, and later validation work |
+| Lessons 1.1-1.3 and Lab 01 completed | Turning lab observations into notes, inferences, validation questions, and cleaner next-step logic | The reasoning habit that bridges Module 01 into Module 02 |
 
 > **🚨 Important**
 >
-> This lesson is where the module becomes operational.
-> Without this mindset, later modules are much easier to reduce into random commands and output collecting.
+> This lesson comes after the lab on purpose.
+> We are no longer reasoning from hypothetical machines.
+> We are reasoning from the actual course baseline we just built and documented.
 
 ---
 
@@ -36,20 +37,19 @@
 - [Learning Objectives](#learning-objectives)
 - [The Practical Problem This Lesson Solves](#the-practical-problem-this-lesson-solves)
 - [What We Mean by an Analyst Mindset](#what-we-mean-by-an-analyst-mindset)
-- [Why Curiosity Alone Is Not Enough](#why-curiosity-alone-is-not-enough)
-- [The Core Testing Model: Question -> Observe -> Infer -> Validate](#the-core-testing-model-question---observe---infer---validate)
-- [What a Hypothesis Looks Like in Technical Work](#what-a-hypothesis-looks-like-in-technical-work)
-- [Observation vs Inference vs Validation](#observation-vs-inference-vs-validation)
-- [Why Exact Nouns Matter So Much](#why-exact-nouns-matter-so-much)
-- [What Makes a Strong Next-Step Decision](#what-makes-a-strong-next-step-decision)
-- [How Weak Thinking Shows Up in Notes](#how-weak-thinking-shows-up-in-notes)
-- [A Practical Evidence-Triage Workflow](#a-practical-evidence-triage-workflow)
-- [Walkthrough 1: Reading a Small Port List Like an Analyst](#walkthrough-1-reading-a-small-port-list-like-an-analyst)
-- [Walkthrough 2: Turning a Web Clue Into a Better Next Question](#walkthrough-2-turning-a-web-clue-into-a-better-next-question)
-- [Walkthrough 3: Writing a Stronger Daily Note Entry](#walkthrough-3-writing-a-stronger-daily-note-entry)
+- [The Core Mental Model](#the-core-mental-model)
+- [What Questions This Topic Helps Us Answer](#what-questions-this-topic-helps-us-answer)
+- [Major Components of Strong Analyst Thinking](#major-components-of-strong-analyst-thinking)
+- [What This Topic Can and Cannot Tell Us](#what-this-topic-can-and-cannot-tell-us)
+- [Where This Fits in a Real Workflow](#where-this-fits-in-a-real-workflow)
+- [Walkthrough 1 - Reading the Fresh Lab Like an Analyst](#walkthrough-1---reading-the-fresh-lab-like-an-analyst)
+- [Walkthrough 2 - Turning a Reachability Result Into a Better Next Question](#walkthrough-2---turning-a-reachability-result-into-a-better-next-question)
+- [Walkthrough 3 - Writing a Stronger Daily Note Entry](#walkthrough-3---writing-a-stronger-daily-note-entry)
+- [Interpret the Reasoning Standard](#interpret-the-reasoning-standard)
 - [Stop and Think](#stop-and-think)
 - [Common Mistakes and Misconceptions](#common-mistakes-and-misconceptions)
-- [Defender’s View](#defenders-view)
+- [Defender's View](#defenders-view)
+- [Beyond the Surface](#beyond-the-surface)
 - [Key Takeaways](#key-takeaways)
 - [Knowledge Check Quiz](#knowledge-check-quiz)
 - [Quiz Answers](#quiz-answers)
@@ -62,35 +62,53 @@
 ## Lesson Map
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryTextColor":"#e8f0ff","lineColor":"#7dd3fc","fontSize":"14px"}}}%%
 flowchart TD
-    A[Start with a question] --> B[Gather evidence]
-    B --> C[Separate observation from inference]
-    C --> D[Choose what needs validation]
-    D --> E[Decide the next step]
+    A["Question<br/>What uncertainty are we reducing?"] --> B["Observe<br/>Record exact evidence"]
+    B --> C["Infer<br/>State the likely meaning carefully"]
+    C --> D["Validate<br/>Name what still needs confirmation"]
+    D --> E["Next step<br/>Choose the strongest follow-up action"]
+
+    classDef question fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:1.5px;
+    classDef observe fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef infer fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2px;
+    classDef validate fill:#78350f,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+    classDef next fill:#4c0519,stroke:#fb7185,color:#fff1f2,stroke-width:3px;
+
+    class A question;
+    class B observe;
+    class C infer;
+    class D validate;
+    class E next;
 ```
 
-> **💡 Tip**
+> **🧠 Mental Model**
 >
-> A better analyst is not the person who runs the most tools.
-> It is the person who asks better questions and records clearer answers.
+> The analyst mindset is how we keep technical work honest.
+> It stops us from turning output into certainty too early.
 
 ---
 
 ## Why This Lesson Matters
 
-Many learners can produce output.
-Fewer can explain what the output means.
+The lab is now built.
+That is necessary, but not sufficient.
 
-That gap is where a lot of weak security learning lives.
+Many learners make the same mistake at this point:
 
-Without a better reasoning model, the learner may:
+- they see reachable targets
+- they feel ready to start scanning
+- they skip the reasoning discipline that makes later output meaningful
 
-- chase every clue equally
-- confuse labels with proof
-- make notes that describe noise instead of evidence
-- choose the next step based on excitement instead of logic
+This lesson matters because Module 02 will immediately ask the learner to turn packets, ports, and silence into evidence.
 
-This lesson matters because it builds the thought pattern later modules depend on.
+If the learner cannot already separate:
+
+- what they observed
+- what they suspect
+- what still needs validation
+
+then later modules will become tool-heavy and weaker than they should be.
 
 ---
 
@@ -98,341 +116,270 @@ This lesson matters because it builds the thought pattern later modules depend o
 
 By the end of this lesson, we should be able to:
 
-- explain what hypothesis-driven testing means in this course
-- distinguish observation, inference, and validation cleanly
-- write stronger notes using exact nouns and better claims
-- choose next steps based on evidence and workflow context
-- recognize weak analyst habits before they harden
-- carry this mindset into Module 02 and beyond
+- define hypothesis-driven testing in simple practical terms
+- separate observation, inference, and validation in notes
+- use exact nouns when recording technical details
+- choose next steps based on the current question and phase
+- turn the Module 01 lab baseline into a cleaner Module 02 starting point
 
 ---
 
 ## The Practical Problem This Lesson Solves
 
-Suppose you see:
+Suppose a learner finishes Lab 01 and writes:
 
 ```text
-80/tcp  open  http
-443/tcp open  https
+Lab is up. Looks good. Ready to hack.
 ```
 
-A weak response:
+That note is not useful enough.
 
-- “Interesting web server.”
+It does not preserve:
 
-A stronger response:
+- what was actually observed
+- what target state is known
+- what is only inferred
+- what should be checked next
 
-- What question am I asking here?
-- What is directly observed?
-- What does that suggest?
-- What should I validate next?
-
-Lesson 1.4 solves the problem of moving from:
-
-- output collection
-
-to:
-
-- evidence-based reasoning
-
-That is the mindset shift the entire rest of the course needs.
+This lesson solves that problem by giving the learner a stronger thinking pattern before the first real enumeration module begins.
 
 ---
 
 ## What We Mean by an Analyst Mindset
 
-An analyst mindset means working from:
+An analyst mindset means technical curiosity with structure.
 
-- clear questions
-- bounded claims
-- usable evidence
-- reasoned next steps
+It means working from:
 
-It does **not** mean:
+- a current question
+- the evidence available now
+- bounded inferences
+- explicit validation needs
+- a next step chosen for a reason
 
-- sounding formal
-- pretending certainty
-- collecting huge amounts of output without purpose
+It does not mean:
 
-### Strong analyst habits
-
-- define the current question
-- capture exact evidence
-- separate what is known from what is suspected
-- choose the next step for a reason
+- jumping to the most exciting tool
+- calling guesses “facts”
+- collecting output without deciding what it means
+- skipping note quality because the work feels preliminary
 
 ---
 
-## Why Curiosity Alone Is Not Enough
+## The Core Mental Model
 
-Curiosity is helpful.
-But on its own, it often produces:
+Use this model repeatedly:
 
-- wandering
-- over-testing
-- weak notes
-- poor prioritization
-
-Curiosity becomes much stronger when paired with structure.
-
-### Better framing
-
-Instead of:
-
-- “I wonder what happens if I run this”
-
-prefer:
-
-- “I want to test whether this host exposes web services, because that would change the next workflow”
-
-That single change makes the action easier to justify and the result easier to interpret.
-
----
-
-## The Core Testing Model: Question -> Observe -> Infer -> Validate
-
-This is the main reasoning model the course will keep returning to.
-
-```mermaid
-flowchart LR
-    A[Question] --> B[Observe]
-    B --> C[Infer]
-    C --> D[Validate]
+```text
+Question -> Observe -> Infer -> Validate -> Choose next step
 ```
 
-### Question
+Each part has a job.
 
-What are you trying to learn?
-
-### Observe
-
-What did you actually see?
-
-### Infer
-
-What does the evidence suggest?
-
-### Validate
-
-What still needs confirmation?
-
-This model will appear again and again in later modules.
-
----
-
-## What a Hypothesis Looks Like in Technical Work
-
-A hypothesis is a testable idea about what may be true.
-
-### Example hypotheses
-
-- this host may expose web services worth mapping
-- this certificate name may correspond to an admin-related surface
-- this service mix may indicate a domain-related host role
-
-These are not claims of certainty.
-They are structured next-step ideas.
-
-### Why hypotheses are useful
-
-They prevent aimless testing.
-They also make failures informative.
-
-If the hypothesis is wrong, that still teaches something.
-
----
-
-## Observation vs Inference vs Validation
-
-This distinction is the single most important writing habit in the early course.
-
-| Category | Question |
+| Part | Job |
 |---|---|
-| Observation | what did I directly see? |
-| Inference | what does that suggest? |
-| Validation | what still needs to be confirmed? |
+| Question | defines what uncertainty we are trying to reduce |
+| Observe | records what we directly saw |
+| Infer | states what the evidence probably suggests |
+| Validate | names what still needs confirmation |
+| Next step | chooses the smallest useful action that reduces uncertainty |
 
-### Example
-
-```text
-Observation: 443/tcp is open and the page title is "Acme Portal"
-Inference: the host likely exposes a user-facing web application
-Validation: confirm routes, cert names, and auth behavior
-```
-
-This note is much more trustworthy than:
-
-```text
-Found the portal.
-```
+This is the bridge from Module 01 into every later technical module.
 
 ---
 
-## Why Exact Nouns Matter So Much
+## What Questions This Topic Helps Us Answer
 
-Vague notes are hard to reuse.
-Exact nouns make technical work portable.
+This lesson should help the learner answer:
 
-### Capture exact things
+- what do I know for sure right now?
+- what am I only assuming?
+- what should be checked next before I get more confident?
+- what note would still make sense tomorrow or next week?
+
+Those questions matter more than “which tool should I launch first?”
+
+---
+
+## Major Components of Strong Analyst Thinking
+
+### 1. Start with a real question
+
+Bad:
+
+- “Time to run some tools.”
+
+Better:
+
+- “What is reachable from Kali WSL on the target subnet?”
+
+### 2. Preserve direct observations
+
+Good observations use exact nouns:
 
 - IPs
-- ports
 - hostnames
-- URLs
-- titles
-- share names
-- service names
-- route names
+- ports
+- route paths
+- commands
+- output snippets
 
-### Weak note
+### 3. Keep inferences bounded
 
-```text
-Interesting service found.
-```
+An inference should sound like:
 
-### Strong note
+- likely
+- probably
+- suggests
+- may indicate
 
-```text
-10.10.10.15 exposes 80/tcp and 443/tcp; HTTPS title "Acme Portal"; redirect behavior still unverified.
-```
+That language keeps the reasoning honest.
 
-Later modules depend on this kind of specificity.
+### 4. Name the validation need
 
----
+This is what turns notes into workflow.
 
-## What Makes a Strong Next-Step Decision
+If the learner cannot say what still needs confirmation, they are often mistaking evidence for certainty.
 
-A strong next step is usually:
+### 5. Choose the next step by purpose
 
-- tied to the current question
-- supported by the evidence already collected
-- appropriate to the current lifecycle phase
-- likely to reduce uncertainty meaningfully
-
-### Weak next step
-
-- run a random tool because it might be useful
-
-### Strong next step
-
-- use Nmap host discovery and first-pass scan logic because the current phase is surface mapping and we still do not know what is reachable from the Kali VM
-
-That is exactly the kind of decision Module 02 will start formalizing.
+The next step should reduce uncertainty.
+It should not merely feel interesting.
 
 ---
 
-## How Weak Thinking Shows Up in Notes
+## What This Topic Can and Cannot Tell Us
 
-Weak reasoning often produces weak notes.
+This lesson can tell us:
 
-Examples:
+- how to think about the fresh lab baseline
+- how to record evidence more honestly
+- how to frame better next-step questions for Module 02
 
-- “Looks vulnerable”
-- “Interesting host”
-- “Might be domain controller”
-- “Probably admin panel”
+This lesson cannot replace:
 
-These notes are not automatically wrong.
-They are just incomplete.
+- the actual scanning mechanics in Module 02
+- later protocol and service interpretation in Modules 02-03
+- deeper attack-path decisions in later modules
 
-A better note gives:
-
-- the evidence
-- the likely meaning
-- the uncertainty
-- the next step
+Its job is to improve the quality of thinking before those modules begin.
 
 ---
 
-## A Practical Evidence-Triage Workflow
+## Where This Fits in a Real Workflow
 
-Use this small workflow every time you collect something new.
+This lesson still belongs to the Orientation phase, but it points directly into Surface Mapping.
 
-1. Write the exact observation.
-2. Write one careful inference.
-3. Write what still needs validation.
-4. Write the most natural next step.
+Right now, the learner should be able to say:
 
-```mermaid
-flowchart TD
-    A[Exact evidence] --> B[Likely meaning]
-    B --> C[Validation need]
-    C --> D[Next step]
-```
+- the environment exists
+- the targets are named
+- the subnet is known
+- the baseline notes exist
+- the next step is to gather visibility deliberately
 
-This takes seconds once it becomes a habit.
+That is exactly where Module 02 begins.
 
 ---
 
-## Walkthrough 1: Reading a Small Port List Like an Analyst
+## Walkthrough 1 - Reading the Fresh Lab Like an Analyst
 
-Suppose you later see:
+Suppose the learner has just completed the validation step from Lab 01.
 
-```text
-22/tcp  open  ssh
-80/tcp  open  http
-```
-
-Weak note:
+A weak reaction is:
 
 ```text
-SSH and HTTP found.
+Everything seems fine.
 ```
 
-Stronger note:
+A stronger interpretation is:
 
 ```text
-Observation: 22/tcp and 80/tcp open
-Inference: host may support both remote administration and a visible web surface
-Validation: confirm the web route behavior and gather service details later
-Next step: begin disciplined surface mapping rather than guessing host role fully yet
+Question: Is the course baseline reachable from the attack position?
+Observation: Kali WSL reaches 192.168.57.10, 192.168.57.31, and 192.168.57.25; expected ports answer on each target.
+Inference: The host-only lab baseline is likely ready for first-pass surface mapping.
+Validation: Confirm in Module 02 that saved scan output and host tracking remain consistent with the baseline notes.
+Next step: Begin controlled host discovery and first-pass port mapping from Kali WSL.
 ```
+
+That note is much more reusable because it preserves both evidence and intent.
 
 ---
 
-## Walkthrough 2: Turning a Web Clue Into a Better Next Question
+## Walkthrough 2 - Turning a Reachability Result Into a Better Next Question
 
-Suppose you later observe:
+Suppose we know:
 
-```text
-HTTPS certificate SAN includes admin.lab.local
-```
+- `GOAD-Mini-DC01` responds on `53`, `88`, `135`, `389`, and `445`
+- `GOAD-Mini-WS01` responds on `135`, `139`, `445`, and `3389`
+- `META-TGT` responds on `21`, `22`, `23`, and `80`
 
-Weak next thought:
+A weak next thought is:
 
-- “Admin box!”
+- “Looks exploitable.”
 
-Stronger next thought:
+A stronger next thought is:
 
-- Observation: cert SAN includes `admin.lab.local`
-- Inference: the environment may expose an admin-related hostname
-- Validation: confirm whether that hostname resolves and behaves distinctly
-- Next step: document the clue and validate it during later web recon
+- `GOAD-Mini-DC01` likely plays a domain infrastructure role
+- `GOAD-Mini-WS01` looks like a workstation or Windows service host
+- `META-TGT` looks like the early Linux service target
 
-That is the reasoning quality the course wants.
+But those are still inferences, not final truths.
+
+The stronger question for Module 02 is:
+
+> what does careful first-pass network enumeration show from the Kali position, and how should that evidence be saved for later service reasoning?
+
+That is the right transition into the next module.
 
 ---
 
-## Walkthrough 3: Writing a Stronger Daily Note Entry
+## Walkthrough 3 - Writing a Stronger Daily Note Entry
 
 Weak daily note:
 
 ```text
-Worked on the lab. Found some useful things.
+Built the lab. Ready for the next module.
 ```
 
 Stronger daily note:
 
 ```text
 Current phase: Orientation
-Question: Is the lab baseline documented well enough for Module 02?
-Observation: Kali, META-TGT, LINUX-LAB, and WIN11-LAB inventoried; host-only network selected; clean snapshots named.
-Inference: The lab is likely ready for early enumeration practice.
-Validation: Confirm connectivity and save first scan artifacts in Module 02.
-Next step: Begin network visibility work from the Kali VM.
+Question: Is the Module 01 baseline ready for disciplined surface mapping?
+Observation: Windows host, Kali WSL, GOAD-Mini-DC01, GOAD-Mini-WS01, and META-TGT documented; target subnet recorded as 192.168.57.0/24; validation checks from Kali WSL succeeded.
+Inference: The environment is likely stable enough to begin Module 02 without rebuilding context.
+Validation needed: Confirm scan outputs are saved into the workspace cleanly and host tracking stays aligned to the baseline inventory.
+Next step: Start Module 02 and use the saved inventory plus network notes as the initial scan context.
 ```
 
-That note is actionable, reusable, and honest.
+That note is action-oriented and trustworthy.
+
+---
+
+## Interpret the Reasoning Standard
+
+The course wants the learner to sound more like this:
+
+```text
+Observation: 192.168.57.10 answers on the expected Windows and AD-related ports from Kali WSL.
+Inference: The target is likely the domain controller in the course baseline.
+Validation: Confirm identity through later enumeration and preserve the result in host tracking notes.
+```
+
+Not like this:
+
+```text
+DC confirmed.
+```
+
+The first version is stronger because it preserves:
+
+- evidence
+- confidence level
+- what still needs to happen
+
+That is the standard to keep.
 
 ---
 
@@ -440,10 +387,10 @@ That note is actionable, reusable, and honest.
 
 > **🛠 Practice**
 >
-> Before reading on, choose one fact from your own current lab and write:
+> Pick one asset from your fresh lab and write:
 >
 > 1. one observation
-> 2. one inference
+> 2. one bounded inference
 > 3. one validation need
 > 4. one next step
 
@@ -452,19 +399,19 @@ That note is actionable, reusable, and honest.
 
 Observation:
 
-- the Windows 11 VM has a clean baseline snapshot and lives on the host-only lab network
+- `META-TGT` responds on `21`, `22`, `23`, and `80` from Kali WSL.
 
 Inference:
 
-- it is likely ready to serve as a stable future Windows target
+- it is likely the intentionally vulnerable Linux service target for early enumeration and service reasoning.
 
 Validation:
 
-- confirm later that the Kali VM can reach it from the expected position
+- confirm service behavior and save the first-pass output in Module 02.
 
 Next step:
 
-- record the VM details in the inventory and preserve the snapshot name in notes
+- begin controlled surface mapping against `192.168.57.25` and record the results in host tracking notes.
 
 </details>
 
@@ -474,85 +421,100 @@ Next step:
 
 ### Mistake 1: Treating every clue like proof
 
-Labels and hints are not the same as validation.
+Output often suggests more than it proves.
 
-### Mistake 2: Writing notes without structure
+### Mistake 2: Writing notes without exact nouns
 
-If the note does not preserve evidence, it will be harder to trust later.
+If IPs, hostnames, and ports are missing, notes become weaker fast.
 
 ### Mistake 3: Choosing next steps by excitement
 
-The next step should reduce uncertainty, not just feel interesting.
+The next step should answer the current question, not just launch the most famous tool.
 
-### Mistake 4: Skipping exact nouns
+### Mistake 4: Thinking setup notes do not count as evidence
 
-Exact hostnames, routes, and ports matter more than impressions.
+Module 01 already teaches evidence habits.
+It does not begin later.
 
-### Mistake 5: Thinking the analyst mindset starts after the basics
+### Mistake 5: Treating the analyst mindset as separate from the technical modules
 
-It starts here, before the first real scan.
+The analyst mindset is what makes the technical modules useful.
 
 ---
 
-## Defender’s View
+## Defender's View
 
-Defenders also benefit from the same reasoning habits:
+This same reasoning discipline helps defenders:
 
-- clearer evidence
-- better incident notes
-- more honest confidence levels
-- better prioritization
+- preserve exact observations
+- avoid overstating confidence too early
+- choose follow-up based on uncertainty reduction
+- build better incident and triage notes
 
-This lesson is about disciplined technical thinking, not only offensive workflow.
+The habit is broader than offensive workflow.
+
+---
+
+## Beyond the Surface
+
+The analyst mindset still needs support from:
+
+- real technical knowledge
+- careful validation in later modules
+- stronger service interpretation
+- better note systems as the environment grows
+
+This lesson does not replace those things.
+It makes them easier to use well.
 
 ---
 
 ## Key Takeaways
 
-- Hypothesis-driven testing begins with better questions.
-- Observation, inference, and validation should stay separate in notes.
-- Exact nouns make technical notes reusable and trustworthy.
-- Strong next steps reduce uncertainty and fit the current phase.
-- This mindset is the bridge into later enumeration modules.
+- A strong analyst note begins with a real question.
+- Observation, inference, and validation should stay separate.
+- Exact nouns make the Module 01 baseline reusable in later modules.
+- Better next steps reduce uncertainty instead of chasing novelty.
+- This lesson is the reasoning bridge from Module 01 into Module 02.
 
 ---
 
 ## Knowledge Check Quiz
 
-### 1. What best describes a hypothesis in this course?
+### 1. What is the strongest summary of a hypothesis in this course?
 
-A. A final claim of certainty
-B. A testable idea about what may be true
-C. A replacement for evidence
-D. A guess that does not need follow-up
+A. A final statement of certainty  
+B. A structured, testable idea about what may be true  
+C. A replacement for evidence  
+D. A note that does not need follow-up
 
 ### 2. Which note is strongest?
 
-A. “Probably vulnerable host.”
-B. “Interesting machine.”
-C. “Observation: 80/tcp and 443/tcp open; Inference: likely web surface; Validation: confirm route behavior and titles.”
+A. “DC is up.”  
+B. “Looks like Windows stuff.”  
+C. “Observation: 192.168.57.10 answers on 53, 88, 135, 389, and 445; Inference: likely AD infrastructure target; Validation: confirm identity during later enumeration.”  
 D. “Need more tools.”
 
-### 3. Why are exact nouns important?
+### 3. Why are exact nouns important in Module 01 notes?
 
-A. They make notes more reusable and trustworthy later
-B. They are only useful in reporting
-C. They replace screenshots entirely
-D. They slow down the learner too much
+A. They make notes reusable and trustworthy in later modules  
+B. They only matter in the reporting module  
+C. They replace screenshots entirely  
+D. They are mostly decorative
 
 ### 4. What should guide the next step most strongly?
 
-A. whichever tool is most popular
-B. the current evidence, question, and lifecycle phase
-C. what feels exciting
-D. randomness
+A. whichever tool feels most exciting  
+B. the current question, evidence, and phase  
+C. habit alone  
+D. random experimentation
 
-### 5. Why does this lesson belong before Module 02?
+### 5. Why does Lesson 1.4 appear after the lab?
 
-A. Because later modules do not use reasoning
-B. Because later scanning and recon work depend on stronger evidence and next-step thinking
-C. Because Nmap cannot run without it
-D. Because it is only about legal warnings
+A. Because the lab replaces reasoning  
+B. Because the learner can now reason from a real environment and real artifacts  
+C. Because Module 02 no longer needs notes  
+D. Because Lesson 1.3 already covered hypothesis testing fully
 
 ---
 
@@ -560,75 +522,71 @@ D. Because it is only about legal warnings
 
 ### 1. Correct answer: B
 
-A hypothesis is a structured, testable idea that guides the next action.
+A hypothesis is a bounded, testable idea that helps guide the next useful action.
 
 ### 2. Correct answer: C
 
-It preserves the evidence, likely meaning, and validation need clearly.
+It preserves the evidence, the likely meaning, and the validation need.
 
 ### 3. Correct answer: A
 
-Exact nouns are what make notes useful later.
+Later modules depend on exact nouns and trustworthy baseline notes.
 
 ### 4. Correct answer: B
 
-Good next steps follow from the current question and evidence, not from tool hype.
+Good next steps follow from the current question and evidence.
 
 ### 5. Correct answer: B
 
-Later technical modules work much better when the learner already thinks this way.
+The lab gives the learner a real baseline to reason from, which makes this lesson more concrete and useful.
 
 ---
 
 ## Mini Practice Task
 
-Write one daily note entry using this structure:
+Open your Module 01 workspace and write one short entry that includes:
 
 1. current phase
-2. question being asked
+2. question
 3. observation
 4. inference
 5. validation needed
 6. next step
 
-Use your actual lab workspace if possible.
+Use one real fact from your fresh lab build.
 
 ---
 
 ## Next Lesson Bridge
 
-Module 01 now hands directly into the technical work of [Module 02 - Network Enumeration with Nmap](../../02-enumeration-using-nmap/README.md).
+Module 01 now hands directly into [Module 02 - Network Enumeration with Nmap](../../02-enumeration-using-nmap/README.md).
 
-That handoff should feel clear:
+That handoff should feel clean:
 
-- the workspace exists
-- scope is documented
-- the lifecycle is understood
-- the learner knows how to think about evidence
+- the environment exists
+- the targets are named
+- the subnet is documented
+- the baseline notes exist
+- the learner knows how to think about evidence before scanning begins
 
-Now the next phase can begin:
-
-- figuring out what is reachable from the Kali VM
-- mapping the visible surface deliberately
-- turning packets and silence into evidence
+The next job is no longer orientation.
+It is deliberate visibility.
 
 ---
 
 ## End-of-Module Recap
 
-Module 01 established the operating habits that the rest of `Hack the Basics` will depend on.
+Module 01 was built to do two things at once:
 
-Across the module, we learned how to:
+- give the learner a strong foundation
+- leave behind the real workspace the rest of the course will use
 
-- understand the course as a workflow-first curriculum
-- read the assessment lifecycle as the spine of later technical work
-- define scope and lab discipline inside a VMware-based learner workspace
-- write stronger notes with cleaner evidence and next-step logic
+Across the module, we now know how to:
 
-That means the learner should now be ready for Module 02 not just emotionally, but operationally.
+- read the course as a workflow-first learning system
+- understand the assessment lifecycle
+- define scope and lab discipline before technical work begins
+- build the actual course baseline and document it
+- write notes that separate observation, inference, and validation
 
-The next step is to move from orientation into visibility:
-
-- which hosts are there?
-- which ports respond?
-- what can we actually see from our current network position?
+That means the learner should now be ready for Module 02 not only conceptually, but operationally.

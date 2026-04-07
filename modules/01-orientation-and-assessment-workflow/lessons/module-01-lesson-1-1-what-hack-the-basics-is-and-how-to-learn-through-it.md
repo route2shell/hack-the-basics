@@ -63,11 +63,20 @@
 ## Lesson Map
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryTextColor":"#e8f0ff","lineColor":"#7dd3fc","fontSize":"14px"}}}%%
 flowchart TD
-    A[Understand the course promise] --> B[Understand the structure and phases]
-    B --> C[Understand what strong learning looks like]
-    C --> D[Set up a repeatable study rhythm]
-    D --> E[Leave the lesson with an orientation checklist]
+    A["Course promise<br/>What this repo is really teaching"] --> B["Course structure<br/>Why the phases and modules are ordered"]
+    B --> C["Success model<br/>What strong learning looks like here"]
+    C --> D["Study rhythm<br/>How to move through the course well"]
+    D --> E["Orientation output<br/>Leave with a usable checklist"]
+
+    classDef foundation fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:1.5px;
+    classDef focus fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef outcome fill:#4c0519,stroke:#fb7185,color:#fff1f2,stroke-width:3px;
+
+    class A,B foundation;
+    class C,D focus;
+    class E outcome;
 ```
 
 > **💡 Tip**
@@ -206,11 +215,24 @@ In reality, it is simply structured.
 The course follows one large workflow arc.
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryTextColor":"#e8f0ff","lineColor":"#7dd3fc","fontSize":"14px"}}}%%
 flowchart LR
-    A[Phase I<br/>Orientation and Surface Mapping] --> B[Phase II<br/>Web Understanding and Exposure Analysis]
-    B --> C[Phase III<br/>Access and Foothold Operations]
-    C --> D[Phase IV<br/>Local Escalation and Internal Movement]
-    D --> E[Phase V<br/>Enterprise Reasoning, Communication, and Synthesis]
+    P1["Phase I<br/>Orientation and Surface Mapping"] --> P2["Phase II<br/>Web Understanding and Exposure Analysis"]
+    P2 --> P3["Phase III<br/>Access and Foothold Operations"]
+    P3 --> P4["Phase IV<br/>Local Escalation and Internal Movement"]
+    P4 --> P5["Phase V<br/>Enterprise Reasoning, Communication, and Synthesis"]
+
+    classDef phase1 fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:3px;
+    classDef phase2 fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2.5px;
+    classDef phase3 fill:#312e81,stroke:#a78bfa,color:#f5f3ff,stroke-width:2.5px;
+    classDef phase4 fill:#4c0519,stroke:#fb7185,color:#fff1f2,stroke-width:2.5px;
+    classDef phase5 fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2.5px;
+
+    class P1 phase1;
+    class P2 phase2;
+    class P3 phase3;
+    class P4 phase4;
+    class P5 phase5;
 ```
 
 ### Why that matters
@@ -298,7 +320,15 @@ The module structure is intentional.
 2. Work through the lessons in order.
 3. Keep the reference artifact nearby.
 4. Use the worksheet or template while reading, not after.
-5. Finish with the lab or guided exercise.
+5. Follow the module's actual execution flow rather than assuming every lab waits until the end.
+
+In Module 01 specifically, that means:
+
+1. understand the course
+2. understand the lifecycle
+3. define the lab boundary
+4. build the actual course baseline
+5. return for the final analyst-mindset lesson
 
 ### On later passes
 
@@ -355,10 +385,11 @@ Examples include:
 
 In Module 01, the first artifacts are simpler but just as important:
 
-- a workspace layout
+- a scope note
 - a VM inventory
-- a lifecycle map
-- a first note-taking structure
+- network notes
+- a snapshot map
+- a first analyst note
 
 Those become the foundation for later work.
 
@@ -382,8 +413,9 @@ Use this checklist before moving on.
 
 ### Lab readiness
 
-- I know that Module 01 will define the VMware-based lab baseline.
-- I am prepared to document my VM roles and note structure.
+- I know that Module 01 is meant to leave behind the real course baseline.
+- I understand that the lab build sits in the middle of the module, not outside it.
+- I am prepared to document asset roles, network notes, and reset points while building.
 - I understand that safe, legal lab use is mandatory.
 
 ### Evidence discipline

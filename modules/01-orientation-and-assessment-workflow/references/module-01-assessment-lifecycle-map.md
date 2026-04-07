@@ -9,12 +9,27 @@
 ## Lifecycle Diagram
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryTextColor":"#e8f0ff","lineColor":"#7dd3fc","fontSize":"14px"}}}%%
 flowchart LR
-    A[Orientation] --> B[Surface Mapping]
-    B --> C[Service and App Understanding]
-    C --> D[Validation and Access]
-    D --> E[Post-Access and Expansion]
-    E --> F[Reporting and Close-Out]
+    O["Orientation<br/>Environment, scope, constraints"] --> S["Surface Mapping<br/>Visibility and reachability"]
+    S --> U["Service and App Understanding<br/>Role, meaning, and triage"]
+    U --> V["Validation and Access<br/>Controlled testing and footholds"]
+    V --> P["Post-Access and Expansion<br/>Privilege, movement, and new visibility"]
+    P --> R["Reporting and Close-Out<br/>Evidence, findings, and delivery"]
+
+    classDef orientation fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:3px;
+    classDef mapping fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2.5px;
+    classDef understanding fill:#312e81,stroke:#a78bfa,color:#f5f3ff,stroke-width:2.5px;
+    classDef validation fill:#78350f,stroke:#fbbf24,color:#fffbeb,stroke-width:2.5px;
+    classDef postaccess fill:#4c0519,stroke:#fb7185,color:#fff1f2,stroke-width:2.5px;
+    classDef reporting fill:#334155,stroke:#cbd5e1,color:#f8fafc,stroke-width:2.5px;
+
+    class O orientation;
+    class S mapping;
+    class U understanding;
+    class V validation;
+    class P postaccess;
+    class R reporting;
 ```
 
 ---
