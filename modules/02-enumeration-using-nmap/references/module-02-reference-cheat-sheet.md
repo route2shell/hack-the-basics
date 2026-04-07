@@ -12,30 +12,31 @@
 
 > **🧭 Use This For**
 >
-> Fast scanning during labs, note-backed practice, and post-lesson review when you need a compact reminder of host discovery, scan types, enrichment, interpretation, and artifact capture.
+> Fast scanning during Module 02 checkpoints, the module lab, and later review when you need compact reminders for host discovery, scan types, enrichment, artifact capture, and handoff thinking.
 
 | Best paired with | Main job | Assumption |
 |---|---|---|
-| Lesson 2.5 and the module lab | Help you move from quick triage to deliberate follow-up | Authorized lab use only |
+| Lesson 2.5 and Module 02 Lab 01 | Help you move from discovery to saved evidence to next-step routing | Kali WSL scanning the Module 01 baseline lab |
 
 | Preserve these outputs | Avoid these habits |
 |---|---|
-| live hosts, open ports, version clues, saved artifacts, next-step notes | blind `-Pn`, overtrusting silence, treating labels as certainty |
+| live hosts, open ports, version clues, saved artifacts, host notes, next-step queue | blind `-Pn`, overtrusting silence, treating labels as certainty, saving results outside the shared workspace |
 
 ---
 
 ## Table of Contents
 
 - [1. Quick Workflow](#1-quick-workflow)
-- [2. Command Anatomy](#2-command-anatomy)
-- [3. Target Definition](#3-target-definition)
-- [4. Host Discovery](#4-host-discovery)
-- [5. Port Scanning and States](#5-port-scanning-and-states)
-- [6. Enrichment and NSE](#6-enrichment-and-nse)
-- [7. Output and Artifact Capture](#7-output-and-artifact-capture)
-- [8. Tuning and Troubleshooting](#8-tuning-and-troubleshooting)
-- [9. Interpretation Rules](#9-interpretation-rules)
-- [10. Minimal Note Template](#10-minimal-note-template)
+- [2. Baseline Targets](#2-baseline-targets)
+- [3. Command Anatomy](#3-command-anatomy)
+- [4. Target Definition](#4-target-definition)
+- [5. Host Discovery](#5-host-discovery)
+- [6. Port Scanning and States](#6-port-scanning-and-states)
+- [7. Enrichment and NSE](#7-enrichment-and-nse)
+- [8. Output and Artifact Capture](#8-output-and-artifact-capture)
+- [9. Tuning and Troubleshooting](#9-tuning-and-troubleshooting)
+- [10. Interpretation Rules](#10-interpretation-rules)
+- [11. Minimal Note Template](#11-minimal-note-template)
 
 ---
 
@@ -43,28 +44,29 @@
 
 > **🧠 Mental Model**
 >
-> discover -> scan -> enrich -> save -> interpret -> route the next step
+> define -> discover -> triage -> enrich -> save -> interpret -> route the next step
 
 ### Fast first pass
 
 ```bash
-nmap -sn <target-or-range>
-nmap -sS -Pn --top-ports 1000 <target>
-nmap -sV -sC -Pn -p <open-ports> <target>
+mkdir -p assessment-workspace/02-evidence/scans/module-02
+nmap -sn -oA assessment-workspace/02-evidence/scans/module-02/lab-net-discovery-YYYY-MM-DD 192.168.57.0/24
+nmap -sS -Pn --top-ports 1000 -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-triage-YYYY-MM-DD 192.168.57.25
+nmap -sV -sC -Pn -p <open-ports> -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-enriched-YYYY-MM-DD 192.168.57.25
 ```
 
 ### If UDP likely matters
 
 ```bash
-nmap -sU -Pn --top-ports 50 <target>
-nmap -sU -sV -Pn -p <interesting-udp-ports> <target>
+sudo nmap -sU -Pn --top-ports 25 -oA assessment-workspace/02-evidence/scans/module-02/goad-mini-dc01-udp-YYYY-MM-DD 192.168.57.10
+sudo nmap -sU -sV -Pn -p <interesting-udp-ports> -oA assessment-workspace/02-evidence/scans/module-02/goad-mini-dc01-udp-focused-YYYY-MM-DD 192.168.57.10
 ```
 
 ### If the host is already known to be up
 
 ```bash
-nmap -sS -Pn -p- <target>
-nmap -sV -sC -Pn -p <open-ports> <target>
+nmap -sS -Pn -p- -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-fulltcp-YYYY-MM-DD 192.168.57.25
+nmap -sV -sC -Pn -p <open-ports> -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-service-pass-YYYY-MM-DD 192.168.57.25
 ```
 
 ### Default operator rhythm
@@ -75,11 +77,21 @@ nmap -sV -sC -Pn -p <open-ports> <target>
 4. Expand only where the evidence justifies it.
 5. Enrich open ports with `-sV` and targeted scripts.
 6. Save results every time.
-7. Manually validate high-value services.
+7. Update host notes and the follow-up queue.
 
 ---
 
-## 2. Command Anatomy
+## 2. Baseline Targets
+
+| Asset | IP | Why it is useful in Module 02 |
+|---|---|---|
+| `GOAD-Mini-DC01` | `192.168.57.10` | Strong Windows and identity-oriented discovery target |
+| `META-TGT` | `192.168.57.25` | Strong Linux and multi-service exposure target |
+| `GOAD-Mini-WS01` | `192.168.57.31` | Helpful for Windows workstation visibility and comparison |
+
+---
+
+## 3. Command Anatomy
 
 ```bash
 nmap [host-discovery] [scan-type] [port-selection] [enrichment] [timing] [output] <target>
@@ -96,16 +108,16 @@ nmap [host-discovery] [scan-type] [port-selection] [enrichment] [timing] [output
 
 ---
 
-## 3. Target Definition
+## 4. Target Definition
 
 ### Common target forms
 
 ```bash
-nmap 10.10.10.5
-nmap 10.10.10.0/24
-nmap 10.10.10.1-50
-nmap -iL targets.txt
-nmap 10.10.10.0/24 --exclude 10.10.10.1
+nmap 192.168.57.25
+nmap 192.168.57.0/24
+nmap 192.168.57.10,25,31
+nmap -iL assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt
+nmap 192.168.57.0/24 --exclude 192.168.57.31
 ```
 
 ### Helpful DNS controls
@@ -121,7 +133,7 @@ nmap -R <target>
 
 ---
 
-## 4. Host Discovery
+## 5. Host Discovery
 
 | Mode | Meaning |
 |---|---|
@@ -140,9 +152,9 @@ nmap -R <target>
 ### Examples
 
 ```bash
-nmap -sn 10.10.10.0/24
-nmap -sn -PS22,80,443 -PA80,443 10.10.10.0/24
-nmap -Pn 10.10.10.15
+nmap -sn 192.168.57.0/24
+nmap -sn -PS22,80,445 -PA80,445 192.168.57.0/24
+nmap -Pn 192.168.57.25
 ```
 
 ### Quick reminders
@@ -154,7 +166,7 @@ nmap -Pn 10.10.10.15
 
 ---
 
-## 5. Port Scanning and States
+## 6. Port Scanning and States
 
 ### Good defaults
 
@@ -163,7 +175,7 @@ nmap -Pn 10.10.10.15
 | Fast TCP triage | `nmap -sS --top-ports 1000 <target>` |
 | Full TCP sweep | `nmap -sS -p- <target>` |
 | Focused follow-up | `nmap -sV -sC -p <ports> <target>` |
-| Quick UDP triage | `nmap -sU --top-ports 50 <target>` |
+| Quick UDP triage | `sudo nmap -sU --top-ports 25 <target>` |
 
 ### Common scan types
 
@@ -190,7 +202,7 @@ nmap -Pn 10.10.10.15
 
 ---
 
-## 6. Enrichment and NSE
+## 7. Enrichment and NSE
 
 ### Common enrichment patterns
 
@@ -216,14 +228,14 @@ nmap --script <script-name> -p <ports> <target>
 
 ---
 
-## 7. Output and Artifact Capture
+## 8. Output and Artifact Capture
 
 ### Useful output modes
 
 ```bash
 nmap -oN scan.nmap <target>
 nmap -oX scan.xml <target>
-nmap -oA scans/triage <target>
+nmap -oA assessment-workspace/02-evidence/scans/module-02/<basename> <target>
 ```
 
 | Output | Best use |
@@ -238,11 +250,17 @@ nmap -oA scans/triage <target>
 - your network position or pivot context
 - notable open ports
 - uncertainty notes
-- manual validation ideas
+- host-tracking updates
+- follow-up queue entries
+
+### Default note destinations
+
+- `assessment-workspace/01-target-notes/host-tracking.md`
+- `assessment-workspace/03-analysis/follow-up-queue.md`
 
 ---
 
-## 8. Tuning and Troubleshooting
+## 9. Tuning and Troubleshooting
 
 ### Four main tuning levers
 
@@ -264,7 +282,7 @@ nmap -oA scans/triage <target>
 
 ---
 
-## 9. Interpretation Rules
+## 10. Interpretation Rules
 
 > **🔍 Interpretation**
 >
@@ -280,18 +298,17 @@ nmap -oA scans/triage <target>
 
 ---
 
-## 10. Minimal Note Template
+## 11. Minimal Note Template
 
 ```text
 Target:
 Network position:
 Scan command:
-Discovery result:
-Open ports:
-Version / service clues:
-Ambiguities:
-Next manual checks:
+Observation:
+Inference:
+Validation needed:
 Saved artifacts:
+Next module or workflow owner:
 ```
 
 ---

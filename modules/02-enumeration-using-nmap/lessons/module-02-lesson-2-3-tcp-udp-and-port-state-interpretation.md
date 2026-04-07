@@ -68,13 +68,25 @@
 ## Lesson Map
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart TD
-    A[TCP vs UDP behavior] --> B[How scan probes work]
-    B --> C[How Nmap labels responses]
-    C --> D[The six port states]
-    D --> E[Why scanner perspective matters]
-    E --> F[Read example outputs]
-    F --> G[Choose the right next step]
+    A["TCP vs UDP behavior"] --> B["How scan probes work"]
+    B --> C["How Nmap labels responses"]
+    C --> D["The six port states"]
+    D --> E["Why scanner perspective matters"]
+    E --> F["Read example outputs"]
+    F --> G["Choose the right next step"]
+
+    classDef protocol fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:2px;
+    classDef process fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef states fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2px;
+    classDef decision fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+    classDef outcome fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:3px;
+
+    class A protocol;
+    class B,C process;
+    class D,E,F states;
+    class G outcome;
 ```
 
 > **💡 Tip**
@@ -305,11 +317,22 @@ It sees what the probe path allows it to see.
 ### The real process
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart LR
-    A[Choose protocol and scan type] --> B[Send probe]
-    B --> C[Observe reply / silence / error]
-    C --> D[Assign state]
-    D --> E[Decide next step]
+    A["Choose protocol<br/>and scan type"] --> B["Send probe"]
+    B --> C["Observe<br/>reply, silence, or error"]
+    C --> D["Assign state<br/>best-fit Nmap label"]
+    D --> E["Decide next step<br/>validate, enrich, or defer"]
+
+    classDef select fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:2px;
+    classDef action fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef evidence fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2px;
+    classDef decision fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:3px;
+
+    class A select;
+    class B action;
+    class C,D evidence;
+    class E decision;
 ```
 
 > **🚨 Important**
@@ -459,14 +482,27 @@ These states are more nuanced than simply open or closed.
 They help us express uncertainty honestly.
 
 ```mermaid
-mindmap
-  root((Nmap Port States))
-    open
-    closed
-    filtered
-    unfiltered
-    open|filtered
-    closed|filtered
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
+flowchart TD
+    ROOT["Nmap port states<br/><b>labels based on observed behavior</b>"]
+    ROOT --> O["open<br/>accepts traffic"]
+    ROOT --> C["closed<br/>reachable but not listening"]
+    ROOT --> F["filtered<br/>visibility blocked"]
+    ROOT --> U["unfiltered<br/>reachable in that scan context"]
+    ROOT --> OF["open|filtered<br/>cannot separate openness from filtering"]
+    ROOT --> CF["closed|filtered<br/>rare ambiguous result"]
+
+    classDef root fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:3px;
+    classDef strong fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:2px;
+    classDef clear fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef caution fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+    classDef uncertain fill:#4c0519,stroke:#fb7185,color:#fff1f2,stroke-width:2px;
+
+    class ROOT root;
+    class O strong;
+    class C,U clear;
+    class F caution;
+    class OF,CF uncertain;
 ```
 
 ### The six states at a glance
@@ -670,7 +706,7 @@ Possible reasons include:
 Let’s begin with a straightforward lab example:
 
 ```bash
-sudo nmap -sS -p 22,80,443 192.168.56.20
+sudo nmap -sS -p 22,80,443 192.168.57.25
 ```
 
 ### Command anatomy
@@ -681,7 +717,7 @@ sudo nmap -sS -p 22,80,443 192.168.56.20
 | `nmap` | Launches the scanner |
 | `-sS` | Requests a TCP SYN scan |
 | `-p 22,80,443` | Restricts the scan to three TCP ports |
-| `192.168.56.20` | The target host |
+| `192.168.57.25` | The target host |
 
 ### What this is trying to answer
 
@@ -694,7 +730,7 @@ sudo nmap -sS -p 22,80,443 192.168.56.20
 
 ```text
 Starting Nmap 7.xx at 2026-03-29 09:00 UTC
-Nmap scan report for 192.168.56.20
+Nmap scan report for 192.168.57.25
 Host is up (0.0041s latency).
 
 PORT    STATE    SERVICE
@@ -738,7 +774,7 @@ They tell different stories.
 Now let’s imagine we do not have the privileges or environment needed for a SYN scan.
 
 ```bash
-nmap -sT -p 22,80,443 192.168.56.20
+nmap -sT -p 22,80,443 192.168.57.25
 ```
 
 ### Why we might do this
@@ -755,7 +791,7 @@ The goal is still to understand port reachability, but the mechanics differ:
 
 ```text
 Starting Nmap 7.xx at 2026-03-29 09:05 UTC
-Nmap scan report for 192.168.56.20
+Nmap scan report for 192.168.57.25
 Host is up (0.0050s latency).
 
 PORT    STATE    SERVICE
@@ -790,7 +826,7 @@ So one lesson here is:
 Now let’s look at an example where ambiguity becomes much more obvious.
 
 ```bash
-sudo nmap -sU -p 53,67,161 192.168.56.20
+sudo nmap -sU -p 53,67,161 192.168.57.25
 ```
 
 ### Command anatomy
@@ -800,13 +836,13 @@ sudo nmap -sU -p 53,67,161 192.168.56.20
 | `sudo` | Often needed for full packet-level behavior |
 | `-sU` | Requests a UDP scan |
 | `-p 53,67,161` | Targets three UDP ports |
-| `192.168.56.20` | The target host |
+| `192.168.57.25` | The target host |
 
 ### Representative output
 
 ```text
 Starting Nmap 7.xx at 2026-03-29 09:12 UTC
-Nmap scan report for 192.168.56.20
+Nmap scan report for 192.168.57.25
 Host is up.
 
 PORT     STATE         SERVICE
@@ -1140,13 +1176,13 @@ A SYN scan and connect scan may answer similar questions, but the underlying mec
 
 ### Task
 
-Against a lab host, run one small TCP scan and one small UDP scan.
+Against the Module 01 baseline, run one small TCP scan and one small UDP-oriented scan, and save both results.
 
 For example:
 
 ```bash
-sudo nmap -sS -p 22,80,443 <target-ip>
-sudo nmap -sU -p 53,67,161 <target-ip>
+sudo nmap -sS -p 22,80,443 -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-tcp-small-YYYY-MM-DD 192.168.57.25
+sudo nmap -sU -p 53,88,137 -oA assessment-workspace/02-evidence/scans/module-02/goad-mini-dc01-udp-small-YYYY-MM-DD 192.168.57.10
 ```
 
 ### In your notes, answer the following
@@ -1156,15 +1192,16 @@ sudo nmap -sU -p 53,67,161 <target-ip>
 3. For each state, what direct evidence likely produced that label?
 4. Which ports deserve immediate manual validation?
 5. Which results reflect uncertainty rather than decisive knowledge?
+6. What line should be added to `host-tracking.md` for each host?
 
 ### Suggested note-taking format
 
 | **Observed Output** | **What Nmap is telling me** | **What still needs validation** |
 |---|---|---|
-| `22/tcp open` | A TCP service appears to be accepting traffic | Actual service details and configuration |
-| `80/tcp closed` | Port is reachable but not listening | Whether the service exists elsewhere or behind another route |
-| `53/udp open\|filtered` | Nmap cannot separate openness from filtering | Service-aware validation or alternative context |
-| `161/udp open` | A UDP response strongly suggests a live service | Actual service behavior and exposure |
+| `22/tcp open` on `192.168.57.25` | A TCP service appears to be accepting traffic | Actual service details and configuration |
+| `80/tcp closed` on `192.168.57.25` | Port is reachable but not listening | Whether the service exists elsewhere or behind another route |
+| `53/udp open\|filtered` on `192.168.57.10` | Nmap cannot separate openness from filtering | Service-aware validation or alternative context |
+| `137/udp open` on `192.168.57.10` | A UDP response strongly suggests a live service | Actual service behavior and exposure |
 
 > **💡 Tip**
 >

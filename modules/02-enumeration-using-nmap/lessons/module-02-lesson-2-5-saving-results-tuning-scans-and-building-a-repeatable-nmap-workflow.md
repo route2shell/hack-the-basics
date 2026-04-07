@@ -79,13 +79,24 @@
 ## Lesson Map
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart TD
-    A[Define the question] --> B[Choose scope and scan style]
-    B --> C[Save results in usable formats]
-    C --> D[Tune carefully for the environment]
-    D --> E[Run triage then enrichment]
-    E --> F[Capture notes and follow-up actions]
-    F --> G[Build a repeatable workflow]
+    A["Define the question"] --> B["Choose scope and scan style"]
+    B --> C["Save results in usable formats"]
+    C --> D["Tune carefully for the environment"]
+    D --> E["Run triage then enrichment"]
+    E --> F["Capture notes and follow-up actions"]
+    F --> G["Build a repeatable workflow"]
+
+    classDef foundation fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:2px;
+    classDef action fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef artifact fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2px;
+    classDef outcome fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:3px;
+
+    class A foundation;
+    class B,D,E action;
+    class C,F artifact;
+    class G outcome;
 ```
 
 > **💡 Tip**
@@ -181,7 +192,7 @@ A scan can be technically correct and still operationally weak.
 For example, imagine this command:
 
 ```bash
-nmap -sV -O -sC 10.10.10.15
+nmap -sV -O -sC 192.168.57.25
 ```
 
 That may produce a useful result.
@@ -208,10 +219,19 @@ This lesson is about the second idea.
 A disciplined Nmap workflow usually has to do three things well.
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart LR
-    A[Discover] --> B[Preserve]
-    B --> C[Interpret]
-    C --> D[Act]
+    A["Discover<br/>gather evidence"] --> B["Preserve<br/>save artifacts"] --> C["Interpret<br/>assign meaning"] --> D["Act<br/>choose the next workflow"]
+
+    classDef discover fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef preserve fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2px;
+    classDef interpret fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+    classDef act fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:3px;
+
+    class A discover;
+    class B preserve;
+    class C interpret;
+    class D act;
 ```
 
 ### 1. Discover
@@ -266,23 +286,26 @@ They are part of the assessment record.
 Nmap supports several output styles, and they do not all serve the same purpose.
 
 ```mermaid
-mindmap
-  root((Nmap Output))
-    Interactive
-      Live console view
-      Good for watching
-    Normal
-      Human-readable record
-      Good for review
-    XML
-      Structured data
-      Good for parsing and transformation
-    Grepable
-      Legacy text extraction mindset
-      Limited and older
-    All at once
-      oA basename
-      Better default habit
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
+flowchart TD
+    ROOT["Nmap output ecosystem<br/><b>different formats for different jobs</b>"]
+    ROOT --> I["Interactive<br/>live console view"]
+    ROOT --> N["Normal output<br/>human-readable review copy"]
+    ROOT --> X["XML<br/>structured data for reuse"]
+    ROOT --> G["Grepable<br/>legacy convenience format"]
+    ROOT --> A["All at once with -oA<br/>best default habit"]
+
+    classDef root fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:3px;
+    classDef live fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef structured fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2px;
+    classDef caution fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+    classDef best fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:3px;
+
+    class ROOT root;
+    class I,N live;
+    class X structured;
+    class G caution;
+    class A best;
 ```
 
 At a practical level, beginners should think about them like this:
@@ -330,7 +353,7 @@ Normal output is a saved, human-readable version of scan results.
 Example:
 
 ```bash
-nmap -oN scans/host-10.10.10.15-initial.nmap 10.10.10.15
+nmap -oN assessment-workspace/02-evidence/scans/module-02/meta-tgt-initial.nmap 192.168.57.25
 ```
 
 Why it is useful:
@@ -358,7 +381,7 @@ XML output exists for a different reason.
 Example:
 
 ```bash
-nmap -oX scans/host-10.10.10.15-initial.xml 10.10.10.15
+nmap -oX assessment-workspace/02-evidence/scans/module-02/meta-tgt-initial.xml 192.168.57.25
 ```
 
 XML is useful when we want:
@@ -383,7 +406,7 @@ Grepable output has historically been popular because it is easy to search and p
 Example:
 
 ```bash
-nmap -oG scans/host-10.10.10.15-initial.gnmap 10.10.10.15
+nmap -oG assessment-workspace/02-evidence/scans/module-02/meta-tgt-initial.gnmap 192.168.57.25
 ```
 
 But there is an important mindset correction here:
@@ -406,16 +429,16 @@ One of the easiest good habits we can build is using `-oA` with a basename.
 Example:
 
 ```bash
-nmap -oA scans/host-10.10.10.15-initial 10.10.10.15
+nmap -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-initial 192.168.57.25
 ```
 
 This tells Nmap to save the major formats at once using one common basename.
 
 That means we get files such as:
 
-- `scans/host-10.10.10.15-initial.nmap`
-- `scans/host-10.10.10.15-initial.xml`
-- `scans/host-10.10.10.15-initial.gnmap`
+- `assessment-workspace/02-evidence/scans/module-02/meta-tgt-initial.nmap`
+- `assessment-workspace/02-evidence/scans/module-02/meta-tgt-initial.xml`
+- `assessment-workspace/02-evidence/scans/module-02/meta-tgt-initial.gnmap`
 
 This is useful because it reduces decision friction.
 Instead of asking:
@@ -447,9 +470,9 @@ Compare these two approaches.
 
 ### Better naming
 
-- `scans/10.10.10.15-triage-2026-03-29`
-- `scans/10.10.10.15-enriched-2026-03-29`
-- `scans/subnet-10.10.10.0_24-discovery-2026-03-29`
+- `assessment-workspace/02-evidence/scans/module-02/meta-tgt-triage-2026-03-29`
+- `assessment-workspace/02-evidence/scans/module-02/meta-tgt-enriched-2026-03-29`
+- `assessment-workspace/02-evidence/scans/module-02/lab-net-discovery-2026-03-29`
 
 A good naming convention usually captures:
 
@@ -460,18 +483,21 @@ A good naming convention usually captures:
 ### Example directory structure
 
 ```text
-module-02-lab/
-├── scans/
-│   ├── 10.10.10.15-triage-2026-03-29.nmap
-│   ├── 10.10.10.15-triage-2026-03-29.xml
-│   ├── 10.10.10.15-triage-2026-03-29.gnmap
-│   ├── 10.10.10.15-enriched-2026-03-29.nmap
-│   ├── 10.10.10.15-enriched-2026-03-29.xml
-│   └── 10.10.10.15-enriched-2026-03-29.gnmap
-├── notes/
-│   └── module-02-host-notes.md
-└── targets/
-    └── module-02-targets.txt
+assessment-workspace/
+├── 01-target-notes/
+│   └── host-tracking.md
+├── 02-evidence/
+│   └── scans/
+│       └── module-02/
+│           ├── lab-net-discovery-2026-03-29.nmap
+│           ├── lab-net-discovery-2026-03-29.xml
+│           ├── lab-net-discovery-2026-03-29.gnmap
+│           ├── meta-tgt-triage-2026-03-29.nmap
+│           ├── meta-tgt-triage-2026-03-29.xml
+│           ├── meta-tgt-enriched-2026-03-29.nmap
+│           └── module-02-targets.txt
+└── 03-analysis/
+    └── follow-up-queue.md
 ```
 
 That structure is not magical.
@@ -496,9 +522,9 @@ For example, a note entry might include:
 | **Field** | **Example** |
 |---|---|
 | Date | 2026-03-29 |
-| Target | 10.10.10.15 |
+| Target | `META-TGT (192.168.57.25)` |
 | Scan purpose | Initial triage |
-| Command | `nmap -oA scans/10.10.10.15-triage-2026-03-29 10.10.10.15` |
+| Command | `nmap -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-triage-2026-03-29 192.168.57.25` |
 | Summary | 22, 80, 443, 445 open |
 | Next step | Enrich with service detection and OS clues |
 
@@ -543,11 +569,18 @@ This is why blindly copying an aggressive command from a cheatsheet is weaker th
 For this lesson, we will keep tuning grounded in four practical levers.
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart TD
-    A[Tuning] --> B[Port selection]
-    A --> C[Timing pace]
-    A --> D[Retries and timeouts]
-    A --> E[Discovery and noise controls]
+    A["Tuning"] --> B["Port selection<br/>scope first"]
+    A --> C["Timing pace<br/>speed vs reliability"]
+    A --> D["Retries and timeouts<br/>patience controls"]
+    A --> E["Discovery and noise controls<br/>visibility shaping"]
+
+    classDef root fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:3px;
+    classDef lever fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+
+    class A root;
+    class B,C,D,E lever;
 ```
 
 These four levers cover most of what beginners need to reason well about:
@@ -573,7 +606,7 @@ Because the number of targets and ports heavily affects scan time and noise.
 #### Default top ports mindset
 
 ```bash
-nmap 10.10.10.15
+nmap 192.168.57.25
 ```
 
 Good for:
@@ -585,7 +618,7 @@ Good for:
 #### Fast scan of fewer common ports
 
 ```bash
-nmap -F 10.10.10.15
+nmap -F 192.168.57.25
 ```
 
 Good for:
@@ -598,7 +631,7 @@ But remember: reduced scope means reduced coverage.
 #### Specific ports only
 
 ```bash
-nmap -p 22,80,443,445 10.10.10.15
+nmap -p 22,80,443,445 192.168.57.25
 ```
 
 Good for:
@@ -610,7 +643,7 @@ Good for:
 #### Full TCP port range
 
 ```bash
-nmap -p- 10.10.10.15
+nmap -p- 192.168.57.25
 ```
 
 Good for:
@@ -624,7 +657,7 @@ It should be a deliberate choice, not a reflex.
 #### Top-N port strategies
 
 ```bash
-nmap --top-ports 1000 10.10.10.15
+nmap --top-ports 1000 192.168.57.25
 ```
 
 Good for:
@@ -745,7 +778,7 @@ Some of it is about surrounding behavior.
 Example:
 
 ```bash
-nmap -n 10.10.10.15
+nmap -n 192.168.57.25
 ```
 
 Using `-n` tells Nmap not to do reverse DNS resolution.
@@ -766,7 +799,7 @@ Sometimes we deliberately skip it.
 Example:
 
 ```bash
-nmap -Pn 10.10.10.15
+nmap -Pn 192.168.57.25
 ```
 
 This tells Nmap to treat the host as up and skip normal host discovery assumptions.
@@ -793,10 +826,15 @@ That can involve:
 There is a triangle we should keep in mind.
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart LR
-    A[Speed] --- B[Accuracy]
-    B --- C[Visibility / Noise]
+    A["Speed"] --- B["Accuracy"]
+    B --- C["Visibility / noise"]
     C --- A
+
+    classDef tradeoff fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+
+    class A,B,C tradeoff;
 ```
 
 In practice:
@@ -824,10 +862,17 @@ For this module, a good beginner pattern looks like this:
 4. **Capture notes and next actions** — convert output into workflow decisions
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart TD
-    A[Triage] --> B[Enrichment]
-    B --> C[Focused follow-up]
-    C --> D[Notes and service-specific next steps]
+    A["Triage"] --> B["Enrichment"]
+    B --> C["Focused follow-up"]
+    C --> D["Notes and service-specific next steps"]
+
+    classDef stage fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef artifact fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:3px;
+
+    class A,B,C stage;
+    class D artifact;
 ```
 
 That is simple enough to use consistently, but strong enough to support real work.
@@ -845,7 +890,7 @@ The triage scan answers questions like:
 Example mindset:
 
 ```bash
-nmap -oA scans/10.10.10.15-triage-2026-03-29 10.10.10.15
+nmap -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-triage-2026-03-29 192.168.57.25
 ```
 
 Why this works:
@@ -858,7 +903,7 @@ Why this works:
 For multiple targets:
 
 ```bash
-nmap -sn -oA scans/subnet-discovery-2026-03-29 10.10.10.0/24
+nmap -sn -oA assessment-workspace/02-evidence/scans/module-02/lab-net-discovery-2026-03-29 192.168.57.0/24
 ```
 
 That keeps the discovery question separate from deeper port work.
@@ -872,7 +917,7 @@ Once triage reveals worthwhile hosts, we enrich.
 Example:
 
 ```bash
-nmap -sV -O --traceroute -oA scans/10.10.10.15-enriched-2026-03-29 10.10.10.15
+nmap -sV -O --traceroute -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-enriched-2026-03-29 192.168.57.25
 ```
 
 This asks richer questions:
@@ -884,7 +929,7 @@ This asks richer questions:
 Sometimes we may also include focused default scripts:
 
 ```bash
-nmap -sV -sC -oA scans/10.10.10.15-default-scripts-2026-03-29 10.10.10.15
+nmap -sV -sC -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-default-scripts-2026-03-29 192.168.57.25
 ```
 
 The key idea is not that every host needs every enrichment feature.
@@ -901,19 +946,19 @@ Examples:
 ### Re-check only open or important ports
 
 ```bash
-nmap -p 22,80,443,445 -sV -oA scans/10.10.10.15-focused-2026-03-29 10.10.10.15
+nmap -p 22,80,443,445 -sV -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-focused-2026-03-29 192.168.57.25
 ```
 
 ### Go broader after triage suggests it is worthwhile
 
 ```bash
-nmap -p- -oA scans/10.10.10.15-fulltcp-2026-03-29 10.10.10.15
+nmap -p- -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-fulltcp-2026-03-29 192.168.57.25
 ```
 
 ### Focus on a specific service family later
 
 ```bash
-nmap -p 445 --script smb-os-discovery,smb-enum-shares -oA scans/10.10.10.15-smb-2026-03-29 10.10.10.15
+nmap -p 445 --script smb-os-discovery,smb-enum-shares -oA assessment-workspace/02-evidence/scans/module-02/goad-mini-dc01-smb-2026-03-29 192.168.57.10
 ```
 
 That is the real power of workflow discipline.
@@ -925,18 +970,18 @@ We use different scans for different questions.
 ## Command Walkthrough 1: Saving a Clean First-Pass Scan
 
 ```bash
-mkdir -p scans
-nmap -oA scans/10.10.10.15-triage-2026-03-29 10.10.10.15
+mkdir -p assessment-workspace/02-evidence/scans/module-02
+nmap -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-triage-2026-03-29 192.168.57.25
 ```
 
 ### What this does well
 
 | **Part** | **Meaning** | **Why it matters** |
 |---|---|---|
-| `mkdir -p scans` | Creates a scan output directory if needed | Builds clean artifact habits |
+| `mkdir -p assessment-workspace/02-evidence/scans/module-02` | Creates the shared scan output directory if needed | Builds clean artifact habits in the course-wide workspace |
 | `nmap` | Runs the scan | Starts with a simple first pass |
-| `-oA scans/10.10.10.15-triage-2026-03-29` | Saves the major output formats using one basename | Preserves evidence in multiple useful forms |
-| `10.10.10.15` | Defines the target | Keeps the question narrow and clear |
+| `-oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-triage-2026-03-29` | Saves the major output formats using one basename | Preserves evidence in multiple useful forms |
+| `192.168.57.25` | Defines the target | Keeps the question narrow and clear |
 
 ### Why this is a strong beginner command
 
@@ -950,7 +995,7 @@ Because it solves two problems at once:
 ## Command Walkthrough 2: Structured Enrichment with Artifacts
 
 ```bash
-nmap -sV -O --traceroute -oA scans/10.10.10.15-enriched-2026-03-29 10.10.10.15
+nmap -sV -O --traceroute -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-enriched-2026-03-29 192.168.57.25
 ```
 
 ### What this adds
@@ -973,18 +1018,18 @@ It makes the most sense after the target already looks interesting enough to jus
 
 For repeated work, file-based targeting is often cleaner than giant inline target strings.
 
-Example `targets/module-02-targets.txt`:
+Example `assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt`:
 
 ```text
-10.10.10.15
-10.10.10.20
-10.10.10.25
+192.168.57.10
+192.168.57.25
+192.168.57.31
 ```
 
 Scan example:
 
 ```bash
-nmap -iL targets/module-02-targets.txt -oA scans/module-02-hostset-triage-2026-03-29
+nmap -iL assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt -oA assessment-workspace/02-evidence/scans/module-02/module-02-hostset-triage-2026-03-29
 ```
 
 ### Why this is useful
@@ -1028,11 +1073,11 @@ That review step is how scan output becomes workflow input.
 Here is a simple host note format that scales well for beginners.
 
 ```markdown
-## Host: 10.10.10.15
+## Host: META-TGT (192.168.57.25)
 
 ### Scan history
-- 2026-03-29 — triage — `nmap -oA scans/10.10.10.15-triage-2026-03-29 10.10.10.15`
-- 2026-03-29 — enriched — `nmap -sV -O --traceroute -oA scans/10.10.10.15-enriched-2026-03-29 10.10.10.15`
+- 2026-03-29 — triage — `nmap -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-triage-2026-03-29 192.168.57.25`
+- 2026-03-29 — enriched — `nmap -sV -O --traceroute -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-enriched-2026-03-29 192.168.57.25`
 
 ### Key observations
 - Host appears up
@@ -1335,24 +1380,24 @@ Good tuning is about deliberate tradeoffs, not ego or blind aggression.
 
 ### Goal
 
-Against a lab host or small authorized lab subnet, perform a simple three-pass Nmap workflow and preserve your artifacts cleanly.
+Against the Module 01 baseline, perform a three-pass Nmap workflow that writes into the shared `assessment-workspace/` and ends with a clear Module 03 handoff.
 
 ### Suggested workflow
 
 #### Step 1: Discovery or triage
 
-Run a first-pass scan appropriate to your target set and save the results.
+Run a first-pass scan appropriate to your target set and save the results in `assessment-workspace/02-evidence/scans/module-02/`.
 
 Examples:
 
 ```bash
-nmap -sn -oA scans/subnet-discovery-YYYY-MM-DD 10.10.10.0/24
+nmap -sn -oA assessment-workspace/02-evidence/scans/module-02/lab-net-discovery-YYYY-MM-DD 192.168.57.0/24
 ```
 
 or
 
 ```bash
-nmap -oA scans/host-triage-YYYY-MM-DD 10.10.10.15
+nmap -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-triage-YYYY-MM-DD 192.168.57.25
 ```
 
 #### Step 2: Enrichment
@@ -1362,7 +1407,7 @@ Choose one interesting host and enrich the scan.
 Example:
 
 ```bash
-nmap -sV -O --traceroute -oA scans/host-enriched-YYYY-MM-DD 10.10.10.15
+nmap -sV -O --traceroute -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-enriched-YYYY-MM-DD 192.168.57.25
 ```
 
 #### Step 3: Focused follow-up
@@ -1372,7 +1417,7 @@ Pick a few relevant ports and perform a narrower, more purposeful follow-up.
 Example:
 
 ```bash
-nmap -p 22,80,443,445 -sV -oA scans/host-focused-YYYY-MM-DD 10.10.10.15
+nmap -p 22,80,443,445 -sV -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-focused-YYYY-MM-DD 192.168.57.25
 ```
 
 ### In your notes, answer these questions
@@ -1382,6 +1427,7 @@ nmap -p 22,80,443,445 -sV -oA scans/host-focused-YYYY-MM-DD 10.10.10.15
 3. Which output files did you save?
 4. What changed between the first and second pass?
 5. Which open services now deserve protocol-specific follow-up outside Nmap?
+6. What did you add to `host-tracking.md` and `follow-up-queue.md`?
 
 ### Suggested artifact checklist
 
@@ -1389,15 +1435,16 @@ nmap -p 22,80,443,445 -sV -oA scans/host-focused-YYYY-MM-DD 10.10.10.15
 - at least one `.nmap` file
 - at least one `.xml` file
 - target list or scope record
-- short notes file describing observations and next steps
+- an updated host-tracking entry
+- a follow-up queue entry describing the Module 03 handoff
 
 ### Suggested note table
 
 | **Scan Stage** | **Question** | **Command** | **Key Result** | **Next Action** |
 |---|---|---|---|---|
 | Triage | What is exposed? | `nmap ...` | 22, 80, 443 open | Run enrichment |
-| Enrichment | What services and host clues are present? | `nmap -sV -O ...` | HTTP stack clues, SMB visible | Run focused follow-up |
-| Focused follow-up | Which services deserve deeper testing? | `nmap -p ...` | Web + SMB confirmed | Move into service-specific enumeration |
+| Enrichment | What services and host clues are present? | `nmap -sV -O ...` | Web stack clues, platform hints, service nouns captured | Run focused follow-up |
+| Focused follow-up | Which services deserve deeper testing? | `nmap -p ...` | Web and service clues preserved for notes | Move into Module 03 service footprinting |
 
 > **💡 Tip**
 >
@@ -1444,4 +1491,3 @@ and start asking:
 
 > **One-sentence summary:**  
 > Strong Nmap work is not just about finding hosts and ports — it is about saving evidence, tuning deliberately, and using a repeatable workflow that turns scan output into disciplined next steps.
-

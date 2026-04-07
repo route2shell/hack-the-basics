@@ -67,12 +67,23 @@
 ## Lesson Map
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart TD
-    A[Port states identified] --> B[Probe open ports more deeply]
-    B --> C[Collect service and version clues]
-    C --> D[Infer OS and topology hints]
-    D --> E[Use carefully chosen NSE follow-up]
-    E --> F[Validate manually and prioritize next steps]
+    A["Port states identified"] --> B["Probe open ports more deeply"]
+    B --> C["Collect service and version clues"]
+    C --> D["Infer OS and topology hints"]
+    D --> E["Use carefully chosen NSE follow-up"]
+    E --> F["Validate manually and prioritize next steps"]
+
+    classDef foundation fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:2px;
+    classDef enrich fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef evidence fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2px;
+    classDef handoff fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:3px;
+
+    class A foundation;
+    class B,C enrich;
+    class D,E evidence;
+    class F handoff;
 ```
 
 > **💡 Tip**
@@ -204,12 +215,23 @@ A strong operator asks:
 Once ports are identified, Nmap can help answer richer questions.
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart LR
-    A[Open port] --> B[What service is this likely to be?]
-    B --> C[Do we have version clues?]
-    C --> D[What does the host resemble?]
-    D --> E[Can scripts gather useful follow-up detail?]
-    E --> F[What should be validated manually next?]
+    A["Open port<br/>starting clue"] --> B["Service identity<br/>what is this likely to be?"]
+    B --> C["Version clues<br/>how specific is the fingerprint?"]
+    C --> D["Host profile<br/>what does the system resemble?"]
+    D --> E["Script-assisted detail<br/>what low-friction data can we gather?"]
+    E --> F["Manual validation<br/>what still needs confirmation?"]
+
+    classDef start fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:2px;
+    classDef enrich fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef profile fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2px;
+    classDef validate fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:3px;
+
+    class A start;
+    class B,C enrich;
+    class D,E profile;
+    class F validate;
 ```
 
 At a high level, enrichment after port discovery often includes:
@@ -294,11 +316,22 @@ Version detection is better understood as a combination of:
 ### A useful mental model
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart TD
-    A[Send service-specific probes] --> B[Observe banners and behavior]
-    B --> C[Compare to known fingerprints]
-    C --> D[Assign best-fit service/version guess]
-    D --> E[Report confidence-limited result]
+    A["Send service-specific probes"] --> B["Observe banners and behavior"]
+    B --> C["Compare with known fingerprints"]
+    C --> D["Assign the best-fit service guess"]
+    D --> E["Report a confidence-limited result"]
+
+    classDef probe fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef evidence fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2px;
+    classDef classify fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+    classDef output fill:#4c0519,stroke:#fb7185,color:#fff1f2,stroke-width:3px;
+
+    class A probe;
+    class B,C evidence;
+    class D classify;
+    class E output;
 ```
 
 ### What this means in practice
@@ -743,7 +776,7 @@ Use scripts the same way we use any other follow-up technique:
 A common first enrichment step is service and version detection.
 
 ```bash
-nmap -sV 10.10.10.25
+nmap -sV 192.168.57.25
 ```
 
 ### Command anatomy
@@ -752,7 +785,7 @@ nmap -sV 10.10.10.25
 |---|---|
 | `nmap` | Launches Nmap |
 | `-sV` | Enables service/version detection against discovered open ports |
-| `10.10.10.25` | The target host |
+| `192.168.57.25` | The target host |
 
 ### What we are trying to learn
 
@@ -795,7 +828,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 Once we have useful responsive ports, we may ask for broader host context.
 
 ```bash
-nmap -O --traceroute 10.10.10.25
+nmap -O --traceroute 192.168.57.25
 ```
 
 ### Command anatomy
@@ -812,18 +845,17 @@ Device type: general purpose
 Running: Linux 5.X
 OS CPE: cpe:/o:linux:linux_kernel:5
 OS details: Linux 5.4 - 5.15
-Network Distance: 2 hops
+Network Distance: 1 hop
 TRACEROUTE
 HOP RTT     ADDRESS
-1   1.23 ms 10.10.10.1
-2   4.87 ms 10.10.10.25
+1   0.87 ms 192.168.57.25
 ```
 
 ### How we should interpret this
 
 - Nmap believes the host resembles a general-purpose Linux system
 - the version range is not perfectly precise, but still useful
-- the host appears two hops away, which may help explain latency and visibility compared with a same-subnet scan
+- in the Module 01 baseline, a one-hop traceroute often simply confirms that the host is directly reachable on the lab segment from our current position
 
 ### What we should **not** do
 
@@ -833,9 +865,9 @@ We should not write in our notes:
 
 That would overstate the certainty.
 
-A better note would be:
+A better note in the Module 01 lab would be:
 
-> “Nmap OS detection suggests a general-purpose Linux host, likely kernel family 5.x, approximately 2 hops away.”
+> “Nmap OS detection suggests a general-purpose Linux host on the local lab segment. The host appears directly reachable from the current Kali WSL position, but exact OS details still need validation.”
 
 That wording preserves evidence quality.
 
@@ -846,7 +878,7 @@ That wording preserves evidence quality.
 A common next step is to use Nmap’s default scripts or specific discovery-oriented scripts.
 
 ```bash
-nmap -sC -sV 10.10.10.25
+nmap -sC -sV 192.168.57.25
 ```
 
 ### What `-sC` means here
@@ -886,7 +918,7 @@ This is extremely useful for later recon and validation.
 Sometimes we do not want the whole default set. We want one focused script.
 
 ```bash
-nmap --script http-title,ssl-cert -p 80,443 10.10.10.25
+nmap --script http-title,ssl-cert -p 80,443 192.168.57.25
 ```
 
 This is a good example of using NSE with intent.
@@ -904,13 +936,26 @@ We are answering very specific questions:
 A useful workflow after basic port scanning often looks like this:
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart TD
-    A[Basic host and port discovery complete] --> B[Run service detection on interesting hosts]
-    B --> C[Add OS detection where visibility is good enough]
-    C --> D[Use traceroute when path context is useful]
-    D --> E[Run default or selective NSE based on the services found]
-    E --> F[Validate the most important findings manually]
-    F --> G[Capture notes, evidence, and next-step priorities]
+    A["Basic host and port discovery complete"] --> B["Run service detection<br/>on interesting hosts"]
+    B --> C["Add OS detection<br/>when visibility supports it"]
+    C --> D["Use traceroute<br/>when path context matters"]
+    D --> E["Run default or selective NSE<br/>based on the services found"]
+    E --> F["Validate the most important findings manually"]
+    F --> G["Capture notes, evidence,<br/>and next-step priorities"]
+
+    classDef start fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:2px;
+    classDef enrich fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef context fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2px;
+    classDef decision fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+    classDef artifact fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:3px;
+
+    class A start;
+    class B,E enrich;
+    class C,D context;
+    class F decision;
+    class G artifact;
 ```
 
 ### Step 1: Start with confirmed exposure
@@ -1184,17 +1229,17 @@ Traceroute helps us understand path context, hop distance, and possible explanat
 
 ### Task
 
-Against an authorized lab host, perform:
+Against one baseline host from your `host-tracking.md`, perform a basic pass and an enriched pass, and save both artifacts.
 
 ```bash
-nmap <target-ip>
-nmap -sV -sC <target-ip>
+nmap -oA assessment-workspace/02-evidence/scans/module-02/<host>-basic-YYYY-MM-DD <target-ip>
+nmap -sV -sC -oA assessment-workspace/02-evidence/scans/module-02/<host>-enriched-YYYY-MM-DD <target-ip>
 ```
 
 If conditions support it, optionally add:
 
 ```bash
-nmap -O --traceroute <target-ip>
+nmap -O --traceroute -oA assessment-workspace/02-evidence/scans/module-02/<host>-os-YYYY-MM-DD <target-ip>
 ```
 
 ### As you review the output, answer these questions in your notes
@@ -1205,6 +1250,7 @@ nmap -O --traceroute <target-ip>
 4. Did the enriched output change how you think about the host’s role?
 5. Which findings feel strong, and which still need manual validation?
 6. If you used `-O` or `--traceroute`, what path or platform clues were added?
+7. What should be written into `host-tracking.md` and `follow-up-queue.md` before moving on?
 
 ### Suggested note-taking format
 

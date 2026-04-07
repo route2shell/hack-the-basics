@@ -61,13 +61,26 @@
 ## Lesson Map
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart TD
-    A[Define what is in scope] --> B[Choose the right target form]
-    B --> C[Choose host discovery methods]
-    C --> D[Send probes and observe replies or silence]
-    D --> E[Interpret what appears up from this network position]
-    E --> F[Build a clean target list]
-    F --> G[Hand off live hosts for deeper scanning]
+    A["Define scope<br/>what is actually in bounds?"] --> B["Choose target form<br/>host, subnet, list, exclusions"]
+    B --> C["Choose discovery method<br/>ARP, ICMP, TCP, UDP"]
+    C --> D["Observe replies or silence<br/>from the current vantage point"]
+    D --> E["Interpret which hosts appear up<br/>without overstating certainty"]
+    E --> F["Build a reusable live-host list"]
+    F --> G["Hand off live hosts<br/>for deeper scanning"]
+
+    classDef foundation fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:2px;
+    classDef method fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef evidence fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2px;
+    classDef artifact fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+    classDef handoff fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:3px;
+
+    class A foundation;
+    class B,C method;
+    class D,E evidence;
+    class F artifact;
+    class G handoff;
 ```
 
 > **💡 Tip**
@@ -268,7 +281,7 @@ That flexibility is useful, but only if we stay deliberate.
 Useful when we want to validate one address quickly.
 
 ```bash
-nmap -sn 192.168.56.10
+nmap -sn 192.168.57.25
 ```
 
 ### CIDR range
@@ -276,7 +289,7 @@ nmap -sn 192.168.56.10
 Useful when scope is expressed as a subnet.
 
 ```bash
-nmap -sn 192.168.56.0/24
+nmap -sn 192.168.57.0/24
 ```
 
 ### Explicit range or multiple hosts
@@ -284,8 +297,8 @@ nmap -sn 192.168.56.0/24
 Useful when we only care about a handful of addresses.
 
 ```bash
-nmap -sn 192.168.56.10,12,15
-nmap -sn 192.168.56.20-30
+nmap -sn 192.168.57.10,25,31
+nmap -sn 192.168.57.20-31
 ```
 
 ### Input file
@@ -293,7 +306,7 @@ nmap -sn 192.168.56.20-30
 Useful when scope has already been curated or exported into a list.
 
 ```bash
-nmap -sn -iL targets.txt
+nmap -sn -iL assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt
 ```
 
 ### Exclusions
@@ -301,7 +314,7 @@ nmap -sn -iL targets.txt
 Useful when a broader range contains systems we must avoid.
 
 ```bash
-nmap -sn 10.10.10.0/24 --exclude 10.10.10.5,10.10.10.7
+nmap -sn 192.168.57.0/24 --exclude 192.168.57.31
 ```
 
 ### Target definition comparison
@@ -327,20 +340,23 @@ Host discovery is not one technique. It is a family of techniques.
 Different networks and hosts respond differently, so it helps to think in categories.
 
 ```mermaid
-mindmap
-  root((Host Discovery))
-    ARP
-      Same subnet
-      Strong local signal
-    ICMP
-      Echo requests
-      Common but often filtered
-    TCP-based
-      SYN-like probes
-      Useful when ICMP is blocked
-    UDP-based
-      Less common
-      Often ambiguous
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
+flowchart LR
+    CORE["Host discovery<br/><b>find meaningful signs of life</b>"]
+    CORE --> ARP["ARP discovery<br/>same-subnet and strong local signal"]
+    CORE --> ICMP["ICMP discovery<br/>common first probe, often filtered"]
+    CORE --> TCP["TCP-based discovery<br/>useful when ICMP is weak"]
+    CORE --> UDP["UDP-based discovery<br/>less common and often ambiguous"]
+
+    classDef core fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:3px;
+    classDef strong fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef medium fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2px;
+    classDef uncertain fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+
+    class CORE core;
+    class ARP strong;
+    class ICMP,TCP medium;
+    class UDP uncertain;
 ```
 
 | **Method family** | **What it relies on** | **Where it tends to work best** | **Common limitation** |
@@ -553,9 +569,20 @@ If we are separated by routers, VPN boundaries, NAT, ACLs, or firewalls, then di
 - dropped packets that create ambiguity
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart LR
-    A[Operator on same subnet] --> B[Direct local discovery options]
-    C[Operator across routed path] --> D[Visibility shaped by intermediate network controls]
+    subgraph LOCAL["Same-subnet view"]
+        A["Operator on same subnet"] --> B["Direct local discovery options<br/>ARP often strongest"]
+    end
+    subgraph ROUTED["Routed or remote view"]
+        C["Operator across routed path"] --> D["Visibility shaped by routers,<br/>firewalls, ACLs, and path controls"]
+    end
+
+    classDef local fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:2px;
+    classDef routed fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+
+    class A,B local;
+    class C,D routed;
 ```
 
 ### Why this matters operationally
@@ -643,14 +670,27 @@ It is:
 Now let’s turn the concepts into a simple workflow we can actually reuse.
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart TD
-    A[Review scope] --> B[Choose target form]
-    B --> C[Choose initial discovery method]
-    C --> D[Run discovery]
-    D --> E[Record hosts that appear up]
-    E --> F[Question ambiguity and silent ranges]
-    F --> G[Adjust method if needed]
-    G --> H[Save a clean live-host list]
+    A["Review scope"] --> B["Choose target form"]
+    B --> C["Choose initial discovery method"]
+    C --> D["Run discovery"]
+    D --> E["Record hosts that appear up"]
+    E --> F["Question ambiguity<br/>and silent ranges"]
+    F --> G["Adjust method if needed"]
+    G --> H["Save a clean live-host list"]
+
+    classDef foundation fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:2px;
+    classDef action fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef evidence fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2px;
+    classDef decision fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+    classDef artifact fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:3px;
+
+    class A foundation;
+    class B,C,D action;
+    class E evidence;
+    class F,G decision;
+    class H artifact;
 ```
 
 ### Step 1: Review the scope
@@ -716,7 +756,7 @@ The best outcome of host discovery is often a simple artifact:
 Let’s start with a foundational example:
 
 ```bash
-nmap -sn 192.168.56.0/24
+nmap -sn 192.168.57.0/24
 ```
 
 ### Command anatomy
@@ -725,7 +765,7 @@ nmap -sn 192.168.56.0/24
 |---|---|
 | `nmap` | Launches Nmap |
 | `-sn` | Tells Nmap to perform host discovery without proceeding into a normal port scan |
-| `192.168.56.0/24` | Defines the target subnet |
+| `192.168.57.0/24` | Defines the target subnet |
 
 ### What this command is trying to do
 
@@ -753,11 +793,11 @@ A representative discovery result may look like this:
 
 ```text
 Starting Nmap 7.xx ( https://nmap.org ) at 2026-03-29 09:00 UTC
-Nmap scan report for 192.168.56.1
-Host is up (0.0012s latency).
-Nmap scan report for 192.168.56.10
+Nmap scan report for 192.168.57.10
 Host is up (0.0024s latency).
-Nmap scan report for 192.168.56.101
+Nmap scan report for 192.168.57.25
+Host is up (0.0021s latency).
+Nmap scan report for 192.168.57.31
 Host is up (0.0031s latency).
 Nmap done: 256 IP addresses (3 hosts up) scanned in 3.41 seconds
 ```
@@ -766,7 +806,7 @@ Nmap done: 256 IP addresses (3 hosts up) scanned in 3.41 seconds
 
 | **Output line** | **How we should read it** | **Why it matters** |
 |---|---|---|
-| `Nmap scan report for 192.168.56.1` | Nmap is reporting a target that produced enough evidence to list | Confirms a specific live candidate |
+| `Nmap scan report for 192.168.57.10` | Nmap is reporting a target that produced enough evidence to list | Confirms a specific live candidate |
 | `Host is up` | A meaningful response was observed | This address appears to map to a live system from our current position |
 | `0.0012s latency` | Rough observed response timing | Helpful context, but not something to overinterpret |
 | `256 IP addresses (3 hosts up)` | Nmap evaluated the full subnet target set and found three hosts that appeared alive | Gives us a quick scope-to-result summary |
@@ -800,7 +840,7 @@ Sometimes the cleaner workflow is to use a target file.
 ### Example: curated targets from a file
 
 ```bash
-nmap -sn -iL targets.txt
+nmap -sn -iL assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt
 ```
 
 This is useful when:
@@ -812,7 +852,7 @@ This is useful when:
 ### Example: broad range with exclusions
 
 ```bash
-nmap -sn 10.10.10.0/24 --exclude 10.10.10.5,10.10.10.7
+nmap -sn 192.168.57.0/24 --exclude 192.168.57.31
 ```
 
 This is useful when:
@@ -1109,37 +1149,39 @@ A strong outcome of host discovery is a reusable, evidence-based list of live ho
 
 ### Task
 
-Against a small lab subnet you are authorized to assess, run a discovery-only sweep such as:
+Against the Module 01 baseline subnet, run a discovery-only sweep and save the result into the shared workspace.
 
 ```bash
-nmap -sn <target-subnet>
+mkdir -p assessment-workspace/02-evidence/scans/module-02
+nmap -sn -oA assessment-workspace/02-evidence/scans/module-02/lab-net-discovery-YYYY-MM-DD 192.168.57.0/24
 ```
 
 Examples:
 
 ```bash
-nmap -sn 192.168.56.0/24
-nmap -sn -iL targets.txt
+nmap -sn -oA assessment-workspace/02-evidence/scans/module-02/lab-net-discovery-YYYY-MM-DD 192.168.57.0/24
+nmap -sn -iL assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt
 ```
 
 ### As you review the result, answer these questions in your notes
 
 1. What exact target form did I use, and why?
 2. How many addresses were evaluated?
-3. How many hosts were reported up?
+3. Which of the baseline hosts were reported up: `192.168.57.10`, `192.168.57.25`, `192.168.57.31`?
 4. What kind of evidence likely caused Nmap to treat those hosts as alive?
 5. Are there reasons some silent addresses might still deserve caution before I conclude they are down?
 6. What clean host list should I carry into the next stage?
+7. Which line will I add to `host-tracking.md` before moving to Lesson 2.3?
 
 ### Suggested note-taking format
 
 | **Target set** | **Discovery method / context** | **Hosts reported up** | **What I still need to question** |
 |---|---|---|---|
-| `192.168.56.0/24` | Local lab subnet, discovery-only sweep | `192.168.56.1`, `192.168.56.10`, `192.168.56.101` | Whether silent hosts are truly absent or just not visible to this method |
+| `192.168.57.0/24` | Kali WSL on `LAB-NET`, discovery-only sweep | `192.168.57.10`, `192.168.57.25`, `192.168.57.31` | Whether any silent addresses were filtered, powered off, or simply outside the baseline target set |
 
 > **💡 Tip**
 >
-> Try saving the output and turning the live results into a simple target file. That tiny workflow improvement pays off quickly in later lessons.
+> After the sweep, turn the live results into `assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt` and add at least one short host note. That tiny workflow improvement pays off immediately in later lessons.
 
 ---
 

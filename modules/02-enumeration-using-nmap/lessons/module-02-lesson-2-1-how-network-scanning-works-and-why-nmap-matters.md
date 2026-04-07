@@ -58,13 +58,26 @@
 ## Lesson Map
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart TD
-    A[We know little about the target] --> B[Define scope and targets]
-    B --> C[Send intentional probes]
-    C --> D[Observe replies, resets, ICMP errors, or silence]
-    D --> E[Infer host and port behavior]
-    E --> F[Decide what to investigate next]
-    F --> G[Use Nmap as the workflow engine for this process]
+    U["Unknown target surface<br/><b>high uncertainty</b>"] --> S["Scope and target definition<br/>what are we allowed to ask?"]
+    S --> P["Intentional probes<br/>ARP, ICMP, TCP, UDP"]
+    P --> O["Observed behavior<br/>replies, resets, errors, silence, timing"]
+    O --> I["Inference layer<br/>host status, port behavior, service clues"]
+    I --> N["Next-step decision<br/>scan deeper, validate manually, or stop"]
+    N --> W["Nmap workflow loop<br/><b>ask -> observe -> preserve -> follow up</b>"]
+
+    classDef start fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:2px;
+    classDef action fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef evidence fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2px;
+    classDef decision fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+    classDef outcome fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:3px;
+
+    class U start;
+    class S,P action;
+    class O,I evidence;
+    class N decision;
+    class W outcome;
 ```
 
 > **💡 Tip**
@@ -150,7 +163,7 @@ That means scanning is always tied to **perspective**.
 
 What you can see from:
 
-- your Kali VM on the same subnet
+- your Kali WSL instance on the same subnet
 - a cloud host on the public internet
 - a pivot host inside an internal segment
 - a VPN-connected position
@@ -241,10 +254,23 @@ That final step matters: much of scanning is not direct certainty. It is **disci
 This is the mental model we will return to throughout the entire module.
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart LR
-    A[Probe<br/>Send traffic intentionally] --> B[Observe<br/>Replies, resets, ICMP, timing, silence]
-    B --> C[Infer<br/>Host status, port state, service clues]
-    C --> D[Validate<br/>Manual follow-up and deeper enumeration]
+    subgraph LOOP["Scanning reasoning loop"]
+        direction LR
+        A["Probe<br/><b>send intentional traffic</b>"] --> B["Observe<br/>capture response behavior"]
+        B --> C["Infer<br/>assign the strongest justified meaning"]
+        C --> D["Validate<br/>confirm manually or with narrower follow-up"]
+    end
+    D -. feeds the next question .-> A
+
+    classDef action fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef evidence fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2px;
+    classDef decision fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+
+    class A action;
+    class B,C evidence;
+    class D decision;
 ```
 
 ### 1. Probe
@@ -315,11 +341,22 @@ Many beginners flatten them into one idea called “scanning.”
 That creates confusion later.
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart TD
-    A[Target input] --> B[Host discovery]
-    B --> C[Port scanning]
-    C --> D[Service detection]
-    D --> E[Manual validation and follow-up]
+    T["Target input<br/>IP, range, file, exclusions"] --> H["Host discovery<br/>who appears alive from here?"]
+    H --> P["Port scanning<br/>what is reachable?"]
+    P --> S["Service detection<br/>what may be behind the port?"]
+    S --> F["Focused validation<br/>manual checks and narrower follow-up"]
+
+    classDef input fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:2px;
+    classDef scan fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef enrich fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2px;
+    classDef follow fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+
+    class T input;
+    class H,P scan;
+    class S enrich;
+    class F follow;
 ```
 
 ### Host discovery
@@ -473,11 +510,11 @@ In practice, targets are often provided as:
 These examples are just to build comfort with what target definition can look like.
 
 ```bash
-nmap 192.168.56.10
-nmap 192.168.56.0/24
-nmap 192.168.56.10,12,15
-nmap -iL targets.txt
-nmap 10.10.10.0/24 --exclude 10.10.10.5
+nmap 192.168.57.25
+nmap 192.168.57.0/24
+nmap 192.168.57.10,25,31
+nmap -iL assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt
+nmap 192.168.57.0/24 --exclude 192.168.57.31
 ```
 
 ### What target definition should make us ask
@@ -521,9 +558,24 @@ If the target is behind routers, firewalls, VPN boundaries, or network controls,
 - latency and routing complexity affect interpretation
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart LR
-    A[Same subnet] --> B[Direct local visibility<br/>ARP can matter]
-    C[Different subnet / routed path] --> D[Visibility shaped by routers, ACLs, firewalls, NAT, VPNs]
+    subgraph LOCAL["Local position"]
+        L1["Same subnet<br/><b>direct adjacency</b>"]
+        L2["Strong local visibility<br/>ARP and low-hop signals"]
+        L1 --> L2
+    end
+    subgraph ROUTED["Routed or remote position"]
+        R1["Different subnet / routed path"]
+        R2["Visibility shaped by routers,<br/>ACLs, NAT, VPNs, firewalls"]
+        R1 --> R2
+    end
+
+    classDef local fill:#0f3a2f,stroke:#4ade80,color:#ecfdf5,stroke-width:2px;
+    classDef remote fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+
+    class L1,L2 local;
+    class R1,R2 remote;
 ```
 
 ### Why this matters for beginners
@@ -650,13 +702,26 @@ Nmap is not the whole workflow.
 But it is a major early engine inside that workflow.
 
 ```mermaid
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"fontSize":"14px","primaryTextColor":"#e5eef8","lineColor":"#7dd3fc","primaryColor":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155"}}}%%
 flowchart TD
-    A[Scope and target intake] --> B[Host discovery]
-    B --> C[Port discovery]
-    C --> D[Service identification]
-    D --> E[Focused follow-up with other tools]
-    E --> F[Manual validation]
-    F --> G[Notes, artifacts, reporting]
+    A["Scope and target intake"] --> B["Host discovery"]
+    B --> C["Port discovery"]
+    C --> D["Service identification"]
+    D --> E["Focused follow-up<br/>other tools and narrower scans"]
+    E --> F["Manual validation"]
+    F --> G["Notes, artifacts, reporting"]
+
+    classDef foundation fill:#162033,stroke:#7dd3fc,color:#dbeafe,stroke-width:2px;
+    classDef scan fill:#0f3a52,stroke:#5eead4,color:#ecfeff,stroke-width:2px;
+    classDef enrich fill:#1e3a8a,stroke:#60a5fa,color:#eff6ff,stroke-width:2px;
+    classDef action fill:#3b2f0b,stroke:#fbbf24,color:#fffbeb,stroke-width:2px;
+    classDef artifact fill:#4c0519,stroke:#fb7185,color:#fff1f2,stroke-width:3px;
+
+    class A foundation;
+    class B,C scan;
+    class D enrich;
+    class E,F action;
+    class G artifact;
 ```
 
 ### In plain language
@@ -690,7 +755,7 @@ Before we go deeper into practical discovery in the next lesson, let’s look at
 ### Example 1: A single host
 
 ```bash
-nmap 192.168.56.10
+nmap 192.168.57.25
 ```
 
 This is often appropriate when:
@@ -702,7 +767,7 @@ This is often appropriate when:
 ### Example 2: A subnet
 
 ```bash
-nmap 192.168.56.0/24
+nmap 192.168.57.0/24
 ```
 
 This is often appropriate when:
@@ -714,7 +779,7 @@ This is often appropriate when:
 ### Example 3: A curated list of targets
 
 ```bash
-nmap -iL targets.txt
+nmap -iL assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt
 ```
 
 This is useful when:
@@ -726,7 +791,7 @@ This is useful when:
 ### Example 4: A target set with exclusions
 
 ```bash
-nmap 10.10.10.0/24 --exclude 10.10.10.5
+nmap 192.168.57.0/24 --exclude 192.168.57.31
 ```
 
 This is useful when:
@@ -751,7 +816,7 @@ Consider this example:
 
 ```text
 Starting Nmap 7.xx ( https://nmap.org ) at 2026-03-29 12:00 UTC
-Nmap scan report for 192.168.56.10
+Nmap scan report for 192.168.57.25
 Host is up (0.0018s latency).
 Not shown: 998 closed tcp ports
 PORT    STATE SERVICE
@@ -1088,19 +1153,20 @@ Nmap is foundational because it supports discovery, classification, and structur
 
 ### Task
 
-Using a lab environment you are authorized to assess, define one of the following:
+Using the Module 01 baseline, complete the [scan planning worksheet](../references/module-02-scan-planning-worksheet.md) for one of the following:
 
-- a single host
-- a small subnet
-- a short file-based target list
+- a full discovery pass against `LAB-NET` on `192.168.57.0/24`
+- a first-pass scan of `META-TGT` at `192.168.57.25`
+- a first-pass scan of `GOAD-Mini-DC01` at `192.168.57.10`
 
-Then answer these questions in your notes **before** worrying about deep scan flags:
+Before you run anything beyond a tiny validation command, answer these questions in your notes:
 
-1. What exactly am I trying to learn from this target set?
-2. Why is this the right scope for that question?
-3. Am I scanning from the best network position I currently have?
-4. What kinds of responses would count as useful evidence?
-5. What would ambiguity look like in this situation?
+1. What exact question am I trying to answer with this first scan?
+2. Why is this the right target set for that question?
+3. Why is Kali WSL the correct current vantage point?
+4. Where will the saved output go inside `assessment-workspace/`?
+5. What would count as direct observation, and what would still be only inference?
+6. What should happen next if the result is ambiguous?
 
 ### Suggested note-taking template
 
@@ -1108,7 +1174,8 @@ Then answer these questions in your notes **before** worrying about deep scan fl
 |---|---|
 | What is my target set? |  |
 | Why this scope? |  |
-| What is my vantage point? |  |
+| What is my vantage point? | Kali WSL on `LAB-NET` |
+| Where will I save the output? | `assessment-workspace/02-evidence/scans/module-02/` |
 | What useful responses do I expect? |  |
 | What kinds of ambiguity may appear? |  |
 | What would I do after the first scan? |  |
