@@ -51,7 +51,7 @@ Most beginner-friendly offensive security content breaks down in one of two ways
 
 ---
 
-## The Course Promise
+## The Course
 
 By the end of the course, the learner should be able to move through a realistic lab assessment while explaining:
 
@@ -71,7 +71,7 @@ This course is designed to produce:
 
 ## What Makes It Different
 
-| Instead of this | We are building this |
+| Instead of.. | We are building.. |
 |---|---|
 | Tool-first learning | Workflow-first learning |
 | Memorizing flags | Understanding systems |
@@ -116,11 +116,11 @@ Each phase prepares the next one.
 
 | Phase | Focus | What the learner is building |
 |---|---|---|
-| **Phase I** | Orientation and surface mapping | Lab workflow, assessment mindset, network visibility, service reasoning |
-| **Phase II** | Web understanding and exposure analysis | Web discovery, traffic analysis, auth context, fuzzing, and core web attack thinking |
-| **Phase III** | Access and foothold operations | Common service attack paths, shells, payloads, and initial-access handling |
-| **Phase IV** | Local escalation and internal movement | Linux, Windows, pivoting, and deeper internal visibility |
-| **Phase V** | Enterprise reasoning, communication, and synthesis | Active Directory reasoning, reporting discipline, and capstone execution |
+| **I** | Orientation and surface mapping | Lab workflow, assessment mindset, network visibility, service reasoning |
+| **II** | Web understanding and exposure analysis | Web discovery, traffic analysis, auth context, fuzzing, and core web attack thinking |
+| **III** | Access and foothold operations | Common service attack paths, shells, payloads, and initial-access handling |
+| **IV** | Local escalation and internal movement | Linux, Windows, pivoting, and deeper internal visibility |
+| **V** | Enterprise reasoning, communication, and synthesis | Active Directory reasoning, reporting discipline, and capstone execution |
 
 <details>
 <summary><strong>Why this structure?</strong></summary>
@@ -180,32 +180,6 @@ We start with orientation and attack-surface mapping, move into web understandin
 
 ---
 
-## Repository Structure
-
-```text
-hack-the-basics/
-├── README.md
-├── hack-the-basics-implementation-blueprint.md
-├── COURSE_STATUS.md
-├── docs/
-├── templates/
-├── assets/
-└── modules/
-```
-
-### What lives where
-
-| Path | Role |
-|---|---|
-| [`modules/`](modules) | The actual learner-facing module implementations |
-| [`docs/`](docs) | Shared design, authoring, review, and agent guidance |
-| [`templates/`](templates) | Reusable starting points for lessons, labs, cheat sheets, and artifacts |
-| [`assets/`](assets) | Shared diagrams, screenshots, and visual support material |
-| [`hack-the-basics-implementation-blueprint.md`](hack-the-basics-implementation-blueprint.md) | The master curriculum and repository source of truth |
-| [`COURSE_STATUS.md`](COURSE_STATUS.md) | High-level implementation progress |
-
----
-
 ## What the Repository Is Meant to Contain
 
 As the course is built out, the repository is intended to include:
@@ -226,48 +200,9 @@ The repo is meant to work in two modes at once:
 
 ---
 
-## Build Principles
-
-The implementation and review system for the course follows a few simple rules:
-
-- new domains begin with a "how it works" lesson before tactics
-- enumeration comes before exploitation
-- repeated ideas should return with deeper context, not repetition alone
-- tools should support workflows, not replace them
-- every module should create a natural handoff into the next one
-- the course should remain GitHub-friendly, maintainable, and visually deliberate
-
----
-
-## Current Direction
-
-The repository is now being built around:
-
-- a master implementation blueprint
-- a shared Markdown design system
-- a module-by-module content architecture
-- reusable templates and agent briefs
-- practice, reference, and artifact systems designed for self-paced learners
-
-That means the course is open-source, but it is being built with the seriousness and structure of a premium training product.
-
----
 
 ## Useful Entry Points
 
 | If you want to... | Start here |
 |---|---|
 | begin the course as a learner | [Module 01](modules/01-orientation-and-assessment-workflow/README.md) |
-| see the full curriculum and repo architecture | [Master Blueprint](hack-the-basics-implementation-blueprint.md) |
-| check build progress | [Course Status](COURSE_STATUS.md) |
-| review the design system | [Markdown Visual System](docs/design/markdown-visual-system.md) |
-
----
-
-<div align="center">
-
-### Learn the craft in the right order.
-
-**Strong fundamentals. Clean workflows. Serious progression.**
-
-</div>
