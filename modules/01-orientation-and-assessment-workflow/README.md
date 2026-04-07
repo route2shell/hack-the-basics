@@ -56,7 +56,6 @@ By the end of Module 01, the learner should be operationally ready for Module 02
 | **Module** | 01 - Orientation and Assessment Workflow |
 | **Role** | Turn the learner from “new to the repo” into “ready to work from a stable lab and note system” |
 | **Level** | Beginner |
-| **Format** | Self-paced, Markdown-first, GitHub-native |
 
 | Builds On | Prepares Next | Core Outputs |
 |---|---|---|
