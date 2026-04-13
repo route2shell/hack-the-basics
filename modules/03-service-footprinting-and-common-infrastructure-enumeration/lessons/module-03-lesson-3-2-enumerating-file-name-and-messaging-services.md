@@ -19,7 +19,7 @@
 
 | **Prerequisites** | **You will practice** | **Main outcome** |
 |---|---|---|
-| Lesson 3.1, Module 02 or equivalent Nmap basics, basic shell usage | Turning service exposure into structured follow-up across FTP, SMB, NFS, DNS, SMTP, IMAP, and POP3 | Learning what to look for first, what clues matter most, and how to interpret service results like an analyst |
+| Lesson 3.1, Module 02 or equivalent Nmap basics, basic shell usage | Turning service exposure into structured follow-up across FTP, TFTP, SMB, NFS, DNS, SMTP, IMAP, and POP3 | Learning what to look for first, what clues matter most, and how to interpret service results like an analyst |
 
 > **🚨 Important**
 >
@@ -37,9 +37,11 @@
 - [The Practical Problem This Lesson Solves](#the-practical-problem-this-lesson-solves)
 - [Why These Service Families Come First](#why-these-service-families-come-first)
 - [A Protocol-Aware Enumeration Mindset](#a-protocol-aware-enumeration-mindset)
+- [A Default-Behavior and Dangerous-Settings Pattern](#a-default-behavior-and-dangerous-settings-pattern)
 - [What Counts as a Strong Enumeration Outcome?](#what-counts-as-a-strong-enumeration-outcome)
 - [File and Share Protocols at a Glance](#file-and-share-protocols-at-a-glance)
 - [FTP: What to Look for First](#ftp-what-to-look-for-first)
+- [TFTP: What to Look for First](#tftp-what-to-look-for-first)
 - [SMB: What to Look for First](#smb-what-to-look-for-first)
 - [NFS: What to Look for First](#nfs-what-to-look-for-first)
 - [Naming Services: DNS as Environment Map](#naming-services-dns-as-environment-map)
@@ -164,7 +166,8 @@ That is why this lesson sits exactly here in the course progression.
 By the end of this lesson, we should be able to:
 
 - explain what high-value information file, naming, and messaging services often reveal
-- identify low-friction first checks for FTP, SMB, NFS, DNS, SMTP, IMAP, and POP3
+- identify low-friction first checks for FTP, TFTP, SMB, NFS, DNS, SMTP, IMAP, and POP3
+- use default behavior and dangerous-setting clues as first-pass questions rather than memorized trivia
 - distinguish between protocol metadata, access clues, and stronger validation results
 - interpret banners, share names, records, greetings, TLS details, and capability output carefully
 - build a repeatable service-aware workflow for early enumeration
@@ -274,6 +277,7 @@ flowchart LR
 | **Service family** | **Good first questions** |
 |---|---|
 | FTP | Does it allow anonymous access? What banner or directory clues appear? |
+| TFTP | Is the service actually answering as TFTP? Which filenames or transfer behaviors matter? |
 | SMB | What is the host called? What shares exist? What auth posture is visible? |
 | NFS | What exports are exposed? Who appears allowed to mount them? |
 | DNS | What names, records, and trust boundaries are visible? |
@@ -300,6 +304,37 @@ That means we often start with:
 - record lookups
 
 before worrying about deeper testing.
+
+---
+
+## A Default-Behavior And Dangerous-Settings Pattern
+
+The HTB footprinting material does a useful thing repeatedly:
+
+- explain how the service usually behaves
+- highlight default configuration patterns
+- point out dangerous settings or weak exposure choices
+- then show how to footprint the service
+
+That pattern belongs here too.
+
+When a file, naming, or messaging service is exposed, ask:
+
+1. what is the service supposed to do in a normal environment?
+2. what does its default behavior usually look like?
+3. which weak or overly broad settings would make it unusually informative?
+4. which low-friction check can confirm that safely?
+
+Examples:
+
+- FTP: anonymous access, writable directories, banner leakage
+- TFTP: no authentication, shared read/write files, lack of directory listing
+- SMB: visible shares, signing posture, guest access, domain or workgroup naming
+- DNS: recursion, broad record visibility, zone transfer
+- SMTP: `VRFY`, `EXPN`, `STARTTLS`, visible auth methods
+- IMAP / POP3: clear capability lists, secure variants, auth negotiation clues
+
+That mindset keeps the lesson focused on **behavior and posture**, not just tool syntax.
 
 ---
 
@@ -348,6 +383,7 @@ File and share services are some of the most useful first targets in service foo
 | **Protocol** | **Typical role** | **Common clues** | **Why it matters** |
 |---|---|---|---|
 | FTP | File transfer | Banner, anonymous access, directory names, writable locations | May reveal files, staging areas, backups, or misconfigurations |
+| TFTP | Lightweight file transfer, often device-oriented or boot-oriented | UDP exposure, accessible filenames, unauthenticated transfer behavior | May reveal device configs, boot files, or globally readable content |
 | SMB | File / printer sharing, Windows resource access | Hostname, domain/workgroup, shares, auth posture, OS clues | Often reveals names, shares, trust context, and Windows posture |
 | NFS | Unix-like remote filesystem sharing | Export paths, allowed clients, mount posture | May reveal shared storage and access scope |
 
@@ -390,6 +426,52 @@ It may give:
 > **📝 Note**
 >
 > Even when FTP is not ultimately the key path, it can still reveal naming, environment hygiene, and operational habits quickly.
+
+---
+
+## TFTP: What to Look for First
+
+TFTP is much simpler than FTP and that simplicity is exactly why it deserves attention.
+
+### High-value first questions
+
+- Is `UDP/69` actually responding like TFTP?
+- Does the service allow read or write activity without authentication?
+- Are there obvious boot, config, firmware, or device-related filenames?
+- Does the host feel like a network appliance, PXE infrastructure node, or legacy transfer point?
+
+### Why TFTP matters
+
+TFTP often implies:
+
+- minimal or no authentication
+- operational convenience over strong security controls
+- device or bootstrapping workflows
+- globally readable or writable files in badly designed environments
+
+### What makes it different from FTP
+
+| **TFTP trait** | **Why it matters** |
+|---|---|
+| UDP-based | response behavior can feel sparser or less friendly than TCP services |
+| no built-in authentication | low-friction exposure can be meaningful immediately |
+| no directory listing | filenames and known paths matter more than browsing |
+| common in appliance / boot workflows | can reveal configs, firmware, and provisioning behavior |
+
+### Example first-pass thought process
+
+If you see `69/udp open tftp`, a strong note is not:
+
+> "TFTP open."
+
+It is closer to:
+
+> "Unauthenticated lightweight file-transfer service exposed; likely relevant to device config, provisioning, or boot workflows; investigate whether known filenames or transfer behavior reveal more."
+
+> **📝 Note**
+>
+> In the default course baseline, TFTP is usually reference-only.
+> But it still belongs in the module because it is part of the broader footprinting canon and follows the same analyst logic as FTP and NFS.
 
 ---
 

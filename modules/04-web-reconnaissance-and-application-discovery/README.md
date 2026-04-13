@@ -53,7 +53,6 @@ If we do this module well, Module 05 starts with a cleaner application map and a
 | **Module** | 04 - Web Reconnaissance and Application Discovery |
 | **Role** | Convert exposed web services into a mapped application surface and first-pass testing plan |
 | **Level** | Beginner to early intermediate |
-| **Format** | Self-paced, Markdown-first, GitHub-native |
 
 | Builds On | Prepares Next | Core Artifacts |
 |---|---|---|

@@ -121,6 +121,11 @@ For each baseline host:
    - data
 4. write one host-role hypothesis
 5. separate observation from inference
+6. note whether any passive context already sharpens that hypothesis:
+   - certificate names
+   - known DNS names
+   - public provider clues
+   - job-post or staff-stack hints if you have authorized external scope
 
 ### Suggested note table
 
@@ -241,6 +246,10 @@ Examples that usually remain optional or reference-only here:
 - `mysql`
 - `mssqlclient.py`
 - `odat.py`
+- `rsync`
+- `rlogin`
+- `rusers`
+- `wmiexec.py`
 - IPMI Metasploit modules
 
 ### Required artifact updates

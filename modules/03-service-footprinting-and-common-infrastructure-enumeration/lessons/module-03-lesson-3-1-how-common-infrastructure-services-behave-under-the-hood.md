@@ -19,7 +19,7 @@
 
 | **Prerequisites** | **You will practice** | **Main outcome** |
 |---|---|---|
-| Module 02 or equivalent Nmap basics, basic networking vocabulary, basic command-line comfort | Reading exposed services as clues about host role, trust, and likely follow-up questions | Building the service mental model needed before protocol-specific enumeration begins |
+| Module 02 or equivalent Nmap basics, basic networking vocabulary, basic command-line comfort | Reading exposed services as clues about host role, trust, likely follow-up questions, and the broader methodology around them | Building the service mental model needed before protocol-specific enumeration begins |
 
 > **🚨 Important**
 >
@@ -36,6 +36,10 @@
 - [Why This Lesson Matters](#why-this-lesson-matters)
 - [Learning Objectives](#learning-objectives)
 - [The Practical Problem This Lesson Solves](#the-practical-problem-this-lesson-solves)
+- [Enumeration Principles Still Apply Here](#enumeration-principles-still-apply-here)
+- [Where Module 03 Fits In The Six-Layer Methodology](#where-module-03-fits-in-the-six-layer-methodology)
+- [Passive Infrastructure Clues That Change Service Meaning](#passive-infrastructure-clues-that-change-service-meaning)
+- [Domain, Cloud, And Staff Clues As Service Context](#domain-cloud-and-staff-clues-as-service-context)
 - [Why Open Ports Still Leave Big Questions Unanswered](#why-open-ports-still-leave-big-questions-unanswered)
 - [What We Mean by Common Infrastructure Services](#what-we-mean-by-common-infrastructure-services)
 - [Why These Services Exist in Real Environments](#why-these-services-exist-in-real-environments)
@@ -155,8 +159,10 @@ Before we learn how to enumerate specific service families in Lessons 3.2 and 3.
 By the end of this lesson, we should be able to:
 
 - explain what common infrastructure services are doing inside real environments
+- explain how enumeration principles and the broader methodology still shape service work
 - distinguish between major service roles such as naming, storage, messaging, identity, and management
 - reason about a service as a function, not just a port number
+- use passive infrastructure clues to sharpen service hypotheses without confusing them with direct proof
 - describe how service exposure can suggest host role and trust relationships
 - separate direct observation from inference during service footprinting
 - build a more deliberate workflow for turning exposed services into follow-up questions
@@ -218,6 +224,120 @@ This lesson solves the problem of moving from:
 to:
 
 - a working model of host role, environment function, and next-step enumeration
+
+---
+
+## Enumeration Principles Still Apply Here
+
+Module 03 is not a break from enumeration methodology.
+It is where that methodology becomes more concrete.
+
+The core principles still apply:
+
+- there is more than meets the eye
+- we must distinguish between what we see and what we do not see
+- there are always more ways to gain useful information
+
+That means when we see an exposed service, we should keep asking:
+
+- What can we see directly?
+- What reasons might explain why we see it?
+- What useful things are still hidden?
+- What additional service-aware checks could reveal them?
+
+> **🧠 Mental Model**
+>
+> A port is not the answer.
+> It is the entrance to the next layer of questions.
+
+---
+
+## Where Module 03 Fits In The Six-Layer Methodology
+
+The broader footprinting model is usually easier to apply when we remember that service-footprinting is only one layer of a larger investigation.
+
+| **Layer** | **Main question** | **How Module 03 relates** |
+|---|---|---|
+| Internet presence | what public-facing presence exists? | provides context for names, mail routes, certificates, and provider clues |
+| Gateway | what security boundaries or exposure points stand in front? | helps explain why some services are visible and others are not |
+| Accessible services | what reachable services are actually present? | this is the main layer Module 03 works on |
+| Processes | what tasks and data flows support those services? | we only infer lightly here; deeper work belongs later |
+| Privileges | what identities and permissions back those services? | we note the possibility, but do not force validation early |
+| OS setup | how is the host configured internally? | this belongs mostly to later access-dependent work |
+
+For this course, Module 03 is mostly about **accessible services**.
+But the learner gets stronger faster when they remember that service meaning is often improved by clues from the earlier layers.
+
+---
+
+## Passive Infrastructure Clues That Change Service Meaning
+
+Good service-footprinting is not blind to passive context.
+
+Even before we touch a host directly, some clues can sharpen what we expect a service to represent:
+
+| **Passive clue source** | **What it may reveal** | **Why it matters later** |
+|---|---|---|
+| certificates and certificate-transparency logs | subdomains, mail names, wildcard naming, reused hostnames | prepares us to recognize service identities quickly |
+| DNS records and TXT values | mail providers, SaaS ties, verification records, cloud references | helps explain messaging and identity surfaces |
+| cloud-hosting references | S3 buckets, blob storage, external asset hosting | broadens where we expect data or app support to live |
+| job posts and staff profiles | frameworks, databases, DevOps tools, admin platforms | changes which service families we should prioritize mentally |
+| public code or leaked project metadata | repo names, emails, tokens, framework hints | connects later service findings to likely stack reality |
+
+None of those clues prove what an internal host does by themselves.
+But they often make service interpretation much faster and more accurate.
+
+---
+
+## Domain, Cloud, And Staff Clues As Service Context
+
+This module remains anchored to the internal course lab, so these workflows are usually **reference-only** unless the learner has separate authorized external scope.
+
+They still belong in the lesson because they explain why service findings matter.
+
+### Domain and certificate context
+
+Useful passive questions:
+
+- What hostnames already appear in certificates?
+- Which names repeat across mail, app, and support surfaces?
+- Do DNS records suggest external mail or identity providers?
+
+Reference-only examples:
+
+```bash
+curl -s https://crt.sh/?q=<domain>&output=json | jq .
+host <subdomain>
+dig any <domain>
+```
+
+### Cloud context
+
+Cloud references matter because they may explain:
+
+- where static assets are hosted
+- where backups or documents may live
+- whether service names point to third-party storage or delivery infrastructure
+
+If you later see FTP, SMB, mail, or database clues, those cloud hints can change how you interpret whether a host is self-contained or just one part of a larger system.
+
+### Staff and job-post context
+
+Staff clues matter because they can tell us what technologies are likely to appear before we ever see them live.
+
+Examples:
+
+- a job post mentions `MySQL`, `SQL Server`, and `Oracle`
+- engineers publish work involving `Django`, `Spring`, or `ASP.NET`
+- company staff mention `Atlassian`, `Kubernetes`, or `LogMeIn`
+
+Those clues do not prove any specific host role.
+But they make later service findings easier to route and prioritize.
+
+> **📝 Note**
+>
+> In this course, use these passive clues to improve your hypotheses and notes.
+> Do not confuse them with direct evidence from the shared baseline hosts.
 
 ---
 

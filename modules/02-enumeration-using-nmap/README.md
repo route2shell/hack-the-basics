@@ -53,7 +53,6 @@ It establishes the habits that Module 03 and everything after it will depend on.
 | **Module** | 02 - Network Enumeration with Nmap |
 | **Role** | Foundational attack-surface mapping, scan interpretation, and first-pass host profiling |
 | **Level** | Beginner to early intermediate |
-| **Format** | Self-paced, Markdown-first, GitHub-native |
 
 | Builds On | Prepares Next | Core Artifacts |
 |---|---|---|

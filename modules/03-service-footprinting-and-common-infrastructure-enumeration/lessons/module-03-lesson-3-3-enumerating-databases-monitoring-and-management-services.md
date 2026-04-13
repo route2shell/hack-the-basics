@@ -19,7 +19,7 @@
 
 | **Prerequisites** | **You will practice** | **Main outcome** |
 |---|---|---|
-| Lessons 3.1–3.2, Module 02 or equivalent Nmap basics, basic shell usage | Reading back-end, monitoring, and admin-facing services as high-signal infrastructure surfaces | Learning how to pull version clues, management posture, and environment meaning from MySQL, MSSQL, Oracle TNS, SNMP, IPMI, SSH, WinRM, and RDP |
+| Lessons 3.1–3.2, Module 02 or equivalent Nmap basics, basic shell usage | Reading back-end, monitoring, and admin-facing services as high-signal infrastructure surfaces | Learning how to pull version clues, management posture, and environment meaning from MySQL, MSSQL, Oracle TNS, SNMP, IPMI, SSH, Rsync, R-services, WinRM, WMI, and RDP |
 
 > **🚨 Important**
 >
@@ -42,6 +42,7 @@
 - [The Practical Problem This Lesson Solves](#the-practical-problem-this-lesson-solves)
 - [Why These Service Families Matter So Much](#why-these-service-families-matter-so-much)
 - [A Risk-Centered Enumeration Mindset](#a-risk-centered-enumeration-mindset)
+- [A Default-Behavior and Dangerous-Settings Pattern](#a-default-behavior-and-dangerous-settings-pattern)
 - [What Counts as a Strong Result for These Services?](#what-counts-as-a-strong-result-for-these-services)
 - [Red Flags That Immediately Raise Priority](#red-flags-that-immediately-raise-priority)
 - [Database Services at a Glance](#database-services-at-a-glance)
@@ -53,7 +54,10 @@
 - [IPMI: What to Look for First](#ipmi-what-to-look-for-first)
 - [Management and Remote Administration Services at a Glance](#management-and-remote-administration-services-at-a-glance)
 - [SSH: What to Look for First](#ssh-what-to-look-for-first)
+- [Rsync: What to Look for First](#rsync-what-to-look-for-first)
+- [R-Services: What to Look for First](#r-services-what-to-look-for-first)
 - [WinRM: What to Look for First](#winrm-what-to-look-for-first)
+- [WMI: What to Look for First](#wmi-what-to-look-for-first)
 - [RDP: What to Look for First](#rdp-what-to-look-for-first)
 - [How to Read Admin and Data-Service Output Like an Analyst](#how-to-read-admin-and-data-service-output-like-an-analyst)
 - [A Cross-Service Workflow for High-Signal Infrastructure Enumeration](#a-cross-service-workflow-for-high-signal-infrastructure-enumeration)
@@ -162,7 +166,7 @@ This lesson teaches us how to extract those clues without confusing early enumer
 By the end of this lesson, we should be able to:
 
 - explain why exposed database, monitoring, and management services often deserve immediate attention
-- identify strong low-friction first checks for MySQL, MSSQL, Oracle TNS, SNMP, IPMI, SSH, WinRM, and RDP
+- identify strong low-friction first checks for MySQL, MSSQL, Oracle TNS, SNMP, IPMI, SSH, Rsync, R-services, WinRM, WMI, and RDP
 - interpret version, hostname, auth, and posture clues without overstating them
 - reason about how these services affect host role and environment priority
 - document direct observations, likely implications, and next-step validation cleanly
@@ -176,8 +180,10 @@ Suppose a first-pass scan reveals:
 
 ```text
 22/tcp    open  ssh
+135/tcp   open  msrpc
 1433/tcp  open  ms-sql-s
 161/udp   open  snmp
+873/tcp   open  rsync
 3389/tcp  open  ms-wbt-server
 5985/tcp  open  wsman
 3306/tcp  open  mysql
@@ -298,6 +304,37 @@ Usually something that reveals:
 - management identity
 
 without forcing premature assumptions.
+
+---
+
+## A Default-Behavior And Dangerous-Settings Pattern
+
+The HTB footprinting source material is strongest when it keeps repeating the same cycle:
+
+- understand the service's normal job
+- understand common default behavior
+- notice dangerous settings or trust shortcuts
+- use those observations to guide first-pass enumeration
+
+That cycle belongs in this lesson.
+
+When a higher-signal data or management service appears, ask:
+
+1. what is this service normally meant to control or expose?
+2. what does its default deployment usually imply about trust?
+3. which weak settings would make it far more revealing?
+4. what is the safest low-friction check that can confirm that?
+
+Examples:
+
+- MySQL / MSSQL / Oracle: direct listener exposure, version disclosure, instance naming
+- SNMP: readable community strings, device naming, location and interface leakage
+- SSH: password auth, weak banners, unusual forwarding or legacy behavior
+- Rsync: open modules, anonymous listing, backup shares, `.ssh` directories
+- R-services: trusted-host files, legacy cleartext trust, authenticated-user visibility
+- WinRM / WMI / RDP: Windows admin pathways, host naming, certificate identity, auth posture
+
+This keeps the lesson grounded in **service behavior and risk signals**, not only in command recall.
 
 ---
 
@@ -614,7 +651,10 @@ Management services often reveal which hosts are intended for operator or admini
 | **Service** | **Typical role** | **Common clues** | **Why it matters** |
 |---|---|---|---|
 | SSH | Remote shell / admin access | Banner, host key, software family | Strong Linux / Unix admin signal, sometimes appliance admin too |
+| Rsync | File sync, backup, and mirroring | open modules, listable content, backup-style paths | Often reveals operational file movement and backup habits |
+| R-services | Legacy remote access and command execution | ports `512-514`, trusted-host relationships, logged-in user visibility | Signals weak legacy trust and cleartext admin exposure |
 | WinRM | Windows remote management | WSMan identity, HTTP(S) management surface | Indicates PowerShell / Windows remoting context |
+| WMI | Windows management instrumentation | RPC / `135` context, remote command and host-identity clues | Indicates deep Windows admin and management relevance |
 | RDP | Windows graphical remote administration | Certificate naming, Windows-oriented role clue | Strong signal of interactive Windows management surface |
 
 ---
@@ -660,6 +700,94 @@ SSH is one of the most familiar admin services, but it still rewards careful fir
 
 ---
 
+## Rsync: What to Look for First
+
+Rsync is often quieter than SSH, but it can reveal far more storage and backup meaning than beginners expect.
+
+### High-value first questions
+
+- Is `873/tcp` responding as Rsync?
+- Does the service list modules or shares without authentication?
+- Do names like `backup`, `dev`, `mirror`, or `home` appear?
+- Do listed paths suggest `.ssh`, config, or deployment material?
+
+### Why Rsync matters
+
+Rsync often suggests:
+
+- backup workflows
+- deployment or mirroring habits
+- file-sync trust relationships
+- places where sensitive files might accumulate
+
+### Example result style
+
+```text
+@RSYNCD: 31.0
+#list
+dev             Dev Tools
+backup          Nightly Backups
+@RSYNCD: EXIT
+```
+
+### What this tells us
+
+- Rsync is definitely present
+- the host exposes named sync modules
+- the service may sit close to developer or backup material
+
+### What to capture
+
+- module names
+- whether listing required authentication
+- any obvious high-value filenames or directories
+
+> **💡 Tip**
+>
+> Rsync often matters less because it is an "admin shell" and more because it may quietly expose the files admins and apps depend on.
+
+---
+
+## R-Services: What to Look for First
+
+R-services are legacy, but they still matter because their trust model is weak by design.
+
+### High-value first questions
+
+- Are ports `512`, `513`, or `514` open?
+- Does the host appear to support `rlogin`, `rsh`, or related behavior?
+- Are there signs of trusted-host relationships rather than strong authentication?
+- Does the service reveal currently logged-in users or other user-activity clues?
+
+### Why R-services matter
+
+They often imply:
+
+- legacy Unix administration
+- cleartext or trust-file-based remote access
+- `.rhosts` or `/etc/hosts.equiv` style relationships
+- higher priority than their obscurity might suggest
+
+### Example first-pass interpretation
+
+If a host exposes `512-514/tcp`, a strong note is:
+
+> "Legacy Berkeley remote-access family present; likely indicates older trust assumptions and potentially host-based authentication shortcuts."
+
+### What to capture
+
+- exact open ports
+- which service labels or client interactions succeed
+- whether user-activity commands like `rwho` or `rusers` reveal anything
+- why the host now deserves faster triage
+
+> **📝 Note**
+>
+> In the default baseline these are usually reference-only.
+> They still belong here because they are part of the real remote-management footprinting canon and teach the same trust-analysis mindset.
+
+---
+
 ## WinRM: What to Look for First
 
 WinRM matters because it often signals a deliberate Windows administration pathway.
@@ -699,6 +827,46 @@ WinRM often suggests:
 
 - correlate with SMB, RDP, hostname, or certificate data
 - note that this is an admin-relevant service, not just another web listener
+
+---
+
+## WMI: What to Look for First
+
+WMI matters because it sits close to deep Windows management even when the first visible clue is only RPC-style exposure.
+
+### High-value first questions
+
+- Does `135/tcp` and the surrounding Windows service mix suggest WMI-relevant management?
+- If credentials exist later, does a WMI client return simple identity data such as hostname?
+- Does the host already look like a server, admin node, or management-relevant Windows system?
+
+### Why WMI matters
+
+WMI often implies:
+
+- Windows administration depth
+- strong post-auth management power
+- scriptable remote host interaction
+- a host that deserves careful credential-routing later
+
+### Example result style
+
+```text
+wmiexec.py analyst:'<password>'@10.10.10.50 "hostname"
+APP-SRV-01
+```
+
+### What this gives us
+
+- direct Windows host identity
+- stronger support for management relevance
+- a clean bridge into later credential and foothold workflows
+
+### What to capture
+
+- surrounding service context such as `135`, SMB, WinRM, and RDP
+- any confirmed hostname or domain clue
+- whether this is live now or reference-only pending credentials
 
 ---
 

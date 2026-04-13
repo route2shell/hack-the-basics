@@ -58,7 +58,6 @@ It is also where the course should start to feel more cumulative:
 | **Module** | 03 - Service Footprinting and Common Infrastructure Enumeration |
 | **Role** | Turn service exposure into host-role and follow-up understanding |
 | **Level** | Beginner to early intermediate |
-| **Format** | Self-paced, Markdown-first, GitHub-native |
 
 | Builds On | Prepares Next | Core Artifacts |
 |---|---|---|
@@ -158,6 +157,35 @@ flowchart LR
 
 ---
 
+## HTB Coverage Alignment
+
+The source set in `course/htb-footprinting/Footprinting` is broader than a simple command cheat sheet.
+It includes:
+
+- enumeration principles
+- layered methodology
+- passive infrastructure context
+- host-based service families
+- remote-management families
+
+Module 03 should preserve that breadth without breaking the course's lab-first progression.
+
+| Source area | Where Module 03 should cover it |
+|---|---|
+| Enumeration principles and six-layer methodology | Lesson 3.1 as the framing model for how we read service exposure |
+| Domain info, cloud resources, and staff clues | Lesson 3.1 and the field reference as passive context that sharpens service expectations |
+| FTP, TFTP, SMB, NFS, DNS, SMTP, IMAP, POP3 | Lesson 3.2 |
+| MySQL, MSSQL, Oracle TNS, SNMP, IPMI | Lesson 3.3 |
+| SSH, Rsync, R-services, WinRM, WMI, RDP | Lesson 3.3 |
+| Triage, routing, and workflow discipline | Lesson 3.4 and the progressive lab |
+
+> **🧠 Mental Model**
+>
+> Module 03 is not just "ports to commands."
+> It is where passive context, live service behavior, and follow-up discipline connect into one analyst workflow.
+
+---
+
 ## Shared Workspace Use
 
 Module 03 should keep using the same `assessment-workspace/` created in Module 01 and populated in Module 02.
@@ -198,12 +226,15 @@ The right way to use that command coverage is:
 
 | Service family | Examples preserved in this module | Practice mode |
 |---|---|---|
+| Passive infrastructure context | `crt.sh`, `host`, `dig any`, `shodan`, cloud-hostname review, job-post / staff clues | reference-only or optional unless the learner has authorized external scope |
 | FTP | `ftp`, `nc -nv`, `telnet`, `openssl s_client -starttls ftp`, `wget -m --no-passive` | baseline-live on `META-TGT` where appropriate |
+| TFTP | `nmap -sU -p 69`, `tftp`, `connect`, `get`, `put` | optional or reference-only unless the learner has that service live |
 | SMB / RPC | `smbclient`, `rpcclient`, `samrdump.py`, `smbmap`, `crackmapexec smb`, `enum4linux-ng.py` | baseline-live where tools are available |
 | DNS | `dig`, `host`, `dnsenum` | baseline-live for simple queries; broader brute or transfer work is optional |
 | Linux management | `ssh`, `ssh -i`, `ssh -o PreferredAuthentications=password`, `ssh-audit.py` | baseline-live where practical |
+| Linux file-sync and legacy admin | `rsync`, `nc -nv <target> 873`, `nmap -sV -p 512,513,514`, `rlogin`, `rwho`, `rusers` | optional or reference-only unless the learner has those services live |
 | Windows management | `rdp-sec-check.pl`, `xfreerdp`, `evil-winrm`, `wmiexec.py` | partial baseline-live plus optional / reference-only depending on exposed services |
-| Mail, NFS, SNMP, MySQL, MSSQL, Oracle TNS, IPMI, public recon | `telnet 25`, `curl imaps://`, `showmount`, `snmpwalk`, `mysql`, `mssqlclient.py`, `odat.py`, `crt.sh`, `shodan` | optional or reference-only unless the learner has those services live |
+| Mail, NFS, SNMP, MySQL, MSSQL, Oracle TNS, IPMI, WMI | `telnet 25`, `curl imaps://`, `showmount`, `snmpwalk`, `mysql`, `mssqlclient.py`, `odat.py`, `wmiexec.py` | optional or reference-only unless the learner has those services live |
 
 ---
 

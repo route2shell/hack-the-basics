@@ -27,9 +27,11 @@
 ## Table of Contents
 
 - [1. Quick Workflow](#1-quick-workflow)
+- [1A. Coverage Modes And Context Sources](#1a-coverage-modes-and-context-sources)
 - [2. Service Triage Pattern](#2-service-triage-pattern)
 - [3. Service Role Classification](#3-service-role-classification)
 - [4. Protocol Families at a Glance](#4-protocol-families-at-a-glance)
+- [4A. Passive Infrastructure Context](#4a-passive-infrastructure-context)
 - [5. Common Commands by Service Family](#5-common-commands-by-service-family)
 - [6. What to Capture](#6-what-to-capture)
 - [7. Priority Lenses](#7-priority-lenses)
@@ -64,6 +66,24 @@ nmap --script rdp-ntlm-info,ssl-cert -p 3389 <target>
 
 ---
 
+## 1A. Coverage Modes And Context Sources
+
+| Mode | Use it for |
+|---|---|
+| Baseline-live | required reps against the Module 01 / 02 hosts |
+| Optional live | real services that exist in the learner's environment but not the default baseline |
+| Reference-only | service families or passive workflows the learner should understand even when the baseline does not expose them live |
+
+| Context source | Why it matters to service-footprinting |
+|---|---|
+| saved Module 02 scan evidence | grounds host-role reasoning in what we already know |
+| certificate names and service banners | sharpen host identity and role hints |
+| DNS records and TXT data | reveal naming, mail routing, and third-party providers |
+| cloud-hosting references | hint at external storage, app delivery, or management dependencies |
+| staff profiles, job posts, and public project clues | suggest likely stacks, databases, frameworks, and admin surfaces |
+
+---
+
 ## 2. Service Triage Pattern
 
 ```text
@@ -86,11 +106,11 @@ Identify -> Enumerate -> Correlate -> Prioritize -> Route -> Document
 |---|---|---|
 | Naming | DNS, NetBIOS naming | hostnames, domains, routing clues |
 | Identity | LDAP, Kerberos, SMB auth context | directory relevance, trust, centralized auth |
-| Storage | SMB, NFS, FTP, SFTP | shares, exports, backups, configs |
+| Storage | SMB, NFS, FTP, TFTP, SFTP, Rsync | shares, exports, backups, configs, sync targets |
 | Messaging | SMTP, IMAP, POP3 | mail hostnames, auth posture, transport clues |
 | Data | MySQL, MSSQL, Oracle TNS | application back-end role, instance clues |
 | Monitoring | SNMP | device identity, interface and topology hints |
-| Management | SSH, WinRM, RDP, IPMI | administrative access paths and control-plane relevance |
+| Management | SSH, R-services, WinRM, WMI, RDP, IPMI | administrative access paths and control-plane relevance |
 
 > **🔍 Interpretation**
 >
@@ -102,12 +122,34 @@ Identify -> Enumerate -> Correlate -> Prioritize -> Route -> Document
 
 | Family | Start by asking | High-value clues |
 |---|---|---|
-| FTP / SMB / NFS | what directories, shares, or exports are visible? | names, paths, auth posture, backups |
+| FTP / TFTP / SMB / NFS / Rsync | what directories, shares, exports, or sync targets are visible? | names, paths, auth posture, backups |
 | DNS | what names and records map the environment? | domains, MX, NS, PTR, SRV |
 | SMTP / IMAP / POP3 | what does the mail surface reveal? | mail hostnames, auth methods, TLS names |
 | MySQL / MSSQL / Oracle | what software and instance clues appear? | versions, banners, database role |
 | SNMP / IPMI | what device or management context is exposed? | host identity, interfaces, hardware context |
-| SSH / WinRM / RDP | what admin pathway is visible? | host role, auth context, remote-management value |
+| SSH / R-services / WinRM / WMI / RDP | what admin pathway is visible? | host role, auth context, remote-management value |
+
+---
+
+## 4A. Passive Infrastructure Context
+
+Passive context should not replace live service work, but it often explains why a service matters.
+
+| Source | Look for | What it can change |
+|---|---|---|
+| website certificates and `crt.sh` | subdomains, mail names, management names, wildcard coverage | which hosts or services we expect to find later |
+| DNS `ANY`, `MX`, `NS`, `TXT`, `PTR` | provider names, mail routes, verification records, identity hints | how we interpret later SMTP, DNS, VPN, or admin surfaces |
+| cloud-hosting references | `amazonaws.com`, `blob.core.windows.net`, GCP storage patterns | whether app, file, or backup data may live off-host |
+| staff and job-post clues | frameworks, databases, DevOps tools, admin platforms | which service families deserve extra attention in follow-up |
+
+Reference-only examples:
+
+```bash
+curl -s https://crt.sh/?q=<domain>&output=json | jq .
+host <subdomain>
+dig any <domain>
+shodan host <ip>
+```
 
 ---
 
@@ -116,9 +158,11 @@ Identify -> Enumerate -> Correlate -> Prioritize -> Route -> Document
 ### File and storage
 
 ```bash
-nc <target> 21
+nc -nv <target> 21
+tftp <target>
 smbclient -L //<target>/ -N
 showmount -e <target>
+rsync -av --list-only rsync://<target>/<share>
 nmap --script smb-os-discovery,smb-enum-shares,smb-security-mode -p 139,445 <target>
 ```
 
@@ -132,6 +176,15 @@ nmap --script ldap-rootdse -p 389,636 <target>
 ldapsearch -x -H ldap://<target> -s base namingcontexts defaultnamingcontext
 ```
 
+### Passive context
+
+```bash
+curl -s https://crt.sh/?q=<domain>&output=json | jq .
+host <target>
+dig any <domain>
+shodan host <ip>
+```
+
 ### Data, monitoring, and management
 
 ```bash
@@ -139,6 +192,8 @@ nmap --script mysql-info,ms-sql-info -p 3306,1433 <target>
 snmpwalk -v2c -c public <target> 1.3.6.1.2.1.1
 nmap --script rdp-ntlm-info,ssl-cert -p 3389 <target>
 nmap -sV -p 22,5985,5986,3389,623 <target>
+wmiexec.py <user>:<password>@<target> "hostname"
+nmap -sV -p 512,513,514 <target>
 ```
 
 ---
