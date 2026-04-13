@@ -482,6 +482,9 @@ D. Because Lesson 1.4 no longer matters
 
 ## Quiz Answers
 
+<details>
+<summary><strong>Reveal quiz answers</strong></summary>
+
 ### 1. Correct answer: B
 
 Scope here defines the actual learner environment and keeps later work bounded and understandable.
@@ -501,6 +504,8 @@ Module 02 needs clear target nouns and network context immediately.
 ### 5. Correct answer: B
 
 The lesson exists to remove ambiguity before the learner starts building.
+
+</details>
 
 ---
 

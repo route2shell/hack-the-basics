@@ -598,6 +598,9 @@ D. Because screenshots alone are enough
 
 ## Quiz Answers
 
+<details>
+<summary><strong>Reveal quiz answers</strong></summary>
+
 ### 1. Correct answer: B
 
 The lifecycle connects tasks, outputs, and decisions across the full assessment.
@@ -617,6 +620,8 @@ Orientation should leave behind scope, environment, and workflow structure.
 ### 5. Correct answer: A
 
 Late reporting quality depends heavily on early evidence quality.
+
+</details>
 
 ---
 

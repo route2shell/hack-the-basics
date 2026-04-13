@@ -728,6 +728,9 @@ D. It only matters after a foothold
 
 ## Quiz Answers
 
+<details>
+<summary><strong>Reveal quiz answers</strong></summary>
+
 ### 1. Correct answer: B
 
 Passive recon is meant to improve the quality of active mapping, not replace it.
@@ -747,6 +750,8 @@ Passive recon should make the next active steps more precise and better justifie
 ### 5. Correct answer: B
 
 Earlier modules give you domain, naming, and infrastructure context that makes web recon sharper.
+
+</details>
 
 ---
 

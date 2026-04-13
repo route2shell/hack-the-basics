@@ -895,6 +895,9 @@ D. A list of ports copied from Nmap
 
 ## Quiz Answers
 
+<details>
+<summary><strong>Reveal quiz answers</strong></summary>
+
 ### 1. Correct answer: B
 
 The service is reachable, but we still need to map names, redirects, routes, technologies, and trust boundaries.
@@ -915,6 +918,8 @@ Actions are meaningful behaviors such as login, upload, create, delete, export, 
 ### 5. Correct answer: B
 
 Module 04 is successful when it leaves behind a structured application map and a smart next-step queue.
+
+</details>
 
 ---
 

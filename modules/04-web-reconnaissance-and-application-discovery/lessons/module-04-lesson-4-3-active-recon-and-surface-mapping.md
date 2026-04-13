@@ -765,6 +765,9 @@ D. Because it replaces proxy work
 
 ## Quiz Answers
 
+<details>
+<summary><strong>Reveal quiz answers</strong></summary>
+
 ### 1. Correct answer: B
 
 Lesson 4.3 is about surface confirmation and mapping, not about brute-force discovery or exploitation.
@@ -784,6 +787,8 @@ Broad content discovery is important, but it belongs to the later fuzzing module
 ### 5. Correct answer: A
 
 JavaScript often exposes endpoints, route names, and role concepts that enrich the route map.
+
+</details>
 
 ---
 

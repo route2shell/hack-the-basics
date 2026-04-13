@@ -686,6 +686,9 @@ D. Because the proxy cannot inspect more than five requests
 
 ## Quiz Answers
 
+<details>
+<summary><strong>Reveal quiz answers</strong></summary>
+
 ### 1. Correct answer: B
 
 The test plan translates recon into decisions and handoffs.
@@ -705,6 +708,8 @@ Broad hidden-content expansion belongs naturally to the later content-discovery 
 ### 5. Correct answer: B
 
 A short queue forces the learner to rank importance instead of avoiding the decision.
+
+</details>
 
 ---
 

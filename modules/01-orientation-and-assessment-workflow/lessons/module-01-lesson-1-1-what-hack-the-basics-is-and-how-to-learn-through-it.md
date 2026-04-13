@@ -603,6 +603,9 @@ D. It replaces the rest of the course
 
 ## Quiz Answers
 
+<details>
+<summary><strong>Reveal quiz answers</strong></summary>
+
 ### 1. Correct answer: B
 
 The course is fundamentally about structured technical thinking across an assessment workflow.
@@ -622,6 +625,8 @@ The course is built around repeatable workflow habits and reusable outputs.
 ### 5. Correct answer: B
 
 Module 01 establishes the foundation the rest of the course assumes.
+
+</details>
 
 ---
 

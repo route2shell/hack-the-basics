@@ -520,6 +520,9 @@ D. Because Lesson 1.3 already covered hypothesis testing fully
 
 ## Quiz Answers
 
+<details>
+<summary><strong>Reveal quiz answers</strong></summary>
+
 ### 1. Correct answer: B
 
 A hypothesis is a bounded, testable idea that helps guide the next useful action.
@@ -539,6 +542,8 @@ Good next steps follow from the current question and evidence.
 ### 5. Correct answer: B
 
 The lab gives the learner a real baseline to reason from, which makes this lesson more concrete and useful.
+
+</details>
 
 ---
 
