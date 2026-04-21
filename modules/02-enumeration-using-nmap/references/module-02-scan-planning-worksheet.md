@@ -107,8 +107,8 @@ Use the shared Module 01 workspace by default.
 
 | Artifact | Recommended path | Your chosen path |
 |---|---|---|
-| Discovery outputs | `assessment-workspace/02-evidence/scans/module-02/` |  |
-| Host list | `assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt` |  |
+| Discovery outputs | `assessment-workspace/02-evidence/scans/m02/` |  |
+| Host list | `assessment-workspace/02-evidence/scans/m02/targets.txt` |  |
 | Host notes | `assessment-workspace/01-target-notes/host-tracking.md` |  |
 | Follow-up queue | `assessment-workspace/03-analysis/follow-up-queue.md` |  |
 
@@ -121,9 +121,9 @@ Use the shared Module 01 workspace by default.
 Examples:
 
 ```text
-lab-net-discovery-2026-04-06
-meta-tgt-triage-2026-04-06
-goad-mini-dc01-enriched-2026-04-06
+lab-discovery-2026-04-06
+meta-triage-2026-04-06
+dc01-enriched-2026-04-06
 ```
 
 ---

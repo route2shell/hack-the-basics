@@ -49,24 +49,25 @@
 ### Fast first pass
 
 ```bash
-mkdir -p assessment-workspace/02-evidence/scans/module-02
-nmap -sn -oA assessment-workspace/02-evidence/scans/module-02/lab-net-discovery-YYYY-MM-DD 192.168.57.0/24
-nmap -sS -Pn --top-ports 1000 -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-triage-YYYY-MM-DD 192.168.57.25
-nmap -sV -sC -Pn -p <open-ports> -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-enriched-YYYY-MM-DD 192.168.57.25
+M2SCAN=assessment-workspace/02-evidence/scans/m02
+mkdir -p "$M2SCAN"
+nmap -sn -oA "$M2SCAN"/lab-discovery-YYYY-MM-DD 192.168.57.0/24
+nmap -sS -Pn --top-ports 1000 -oA "$M2SCAN"/meta-triage-YYYY-MM-DD 192.168.57.25
+nmap -sV -sC -Pn -p <open-ports> -oA "$M2SCAN"/meta-enriched-YYYY-MM-DD 192.168.57.25
 ```
 
 ### If UDP likely matters
 
 ```bash
-sudo nmap -sU -Pn --top-ports 25 -oA assessment-workspace/02-evidence/scans/module-02/goad-mini-dc01-udp-YYYY-MM-DD 192.168.57.10
-sudo nmap -sU -sV -Pn -p <interesting-udp-ports> -oA assessment-workspace/02-evidence/scans/module-02/goad-mini-dc01-udp-focused-YYYY-MM-DD 192.168.57.10
+sudo nmap -sU -Pn --top-ports 25 -oA "$M2SCAN"/dc01-udp-YYYY-MM-DD 192.168.57.10
+sudo nmap -sU -sV -Pn -p <interesting-udp-ports> -oA "$M2SCAN"/dc01-udp-focused-YYYY-MM-DD 192.168.57.10
 ```
 
 ### If the host is already known to be up
 
 ```bash
-nmap -sS -Pn -p- -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-fulltcp-YYYY-MM-DD 192.168.57.25
-nmap -sV -sC -Pn -p <open-ports> -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-service-pass-YYYY-MM-DD 192.168.57.25
+nmap -sS -Pn -p- -oA "$M2SCAN"/meta-fulltcp-YYYY-MM-DD 192.168.57.25
+nmap -sV -sC -Pn -p <open-ports> -oA "$M2SCAN"/meta-service-pass-YYYY-MM-DD 192.168.57.25
 ```
 
 ### Default operator rhythm
@@ -116,7 +117,7 @@ nmap [host-discovery] [scan-type] [port-selection] [enrichment] [timing] [output
 nmap 192.168.57.25
 nmap 192.168.57.0/24
 nmap 192.168.57.10,25,31
-nmap -iL assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt
+nmap -iL assessment-workspace/02-evidence/scans/m02/targets.txt
 nmap 192.168.57.0/24 --exclude 192.168.57.31
 ```
 
@@ -184,6 +185,21 @@ nmap -Pn 192.168.57.25
 | SYN scan | `-sS` | Fast TCP scan with strong default utility |
 | Connect scan | `-sT` | When raw packets are not available |
 | UDP scan | `-sU` | Identify UDP exposure carefully |
+| ACK scan | `-sA` | Test whether the path looks filtered or reachable enough to return a reset |
+| NULL scan | `-sN` | Compare how an unusual no-flags probe behaves |
+| FIN scan | `-sF` | Test whether a FIN probe changes what the target reveals |
+| Xmas scan | `-sX` | Compare behavior with a multi-flag unusual TCP probe |
+
+### Quick state reminders for alternate scans
+
+| Scan | Common interpretation pattern |
+|---|---|
+| `-sA` | Often distinguishes `filtered` from `unfiltered`, not `open` from `closed` |
+| `-sN`, `-sF`, `-sX` | Often produce `closed` or `open\|filtered`; interpretation depends heavily on target and middleboxes |
+
+> **📝 Note**
+>
+> Alternate scan types are best used to clarify ambiguity or filtering, not as magical stealth settings.
 
 ### Port states
 
@@ -195,6 +211,22 @@ nmap -Pn 192.168.57.25
 | `open|filtered` | Nmap cannot clearly distinguish the two |
 | `closed|filtered` | Rare ambiguous state |
 | `unfiltered` | Reachable, but not clearly open or closed in that scan context |
+
+### Quiet scanning mindset
+
+| Goal | Pattern |
+|---|---|
+| Reduce extra lookup traffic | `nmap -n <target>` |
+| Start with a smaller TCP question | `nmap -sS --top-ports 100 <target>` |
+| Slow the pace deliberately | `nmap -T2 <target>` |
+| Re-check filtering with a focused scan | `nmap -sA -p <ports> <target>` |
+
+### Advanced awareness, not default workflow
+
+| Option | What it does | Why it is not a default |
+|---|---|---|
+| `-f` | Fragment packets | Can complicate interpretation and does not guarantee invisibility |
+| `-D` | Use decoys | Changes traffic shape but does not replace scope discipline or clean evidence |
 
 > **⚠️ Warning**
 >
@@ -235,7 +267,7 @@ nmap --script <script-name> -p <ports> <target>
 ```bash
 nmap -oN scan.nmap <target>
 nmap -oX scan.xml <target>
-nmap -oA assessment-workspace/02-evidence/scans/module-02/<basename> <target>
+nmap -oA "$M2SCAN"/<basename> <target>
 ```
 
 | Output | Best use |

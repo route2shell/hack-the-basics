@@ -1232,14 +1232,14 @@ Traceroute helps us understand path context, hop distance, and possible explanat
 Against one baseline host from your `host-tracking.md`, perform a basic pass and an enriched pass, and save both artifacts.
 
 ```bash
-nmap -oA assessment-workspace/02-evidence/scans/module-02/<host>-basic-YYYY-MM-DD <target-ip>
-nmap -sV -sC -oA assessment-workspace/02-evidence/scans/module-02/<host>-enriched-YYYY-MM-DD <target-ip>
+nmap -oA assessment-workspace/02-evidence/scans/m02/<host>-basic-YYYY-MM-DD <target-ip>
+nmap -sV -sC -oA assessment-workspace/02-evidence/scans/m02/<host>-enriched-YYYY-MM-DD <target-ip>
 ```
 
 If conditions support it, optionally add:
 
 ```bash
-nmap -O --traceroute -oA assessment-workspace/02-evidence/scans/module-02/<host>-os-YYYY-MM-DD <target-ip>
+nmap -O --traceroute -oA assessment-workspace/02-evidence/scans/m02/<host>-os-YYYY-MM-DD <target-ip>
 ```
 
 ### As you review the output, answer these questions in your notes

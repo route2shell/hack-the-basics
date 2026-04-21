@@ -306,7 +306,7 @@ nmap -sn 192.168.57.20-31
 Useful when scope has already been curated or exported into a list.
 
 ```bash
-nmap -sn -iL assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt
+nmap -sn -iL assessment-workspace/02-evidence/scans/m02/targets.txt
 ```
 
 ### Exclusions
@@ -840,7 +840,7 @@ Sometimes the cleaner workflow is to use a target file.
 ### Example: curated targets from a file
 
 ```bash
-nmap -sn -iL assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt
+nmap -sn -iL assessment-workspace/02-evidence/scans/m02/targets.txt
 ```
 
 This is useful when:
@@ -1152,15 +1152,15 @@ A strong outcome of host discovery is a reusable, evidence-based list of live ho
 Against the Module 01 baseline subnet, run a discovery-only sweep and save the result into the shared workspace.
 
 ```bash
-mkdir -p assessment-workspace/02-evidence/scans/module-02
-nmap -sn -oA assessment-workspace/02-evidence/scans/module-02/lab-net-discovery-YYYY-MM-DD 192.168.57.0/24
+mkdir -p assessment-workspace/02-evidence/scans/m02
+nmap -sn -oA assessment-workspace/02-evidence/scans/m02/lab-discovery-YYYY-MM-DD 192.168.57.0/24
 ```
 
 Examples:
 
 ```bash
-nmap -sn -oA assessment-workspace/02-evidence/scans/module-02/lab-net-discovery-YYYY-MM-DD 192.168.57.0/24
-nmap -sn -iL assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt
+nmap -sn -oA assessment-workspace/02-evidence/scans/m02/lab-discovery-YYYY-MM-DD 192.168.57.0/24
+nmap -sn -iL assessment-workspace/02-evidence/scans/m02/targets.txt
 ```
 
 ### As you review the result, answer these questions in your notes
@@ -1181,7 +1181,7 @@ nmap -sn -iL assessment-workspace/02-evidence/scans/module-02/module-02-targets.
 
 > **💡 Tip**
 >
-> After the sweep, turn the live results into `assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt` and add at least one short host note. That tiny workflow improvement pays off immediately in later lessons.
+> After the sweep, turn the live results into `assessment-workspace/02-evidence/scans/m02/targets.txt` and add at least one short host note. That tiny workflow improvement pays off immediately in later lessons.
 
 ---
 

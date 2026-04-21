@@ -42,6 +42,7 @@
 - [What a Port Scan Is Actually Trying to Learn](#what-a-port-scan-is-actually-trying-to-learn)
 - [Common TCP Scan Behavior in Practice](#common-tcp-scan-behavior-in-practice)
 - [SYN Scan vs Connect Scan](#syn-scan-vs-connect-scan)
+- [Filter-Aware TCP Scan Types](#filter-aware-tcp-scan-types)
 - [UDP Scan and Why It Is Harder to Interpret](#udp-scan-and-why-it-is-harder-to-interpret)
 - [The Six Nmap Port States](#the-six-nmap-port-states)
 - [Open Is Not the Same as Safe](#open-is-not-the-same-as-safe)
@@ -136,6 +137,7 @@ By the end of this lesson, we should be able to:
 
 - explain the practical difference between TCP and UDP from a scanning perspective
 - describe how TCP SYN scans and TCP connect scans differ
+- explain when ACK, NULL, FIN, and Xmas scans help us test filtering and ambiguity rather than simply asking whether a service is open
 - explain why UDP scans often produce more ambiguous results
 - interpret Nmap’s six port states in plain language
 - recognize that port states describe **how Nmap sees the port**, not an absolute universal truth
@@ -418,6 +420,123 @@ Why this matters:
 >
 > The point is not to romanticize one scan type and dismiss the other.  
 > The point is to understand what evidence each one is really based on.
+
+---
+
+## Filter-Aware TCP Scan Types
+
+Once we understand SYN and connect scans, the next useful question is not:
+
+> “Which scan is the most secret?”
+
+It is:
+
+> “Which packet shape helps me answer whether I am dealing with a listening service, a reachable but closed port, or a filtering device in the path?”
+
+This is where alternate TCP scan types become useful.
+
+They are not magic invisibility modes.
+They are different ways of asking the network a narrower question.
+
+### ACK scan: testing whether the path is filtered
+
+An ACK scan sends a TCP ACK probe instead of trying to begin a normal connection.
+
+Conceptually, it is not asking:
+
+> “Is this service open?”
+
+It is asking something closer to:
+
+> “Can my packet reach this port and return a useful TCP response, or is filtering likely shaping what I see?”
+
+Common outcomes:
+
+- a reset comes back, which usually means the path is reachable enough for Nmap to call the port `unfiltered`
+- nothing useful comes back, or filtering indicators appear, which often leads Nmap to call the port `filtered`
+
+That makes ACK scans useful when:
+
+- a SYN scan reports `filtered` and we want to test whether the path is reachable at all
+- we suspect a firewall is shaping the evidence more than the service itself
+- we want to compare how different probe types behave before drawing a conclusion
+
+Example:
+
+```bash
+sudo nmap -sA -p 22,80,445 -oA assessment-workspace/02-evidence/scans/m02/meta-ack-YYYY-MM-DD 192.168.57.25
+```
+
+> **🧠 Mental Model**
+>
+> ACK scans are often better for asking “is the path filtered?” than “is the port open?”
+
+### NULL, FIN, and Xmas scans: alternate TCP flag probes
+
+NULL, FIN, and Xmas scans send unusual TCP flag combinations rather than a normal SYN.
+
+Conceptually:
+
+- NULL scan (`-sN`) sends a packet with no flags set
+- FIN scan (`-sF`) sends a packet with only the FIN flag set
+- Xmas scan (`-sX`) sends a packet with multiple unusual flags set
+
+These scans are helpful because some TCP stacks and some filters react differently to these probes than they do to SYN traffic.
+
+At a high level, Nmap often interprets the results like this:
+
+- a reset reply suggests the port is `closed`
+- no reply may lead to `open|filtered`
+
+That means these scans can sometimes help us explore whether silence is coming from:
+
+- an actually open but quiet path
+- a filtered path
+- a device that handles unusual packets differently than normal SYN traffic
+
+Example:
+
+```bash
+sudo nmap -sF -p 22,25,80 -oA assessment-workspace/02-evidence/scans/m02/meta-fin-YYYY-MM-DD 192.168.57.25
+```
+
+### Why these scans need humility
+
+This is where beginners can get misled if the material is taught poorly.
+
+These scan types can be informative, but their usefulness depends heavily on:
+
+- the target operating system
+- host firewall behavior
+- network middleboxes
+- packet normalization
+- logging and monitoring controls
+
+For example:
+
+- some systems, especially Windows environments, may not behave in the textbook RFC-style way that makes these scans easy to interpret
+- some filters drop or normalize unusual packets, which removes the value of the comparison
+- defenders may still see and log these probes even when the packet shape is unusual
+
+So the right mindset is:
+
+- use alternate scans to answer a specific visibility question
+- compare them to SYN or connect results
+- treat conflicting results as evidence about the path, not as proof that one scan is “wrong”
+
+### A compact comparison
+
+| **Scan Type** | **Flag** | **Best beginner question** | **Common state clues** |
+|---|---|---|---|
+| ACK scan | `-sA` | Is the path filtered or reachable enough to return a reset? | Often `filtered` or `unfiltered` |
+| NULL scan | `-sN` | Does an unusual packet shape change how the target or filter behaves? | Often `closed` or `open\|filtered` |
+| FIN scan | `-sF` | Does a FIN probe produce clearer evidence than a SYN in this path? | Often `closed` or `open\|filtered` |
+| Xmas scan | `-sX` | Does a multi-flag probe reveal filtering or alternate stack behavior? | Often `closed` or `open\|filtered` |
+
+> **🚨 Important**
+>
+> These are visibility-testing tools, not “beat the IDS” buttons.
+> In a beginner workflow, they belong after we understand normal SYN, connect, and UDP behavior, not before.
 
 ---
 
@@ -1176,23 +1295,25 @@ A SYN scan and connect scan may answer similar questions, but the underlying mec
 
 ### Task
 
-Against the Module 01 baseline, run one small TCP scan and one small UDP-oriented scan, and save both results.
+Against the Module 01 baseline, run one small TCP scan, one filter-aware TCP scan, and one small UDP-oriented scan, and save all results.
 
 For example:
 
 ```bash
-sudo nmap -sS -p 22,80,443 -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-tcp-small-YYYY-MM-DD 192.168.57.25
-sudo nmap -sU -p 53,88,137 -oA assessment-workspace/02-evidence/scans/module-02/goad-mini-dc01-udp-small-YYYY-MM-DD 192.168.57.10
+sudo nmap -sS -p 22,80,443 -oA assessment-workspace/02-evidence/scans/m02/meta-tcp-small-YYYY-MM-DD 192.168.57.25
+sudo nmap -sA -p 22,80,443 -oA assessment-workspace/02-evidence/scans/m02/meta-ack-small-YYYY-MM-DD 192.168.57.25
+sudo nmap -sU -p 53,88,137 -oA assessment-workspace/02-evidence/scans/m02/dc01-udp-small-YYYY-MM-DD 192.168.57.10
 ```
 
 ### In your notes, answer the following
 
 1. Which protocol gave you clearer results, and why?
-2. Which ports appeared `open`, `closed`, `filtered`, or `open|filtered`?
-3. For each state, what direct evidence likely produced that label?
-4. Which ports deserve immediate manual validation?
-5. Which results reflect uncertainty rather than decisive knowledge?
-6. What line should be added to `host-tracking.md` for each host?
+2. How did the ACK scan change or refine what the TCP scan seemed to be telling you?
+3. Which ports appeared `open`, `closed`, `filtered`, `unfiltered`, or `open|filtered`?
+4. For each state, what direct evidence likely produced that label?
+5. Which ports deserve immediate manual validation?
+6. Which results reflect uncertainty rather than decisive knowledge?
+7. What line should be added to `host-tracking.md` for each host?
 
 ### Suggested note-taking format
 

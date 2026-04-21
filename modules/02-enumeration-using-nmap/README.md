@@ -131,9 +131,9 @@ flowchart LR
 |---|---|---|
 | [Lesson 2.1](lessons/module-02-lesson-2-1-how-network-scanning-works-and-why-nmap-matters.md) | Builds the scanning mental model before commands take over | Complete the scan planning worksheet and define the first target question |
 | [Lesson 2.2](lessons/module-02-lesson-2-2-host-discovery-and-target-definition-in-practice.md) | Teaches target definition and host discovery as one workflow | Save a discovery sweep and update host tracking with live hosts |
-| [Lesson 2.3](lessons/module-02-lesson-2-3-tcp-udp-and-port-state-interpretation.md) | Explains TCP, UDP, and port-state meaning | Run small focused scans and explain each state in notes |
+| [Lesson 2.3](lessons/module-02-lesson-2-3-tcp-udp-and-port-state-interpretation.md) | Explains TCP, UDP, port-state meaning, and filter-aware scan types | Run small focused scans and explain how scan type changed the evidence |
 | [Lesson 2.4](lessons/module-02-lesson-2-4-service-detection-os-clues-and-script-assisted-enumeration.md) | Adds service, OS, and NSE-driven enrichment | Compare basic and enriched scans and capture service clues for Module 03 |
-| [Lesson 2.5](lessons/module-02-lesson-2-5-saving-results-tuning-scans-and-building-a-repeatable-nmap-workflow.md) | Turns isolated commands into repeatable process | Build a reusable scan directory, naming convention, and handoff-ready note pattern |
+| [Lesson 2.5](lessons/module-02-lesson-2-5-saving-results-tuning-scans-and-building-a-repeatable-nmap-workflow.md) | Turns isolated commands into repeatable process, including quieter and more deliberate scan design | Build a reusable scan directory, naming convention, and handoff-ready note pattern |
 
 ---
 
@@ -146,10 +146,19 @@ Recommended working locations:
 - `assessment-workspace/00-admin/scope.md`
 - `assessment-workspace/00-admin/network-notes.md`
 - `assessment-workspace/01-target-notes/host-tracking.md`
-- `assessment-workspace/02-evidence/scans/module-02/`
+- `assessment-workspace/02-evidence/scans/m02/`
 - `assessment-workspace/03-analysis/follow-up-queue.md`
 
 If Module 02 creates artifacts anywhere else, the handoff into Module 03 becomes weaker immediately.
+
+> **📝 Output Convention**
+>
+> Module 02 uses a short scan root to reduce typing friction:
+> `assessment-workspace/02-evidence/scans/m02/`
+>
+> In command-heavy examples, we set:
+> `M2SCAN=assessment-workspace/02-evidence/scans/m02`
+> and save files like `meta-triage-YYYY-MM-DD` or `dc01-udp-YYYY-MM-DD`.
 
 ---
 

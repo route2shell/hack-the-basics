@@ -19,7 +19,7 @@
 
 | **Prerequisites** | **You will practice** | **Main outcome** |
 |---|---|---|
-| Lessons 2.1–2.4, basic shell usage, basic file and directory navigation | Saving scan results, choosing output formats, adjusting scan scope and speed, and structuring a multi-pass workflow | Learning how to run Nmap in a way that is **repeatable, reviewable, and useful after the terminal scrollback is gone** |
+| Lessons 2.1–2.4, basic shell usage, basic file and directory navigation | Saving scan results, choosing output formats, adjusting scan scope and speed, reducing unnecessary noise, and structuring a multi-pass workflow | Learning how to run Nmap in a way that is **repeatable, reviewable, and useful after the terminal scrollback is gone** |
 
 > **🚨 Important**
 >
@@ -42,6 +42,7 @@
 - [Why Saving Results Is Not Optional](#why-saving-results-is-not-optional)
 - [Nmap Output Formats at a High Level](#nmap-output-formats-at-a-high-level)
 - [Interactive Output vs Saved Output](#interactive-output-vs-saved-output)
+- [Module 02 Output Convention](#module-02-output-convention)
 - [Normal Output: Readable Records for Humans](#normal-output-readable-records-for-humans)
 - [XML Output: Structured Data for Reuse and Parsing](#xml-output-structured-data-for-reuse-and-parsing)
 - [Grepable Output and the Right Way to Think About It](#grepable-output-and-the-right-way-to-think-about-it)
@@ -54,6 +55,8 @@
 - [Lever 2: Timing Templates and Scan Pace](#lever-2-timing-templates-and-scan-pace)
 - [Lever 3: Retries, Host Timeouts, and Patience](#lever-3-retries-host-timeouts-and-patience)
 - [Lever 4: Name Resolution, Discovery Choices, and Noise Control](#lever-4-name-resolution-discovery-choices-and-noise-control)
+- [Quiet Scanning Is Mostly About Discipline](#quiet-scanning-is-mostly-about-discipline)
+- [A Note on Advanced Evasion Flags](#a-note-on-advanced-evasion-flags)
 - [A Word About Speed, Accuracy, and Visibility](#a-word-about-speed-accuracy-and-visibility)
 - [Building a Repeatable Nmap Workflow](#building-a-repeatable-nmap-workflow)
 - [Workflow Pattern 1: Triage Scan](#workflow-pattern-1-triage-scan)
@@ -346,6 +349,30 @@ This is why serious workflows should assume that saved output is normal, not opt
 
 ---
 
+## Module 02 Output Convention
+
+Long output paths create avoidable typing friction.
+Module 02 should not make beginners retype the workspace tree in every command.
+
+Use this short convention for command-heavy work:
+
+```bash
+M2SCAN=assessment-workspace/02-evidence/scans/m02
+mkdir -p "$M2SCAN"
+```
+
+Then save files with short, readable basenames such as:
+
+- `lab-discovery-YYYY-MM-DD`
+- `meta-triage-YYYY-MM-DD`
+- `meta-enriched-YYYY-MM-DD`
+- `dc01-smb-YYYY-MM-DD`
+- `targets.txt`
+
+This keeps the shared workspace structure from Module 01, but removes unnecessary typing overhead.
+
+---
+
 ## Normal Output: Readable Records for Humans
 
 Normal output is a saved, human-readable version of scan results.
@@ -353,7 +380,7 @@ Normal output is a saved, human-readable version of scan results.
 Example:
 
 ```bash
-nmap -oN assessment-workspace/02-evidence/scans/module-02/meta-tgt-initial.nmap 192.168.57.25
+nmap -oN "$M2SCAN"/meta-initial.nmap 192.168.57.25
 ```
 
 Why it is useful:
@@ -381,7 +408,7 @@ XML output exists for a different reason.
 Example:
 
 ```bash
-nmap -oX assessment-workspace/02-evidence/scans/module-02/meta-tgt-initial.xml 192.168.57.25
+nmap -oX "$M2SCAN"/meta-initial.xml 192.168.57.25
 ```
 
 XML is useful when we want:
@@ -406,7 +433,7 @@ Grepable output has historically been popular because it is easy to search and p
 Example:
 
 ```bash
-nmap -oG assessment-workspace/02-evidence/scans/module-02/meta-tgt-initial.gnmap 192.168.57.25
+nmap -oG "$M2SCAN"/meta-initial.gnmap 192.168.57.25
 ```
 
 But there is an important mindset correction here:
@@ -429,16 +456,16 @@ One of the easiest good habits we can build is using `-oA` with a basename.
 Example:
 
 ```bash
-nmap -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-initial 192.168.57.25
+nmap -oA "$M2SCAN"/meta-initial 192.168.57.25
 ```
 
 This tells Nmap to save the major formats at once using one common basename.
 
 That means we get files such as:
 
-- `assessment-workspace/02-evidence/scans/module-02/meta-tgt-initial.nmap`
-- `assessment-workspace/02-evidence/scans/module-02/meta-tgt-initial.xml`
-- `assessment-workspace/02-evidence/scans/module-02/meta-tgt-initial.gnmap`
+- `assessment-workspace/02-evidence/scans/m02/meta-initial.nmap`
+- `assessment-workspace/02-evidence/scans/m02/meta-initial.xml`
+- `assessment-workspace/02-evidence/scans/m02/meta-initial.gnmap`
 
 This is useful because it reduces decision friction.
 Instead of asking:
@@ -470,9 +497,9 @@ Compare these two approaches.
 
 ### Better naming
 
-- `assessment-workspace/02-evidence/scans/module-02/meta-tgt-triage-2026-03-29`
-- `assessment-workspace/02-evidence/scans/module-02/meta-tgt-enriched-2026-03-29`
-- `assessment-workspace/02-evidence/scans/module-02/lab-net-discovery-2026-03-29`
+- `assessment-workspace/02-evidence/scans/m02/meta-triage-2026-03-29`
+- `assessment-workspace/02-evidence/scans/m02/meta-enriched-2026-03-29`
+- `assessment-workspace/02-evidence/scans/m02/lab-discovery-2026-03-29`
 
 A good naming convention usually captures:
 
@@ -488,14 +515,14 @@ assessment-workspace/
 │   └── host-tracking.md
 ├── 02-evidence/
 │   └── scans/
-│       └── module-02/
-│           ├── lab-net-discovery-2026-03-29.nmap
-│           ├── lab-net-discovery-2026-03-29.xml
-│           ├── lab-net-discovery-2026-03-29.gnmap
-│           ├── meta-tgt-triage-2026-03-29.nmap
-│           ├── meta-tgt-triage-2026-03-29.xml
-│           ├── meta-tgt-enriched-2026-03-29.nmap
-│           └── module-02-targets.txt
+│       └── m02/
+│           ├── lab-discovery-2026-03-29.nmap
+│           ├── lab-discovery-2026-03-29.xml
+│           ├── lab-discovery-2026-03-29.gnmap
+│           ├── meta-triage-2026-03-29.nmap
+│           ├── meta-triage-2026-03-29.xml
+│           ├── meta-enriched-2026-03-29.nmap
+│           └── targets.txt
 └── 03-analysis/
     └── follow-up-queue.md
 ```
@@ -524,7 +551,7 @@ For example, a note entry might include:
 | Date | 2026-03-29 |
 | Target | `META-TGT (192.168.57.25)` |
 | Scan purpose | Initial triage |
-| Command | `nmap -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-triage-2026-03-29 192.168.57.25` |
+| Command | `nmap -oA "$M2SCAN"/meta-triage-2026-03-29 192.168.57.25` |
 | Summary | 22, 80, 443, 445 open |
 | Next step | Enrich with service detection and OS clues |
 
@@ -821,6 +848,84 @@ That can involve:
 
 ---
 
+## Quiet Scanning Is Mostly About Discipline
+
+When people first hear phrases like “stealth scan” or “IDS evasion,” they often imagine that quiet scanning is mostly about special flags.
+
+In real operator workflow, the bigger win usually comes from discipline:
+
+- asking a smaller question
+- touching fewer hosts
+- touching fewer ports
+- pacing the scan more deliberately
+- avoiding enrichment before triage justifies it
+- re-checking uncertainty with focused follow-up instead of broad repetition
+
+That means a quieter first move often looks like this:
+
+```bash
+nmap -n -sS -T2 --top-ports 100 -oA "$M2SCAN"/meta-low-noise-YYYY-MM-DD 192.168.57.25
+```
+
+Why that can be quieter than a giant all-in-one command:
+
+- `-n` avoids extra DNS lookups
+- `--top-ports 100` asks a narrower question first
+- `-T2` slows the pace compared to the default aggressive instinct many beginners have
+- the result is still saved and reviewable
+
+This is also where Lesson 2.3 matters.
+If a SYN scan leaves uncertainty, the next best move is often not “scan everything harder.”
+It is:
+
+1. compare with a more focused scan
+2. change the scan type deliberately
+3. save the result
+4. explain what changed in your notes
+
+That is how we reduce noise while improving understanding.
+
+### Useful low-noise habits
+
+| **Habit** | **Why it helps** |
+|---|---|
+| Start with one host, not the whole subnet | Smaller scope means less traffic and cleaner interpretation |
+| Use `--top-ports` or a short `-p` list first | We learn the shape of the host before committing to broad coverage |
+| Use `-n` when reverse DNS is not part of the question | Reduces extra lookup traffic |
+| Separate discovery, triage, and enrichment | Prevents one command from doing too much too early |
+| Use slower timing when patience matters more than speed | Can reduce burstiness and give unstable paths time to answer |
+| Re-check suspicious results with a focused alternate scan | Builds evidence instead of volume |
+
+---
+
+## A Note on Advanced Evasion Flags
+
+Nmap includes options that are often discussed under firewall or IDS/IPS evasion, such as fragmentation and decoys.
+
+Examples you may see in references:
+
+- `-f` for packet fragmentation
+- `-D` for decoys
+
+It is worth knowing these exist.
+It is not good beginner practice to treat them as default workflow.
+
+Why:
+
+- they can complicate interpretation
+- they can create traffic patterns you do not yet understand well
+- they do not replace good scope discipline
+- modern defenses and middleboxes may still detect, normalize, or log the behavior
+
+For this course, the core skill is:
+
+> understand what question you are asking, choose the smallest scan that can answer it, and use alternate scan types to clarify uncertainty before you reach for advanced evasion flags
+
+That keeps Module 02 cohesive.
+We learn to interpret visibility first, then tune responsibly, and only then become aware of more advanced packet-shaping ideas.
+
+---
+
 ## A Word About Speed, Accuracy, and Visibility
 
 There is a triangle we should keep in mind.
@@ -890,7 +995,7 @@ The triage scan answers questions like:
 Example mindset:
 
 ```bash
-nmap -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-triage-2026-03-29 192.168.57.25
+nmap -oA "$M2SCAN"/meta-triage-2026-03-29 192.168.57.25
 ```
 
 Why this works:
@@ -903,7 +1008,7 @@ Why this works:
 For multiple targets:
 
 ```bash
-nmap -sn -oA assessment-workspace/02-evidence/scans/module-02/lab-net-discovery-2026-03-29 192.168.57.0/24
+nmap -sn -oA "$M2SCAN"/lab-discovery-2026-03-29 192.168.57.0/24
 ```
 
 That keeps the discovery question separate from deeper port work.
@@ -917,7 +1022,7 @@ Once triage reveals worthwhile hosts, we enrich.
 Example:
 
 ```bash
-nmap -sV -O --traceroute -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-enriched-2026-03-29 192.168.57.25
+nmap -sV -O --traceroute -oA "$M2SCAN"/meta-enriched-2026-03-29 192.168.57.25
 ```
 
 This asks richer questions:
@@ -929,7 +1034,7 @@ This asks richer questions:
 Sometimes we may also include focused default scripts:
 
 ```bash
-nmap -sV -sC -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-default-scripts-2026-03-29 192.168.57.25
+nmap -sV -sC -oA "$M2SCAN"/meta-scripts-2026-03-29 192.168.57.25
 ```
 
 The key idea is not that every host needs every enrichment feature.
@@ -946,19 +1051,19 @@ Examples:
 ### Re-check only open or important ports
 
 ```bash
-nmap -p 22,80,443,445 -sV -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-focused-2026-03-29 192.168.57.25
+nmap -p 22,80,443,445 -sV -oA "$M2SCAN"/meta-focused-2026-03-29 192.168.57.25
 ```
 
 ### Go broader after triage suggests it is worthwhile
 
 ```bash
-nmap -p- -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-fulltcp-2026-03-29 192.168.57.25
+nmap -p- -oA "$M2SCAN"/meta-fulltcp-2026-03-29 192.168.57.25
 ```
 
 ### Focus on a specific service family later
 
 ```bash
-nmap -p 445 --script smb-os-discovery,smb-enum-shares -oA assessment-workspace/02-evidence/scans/module-02/goad-mini-dc01-smb-2026-03-29 192.168.57.10
+nmap -p 445 --script smb-os-discovery,smb-enum-shares -oA "$M2SCAN"/dc01-smb-2026-03-29 192.168.57.10
 ```
 
 That is the real power of workflow discipline.
@@ -970,17 +1075,18 @@ We use different scans for different questions.
 ## Command Walkthrough 1: Saving a Clean First-Pass Scan
 
 ```bash
-mkdir -p assessment-workspace/02-evidence/scans/module-02
-nmap -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-triage-2026-03-29 192.168.57.25
+M2SCAN=assessment-workspace/02-evidence/scans/m02
+mkdir -p "$M2SCAN"
+nmap -oA "$M2SCAN"/meta-triage-2026-03-29 192.168.57.25
 ```
 
 ### What this does well
 
 | **Part** | **Meaning** | **Why it matters** |
 |---|---|---|
-| `mkdir -p assessment-workspace/02-evidence/scans/module-02` | Creates the shared scan output directory if needed | Builds clean artifact habits in the course-wide workspace |
+| `mkdir -p "$M2SCAN"` | Creates the shared scan output directory if needed | Builds clean artifact habits in the course-wide workspace |
 | `nmap` | Runs the scan | Starts with a simple first pass |
-| `-oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-triage-2026-03-29` | Saves the major output formats using one basename | Preserves evidence in multiple useful forms |
+| `-oA "$M2SCAN"/meta-triage-2026-03-29` | Saves the major output formats using one basename | Preserves evidence in multiple useful forms |
 | `192.168.57.25` | Defines the target | Keeps the question narrow and clear |
 
 ### Why this is a strong beginner command
@@ -995,7 +1101,7 @@ Because it solves two problems at once:
 ## Command Walkthrough 2: Structured Enrichment with Artifacts
 
 ```bash
-nmap -sV -O --traceroute -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-enriched-2026-03-29 192.168.57.25
+nmap -sV -O --traceroute -oA "$M2SCAN"/meta-enriched-2026-03-29 192.168.57.25
 ```
 
 ### What this adds
@@ -1018,7 +1124,7 @@ It makes the most sense after the target already looks interesting enough to jus
 
 For repeated work, file-based targeting is often cleaner than giant inline target strings.
 
-Example `assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt`:
+Example `assessment-workspace/02-evidence/scans/m02/targets.txt`:
 
 ```text
 192.168.57.10
@@ -1029,7 +1135,7 @@ Example `assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt`
 Scan example:
 
 ```bash
-nmap -iL assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt -oA assessment-workspace/02-evidence/scans/module-02/module-02-hostset-triage-2026-03-29
+nmap -iL assessment-workspace/02-evidence/scans/m02/targets.txt -oA "$M2SCAN"/hostset-triage-2026-03-29
 ```
 
 ### Why this is useful
@@ -1076,8 +1182,8 @@ Here is a simple host note format that scales well for beginners.
 ## Host: META-TGT (192.168.57.25)
 
 ### Scan history
-- 2026-03-29 — triage — `nmap -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-triage-2026-03-29 192.168.57.25`
-- 2026-03-29 — enriched — `nmap -sV -O --traceroute -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-enriched-2026-03-29 192.168.57.25`
+- 2026-03-29 — triage — `nmap -oA "$M2SCAN"/meta-triage-2026-03-29 192.168.57.25`
+- 2026-03-29 — enriched — `nmap -sV -O --traceroute -oA "$M2SCAN"/meta-enriched-2026-03-29 192.168.57.25`
 
 ### Key observations
 - Host appears up
@@ -1380,24 +1486,24 @@ Good tuning is about deliberate tradeoffs, not ego or blind aggression.
 
 ### Goal
 
-Against the Module 01 baseline, perform a three-pass Nmap workflow that writes into the shared `assessment-workspace/` and ends with a clear Module 03 handoff.
+Against the Module 01 baseline, perform a three-pass Nmap workflow that writes into the shared `assessment-workspace/`, includes at least one deliberate noise-control or visibility-check decision, and ends with a clear Module 03 handoff.
 
 ### Suggested workflow
 
 #### Step 1: Discovery or triage
 
-Run a first-pass scan appropriate to your target set and save the results in `assessment-workspace/02-evidence/scans/module-02/`.
+Run a first-pass scan appropriate to your target set and save the results in `assessment-workspace/02-evidence/scans/m02/`.
 
 Examples:
 
 ```bash
-nmap -sn -oA assessment-workspace/02-evidence/scans/module-02/lab-net-discovery-YYYY-MM-DD 192.168.57.0/24
+nmap -sn -oA "$M2SCAN"/lab-discovery-YYYY-MM-DD 192.168.57.0/24
 ```
 
 or
 
 ```bash
-nmap -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-triage-YYYY-MM-DD 192.168.57.25
+nmap -oA "$M2SCAN"/meta-triage-YYYY-MM-DD 192.168.57.25
 ```
 
 #### Step 2: Enrichment
@@ -1407,7 +1513,7 @@ Choose one interesting host and enrich the scan.
 Example:
 
 ```bash
-nmap -sV -O --traceroute -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-enriched-YYYY-MM-DD 192.168.57.25
+nmap -sV -O --traceroute -oA "$M2SCAN"/meta-enriched-YYYY-MM-DD 192.168.57.25
 ```
 
 #### Step 3: Focused follow-up
@@ -1417,7 +1523,15 @@ Pick a few relevant ports and perform a narrower, more purposeful follow-up.
 Example:
 
 ```bash
-nmap -p 22,80,443,445 -sV -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-focused-YYYY-MM-DD 192.168.57.25
+nmap -p 22,80,443,445 -sV -oA "$M2SCAN"/meta-focused-YYYY-MM-DD 192.168.57.25
+```
+
+If filtering or ambiguity is part of the question, a focused visibility-check scan is also valid here.
+
+Example:
+
+```bash
+sudo nmap -sA -p 22,80,445 -oA "$M2SCAN"/meta-filter-check-YYYY-MM-DD 192.168.57.25
 ```
 
 ### In your notes, answer these questions
@@ -1426,8 +1540,9 @@ nmap -p 22,80,443,445 -sV -oA assessment-workspace/02-evidence/scans/module-02/m
 2. Why did you choose that scope?
 3. Which output files did you save?
 4. What changed between the first and second pass?
-5. Which open services now deserve protocol-specific follow-up outside Nmap?
-6. What did you add to `host-tracking.md` and `follow-up-queue.md`?
+5. Which tuning or scope decision helped reduce unnecessary noise?
+6. Which open services now deserve protocol-specific follow-up outside Nmap?
+7. What did you add to `host-tracking.md` and `follow-up-queue.md`?
 
 ### Suggested artifact checklist
 
@@ -1444,7 +1559,7 @@ nmap -p 22,80,443,445 -sV -oA assessment-workspace/02-evidence/scans/module-02/m
 |---|---|---|---|---|
 | Triage | What is exposed? | `nmap ...` | 22, 80, 443 open | Run enrichment |
 | Enrichment | What services and host clues are present? | `nmap -sV -O ...` | Web stack clues, platform hints, service nouns captured | Run focused follow-up |
-| Focused follow-up | Which services deserve deeper testing? | `nmap -p ...` | Web and service clues preserved for notes | Move into Module 03 service footprinting |
+| Focused follow-up | Which services deserve deeper testing, or which ports need filtering clarification? | `nmap -p ...` or `nmap -sA ...` | Web and service clues preserved, or filter behavior clarified | Move into Module 03 service footprinting |
 
 > **💡 Tip**
 >

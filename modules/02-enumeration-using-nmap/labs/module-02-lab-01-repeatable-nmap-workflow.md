@@ -50,10 +50,17 @@ Use these defaults unless your Module 01 notes already define a stronger equival
 
 | Artifact | Recommended path |
 |---|---|
-| Discovery and scan outputs | `assessment-workspace/02-evidence/scans/module-02/` |
+| Discovery and scan outputs | `assessment-workspace/02-evidence/scans/m02/` |
 | Host notes | `assessment-workspace/01-target-notes/host-tracking.md` |
 | Follow-up queue | `assessment-workspace/03-analysis/follow-up-queue.md` |
 | Planning worksheet answers | same file or notes alongside `scope.md` / lesson notes |
+
+Set this once per terminal session before you start typing longer commands:
+
+```bash
+M2SCAN=assessment-workspace/02-evidence/scans/m02
+mkdir -p "$M2SCAN"
+```
 
 ---
 
@@ -90,8 +97,7 @@ Perform a discovery pass against the full lab segment and save the result.
 Example:
 
 ```bash
-mkdir -p assessment-workspace/02-evidence/scans/module-02
-nmap -sn -oA assessment-workspace/02-evidence/scans/module-02/lab-net-discovery-YYYY-MM-DD 192.168.57.0/24
+nmap -sn -oA "$M2SCAN"/lab-discovery-YYYY-MM-DD 192.168.57.0/24
 ```
 
 Then record:
@@ -106,7 +112,7 @@ Turn the discovery result into a reusable host list or summary.
 
 Good outputs include:
 
-- a short live-host file such as `module-02-targets.txt`
+- a short live-host file such as `targets.txt`
 - an update to `host-tracking.md`
 - a note of which hosts should move into TCP triage first
 
@@ -129,7 +135,7 @@ Recommended first choices:
 Example:
 
 ```bash
-nmap -sS -Pn --top-ports 1000 -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-triage-YYYY-MM-DD 192.168.57.25
+nmap -sS -Pn --top-ports 1000 -oA "$M2SCAN"/meta-triage-YYYY-MM-DD 192.168.57.25
 ```
 
 Capture:
@@ -145,13 +151,13 @@ Choose one host from the triage step and enrich the scan.
 Example:
 
 ```bash
-nmap -sV -sC -Pn -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-enriched-YYYY-MM-DD 192.168.57.25
+nmap -sV -sC -Pn -oA "$M2SCAN"/meta-enriched-YYYY-MM-DD 192.168.57.25
 ```
 
 If conditions support it and the result would be meaningful, optionally add:
 
 ```bash
-nmap -O --traceroute -Pn -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-os-YYYY-MM-DD 192.168.57.25
+nmap -O --traceroute -Pn -oA "$M2SCAN"/meta-os-YYYY-MM-DD 192.168.57.25
 ```
 
 Capture:
@@ -168,11 +174,11 @@ Use the triage and enrichment results to run one narrower follow-up scan.
 Examples:
 
 ```bash
-nmap -p 80,443 -sV --script http-title,ssl-cert -oA assessment-workspace/02-evidence/scans/module-02/meta-tgt-web-YYYY-MM-DD 192.168.57.25
+nmap -p 80,443 -sV --script http-title,ssl-cert -oA "$M2SCAN"/meta-web-YYYY-MM-DD 192.168.57.25
 ```
 
 ```bash
-nmap -p 445 --script smb-os-discovery,smb-enum-shares -oA assessment-workspace/02-evidence/scans/module-02/goad-mini-dc01-smb-YYYY-MM-DD 192.168.57.10
+nmap -p 445 --script smb-os-discovery,smb-enum-shares -oA "$M2SCAN"/dc01-smb-YYYY-MM-DD 192.168.57.10
 ```
 
 The goal is not to exploit anything.

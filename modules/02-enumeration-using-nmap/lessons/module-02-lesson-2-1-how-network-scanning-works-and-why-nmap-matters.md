@@ -513,7 +513,7 @@ These examples are just to build comfort with what target definition can look li
 nmap 192.168.57.25
 nmap 192.168.57.0/24
 nmap 192.168.57.10,25,31
-nmap -iL assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt
+nmap -iL assessment-workspace/02-evidence/scans/m02/targets.txt
 nmap 192.168.57.0/24 --exclude 192.168.57.31
 ```
 
@@ -779,7 +779,7 @@ This is often appropriate when:
 ### Example 3: A curated list of targets
 
 ```bash
-nmap -iL assessment-workspace/02-evidence/scans/module-02/module-02-targets.txt
+nmap -iL assessment-workspace/02-evidence/scans/m02/targets.txt
 ```
 
 This is useful when:
@@ -1175,7 +1175,7 @@ Before you run anything beyond a tiny validation command, answer these questions
 | What is my target set? |  |
 | Why this scope? |  |
 | What is my vantage point? | Kali WSL on `LAB-NET` |
-| Where will I save the output? | `assessment-workspace/02-evidence/scans/module-02/` |
+| Where will I save the output? | `assessment-workspace/02-evidence/scans/m02/` |
 | What useful responses do I expect? |  |
 | What kinds of ambiguity may appear? |  |
 | What would I do after the first scan? |  |
